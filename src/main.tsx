@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { InjectStyle } from './natived';
 import { Settings } from './pages/Settings';
 const VITE_PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL;
+console.log(`build time:${import.meta.env.VITE_APP_BUILD_TIME}`);
 InjectStyle(`
 body{
   margin:0;
