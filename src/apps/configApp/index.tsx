@@ -348,7 +348,8 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 return <Table style={{
                     // minHeight: '300px'
                 }} scroll={{
-                    y: '300px'
+                    y: '300px',
+                    x:'max-content'
                 }} key={key} dataSource={data[item.valueKey] ?? []} columns={columns} pagination={{
                     pageSize: 1000
                 }}>

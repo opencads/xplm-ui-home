@@ -120,7 +120,7 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
             <Flex style={{
                 padding: '0px 10px 0px 0px'
             }}>
-                <Button>
+                <Button onClick={handleApply}>
                     {"Apply"}
                 </Button>
             </Flex>
