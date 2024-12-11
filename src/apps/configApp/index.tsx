@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Flex, InjectClass, useUpdate } from "../../natived";
 import { Button, Card, Input, List, Switch, Table, TableColumnsType, Tabs } from "antd";
 import { ResizeButton } from "../../uilibs/ResizeButton";
@@ -9,7 +9,7 @@ export interface IConfigAppProps {
 }
 
 export interface IConfigAppRef {
-
+    getConfig: () => { [key: string]: any }
 }
 
 const tabClass = InjectClass(`
@@ -55,6 +55,14 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
     const renderIcon = (icon: string) => {
         return <div></div>
     };
+
+    const self = useRef<IConfigAppRef>({
+        getConfig: () => {
+            return dataRef.current;
+        }
+    });
+
+    useImperativeHandle(ref, () => self.current);
 
     useEffect(() => {
         if (currentTab == undefined || currentTab == "") {

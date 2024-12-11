@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useRef } from "react";
-import { ConfigApp, IConfigMarkdownLine } from "../../apps/configApp";
+import { ConfigApp, IConfigAppRef, IConfigMarkdownLine } from "../../apps/configApp";
 import { Flex, useUpdate } from "../../natived";
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import { services } from "../../services";
 
 export interface ISettingsProps {
@@ -15,9 +15,12 @@ export interface ISettingsRef {
 export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) => {
     const [markdownLines, setMarkdownLines] = useUpdate<IConfigMarkdownLine[]>([]);
     const defaultConfig = useRef<any>(undefined);
+    const configRef = useRef<IConfigAppRef | null>(null);
+    const [loading, updateLoading, loadingRef] = useUpdate(false);
     useEffect(() => {
         let func = async () => {
-            try{
+            updateLoading(true);
+            try {
                 let currentConfig = {
                     defaultDirectory: await services.getDefaultDirectory(),
                     subscribers: await services.getPluginSubscribers()
@@ -75,17 +78,37 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
                     }
                 ]);
             }
-            catch(e:any){
+            catch (e: any) {
                 console.log(e);
             }
-            
+            updateLoading(false);
         };
         func();
     }, []);
+    const handleApply = async () => {
+        let currentConfig = configRef.current?.getConfig();
+        if (currentConfig == undefined) {
+            return;
+        }
+        updateLoading(true);
+        try {
+            if (defaultConfig.current.defaultDirectory != currentConfig.defaultDirectory) {
+                await services.setDefaultDirectory(currentConfig.defaultDirectory);
+            }
+            if (defaultConfig.current.subscribers != currentConfig.subscribers) {
+                await services.setPluginSubscribers(currentConfig.subscribers);
+            }
+        } catch (e: any) {
+            console.log(e);
+        }
+        updateLoading(false);
+    };
     return <Flex direction='column' style={{
-        height: '100vh'
+        height: '100vh',
+        backgroundColor: 'rgb(247, 247, 247)',
     }} spacing={'4px'}>
-        <ConfigApp style={{
+        <Spin spinning={loading} fullscreen></Spin>
+        <ConfigApp ref={configRef} style={{
             flex: 1
         }} markdownLines={markdownLines} />
         <Flex style={{
@@ -97,7 +120,7 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
             <Flex style={{
                 padding: '0px 10px 0px 0px'
             }}>
-                <Button type='text'>
+                <Button>
                     {"Apply"}
                 </Button>
             </Flex>
