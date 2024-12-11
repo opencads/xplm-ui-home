@@ -25,7 +25,7 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
                     defaultDirectory: await services.getDefaultDirectory(),
                     subscribers: await services.getPluginSubscribers()
                 };
-                defaultConfig.current = currentConfig;
+                defaultConfig.current = JSON.parse(JSON.stringify(currentConfig));
                 setMarkdownLines([
                     {
                         type: '#',
