@@ -88,6 +88,7 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
     const handleApply = async () => {
         let currentConfig = configRef.current?.getConfig();
         if (currentConfig == undefined) {
+            console.log("config is undefined");
             return;
         }
         updateLoading(true);
