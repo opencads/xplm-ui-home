@@ -47,3 +47,8 @@ export interface IImportInput {
         FilePath: string
     }[]
 }
+
+export interface PluginSubscriber {
+    url: string,
+    name: string,
+}

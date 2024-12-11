@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DocumentInterface, IImportInput, ImportInterface } from "./interfaces";
+import { DocumentInterface, IImportInput, ImportInterface, PluginSubscriber } from "./interfaces";
 import SparkMD5 from 'spark-md5';
 export type Guid = string;
 const Util = {
@@ -74,6 +74,82 @@ export class services {
     public static async getDefaultDirectory() {
         let url = services.FormatUrl(`/api/v1/xplm/getDefaultDirectory`);
         let response = await axios.get(url);
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data;
+            } else {
+                throw new Error(response.data.message);
+            }
+        }
+        else {
+            throw new Error(`${response.status}`);
+        }
+    }
+    public static async setDefaultDirectory(defaultDirectory: string) {
+        let url = services.FormatUrl(`/api/v1/xplm/setDefaultDirectory`);
+        let response = await axios.post(url, {
+            defaultDirectory
+        });
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data;
+            } else {
+                throw new Error(response.data.message);
+            }
+        }
+        else {
+            throw new Error(`${response.status}`);
+        }
+    }
+    public static async getPluginSubscribers() {
+        let url = services.FormatUrl(`/api/v1/xplm/getPluginSubscribers`);
+        let response = await axios.get(url);
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data as PluginSubscriber[];
+            } else {
+                throw new Error(response.data.message);
+            }
+        }
+        else {
+            throw new Error(`${response.status}`);
+        }
+    }
+    public static async setPluginSubscribers(subscribers: PluginSubscriber[]) {
+        let url = services.FormatUrl(`/api/v1/xplm/setPluginSubscribers`);
+        let response = await axios.post(url, {
+            subscribers
+        });
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data;
+            } else {
+                throw new Error(response.data.message);
+            }
+        }
+        else {
+            throw new Error(`${response.status}`);
+        }
+    }
+    public static async addPluginSubscriber(subscriber: PluginSubscriber) {
+        let url = services.FormatUrl(`/api/v1/xplm/addPluginSubscriber`);
+        let response = await axios.post(url, {
+            subscriber
+        });
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data;
+            } else {
+                throw new Error(response.data.message);
+            }
+        }
+        else {
+            throw new Error(`${response.status}`);
+        }
+    }
+    public static async updatePlugins() {
+        let url = services.FormatUrl(`/api/v1/xplm/updatePlugins`);
+        let response = await axios.post(url);
         if (response.status === 200) {
             if (response.data.success) {
                 return response.data.data;

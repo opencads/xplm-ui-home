@@ -16,6 +16,9 @@ export interface IFlexProps {
     spacing?: JSX.Element | string | number,
     spacingStart?: JSX.Element | string | number,
     spacingEnd?: JSX.Element | string | number,
+    onMouseDown?: MouseEventHandler<HTMLDivElement>,
+    onMouseMove?: MouseEventHandler<HTMLDivElement>,
+    onMouseUp?: MouseEventHandler<HTMLDivElement>,
 }
 
 const Flex = forwardRef<IFlexRef, IFlexProps>((props, ref) => {
@@ -54,7 +57,10 @@ const Flex = forwardRef<IFlexRef, IFlexProps>((props, ref) => {
             justifyContent: props.horizontalCenter ? 'center' : undefined,
             ...props.style
         }}
-        onClick={props.onClick}>
+        onClick={props.onClick}
+        onMouseDown={props.onMouseDown}
+        onMouseMove={props.onMouseMove}
+        onMouseUp={props.onMouseUp}>
         {renderChildren(props.children)}
     </div>
 })
