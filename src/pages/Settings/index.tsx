@@ -86,18 +86,19 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
         func();
     }, []);
     const handleApply = async () => {
-        console.log("apply");
+
         let currentConfig = configRef.current?.getConfig();
+        console.log(`currentConfig: ${currentConfig}`);
         if (currentConfig == undefined) {
             console.log("config is undefined");
             return;
         }
         updateLoading(true);
         try {
-            if (defaultConfig.current.defaultDirectory != currentConfig.defaultDirectory) {
+            if (JSON.stringify(defaultConfig.current.defaultDirectory) != JSON.stringify(currentConfig.defaultDirectory)) {
                 await services.setDefaultDirectory(currentConfig.defaultDirectory);
             }
-            if (defaultConfig.current.subscribers != currentConfig.subscribers) {
+            if (JSON.stringify(defaultConfig.current.subscribers) != JSON.stringify(currentConfig.subscribers)) {
                 await services.setPluginSubscribers(currentConfig.subscribers);
             }
         } catch (e: any) {
