@@ -128,6 +128,13 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 throw `valueKey is undefined, ${item}`;
             }
             let key = `${path}/switch ${item.valueKey}`;
+            let tempValue = data[item.valueKey];
+            if (tempValue == undefined && item.defaultValue) {
+                tempValue = item.defaultValue;
+                let newData = { ...data };
+                newData[item.valueKey] = tempValue;
+                updateData(newData);
+            }
             return <Flex key={key}>
                 <div style={{
                     flex: 1
@@ -151,6 +158,13 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 throw `valueKey is undefined, ${item}`;
             }
             let key = `${path}/input ${item.valueKey}`;
+            let tempValue = data[item.valueKey];
+            if (tempValue == undefined && item.defaultValue) {
+                tempValue = item.defaultValue;
+                let newData = { ...data };
+                newData[item.valueKey] = tempValue;
+                updateData(newData);
+            }
             return <Flex key={key}>
                 <Flex verticalCenter style={{
                     flex: 1,
