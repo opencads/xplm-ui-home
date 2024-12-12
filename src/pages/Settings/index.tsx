@@ -112,6 +112,7 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
                                             add: false,
                                             remove: false
                                         },
+                                        defaultValue: currentConfig.plugins
                                     }
                                 ]
                             }
