@@ -78,7 +78,7 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
                                 children: [
                                     {
                                         type: 'line-switch',
-                                        text: 'Update Plugins After Apply:',
+                                        text: 'Update Plugins After Apply',
                                         defaultValue: false,
                                         valueKey: 'updatePluginsAfterApply'
                                     }
