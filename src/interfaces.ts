@@ -58,3 +58,8 @@ export interface LocalSubscriber {
     name: string,
     url: string
 }
+
+export interface PluginInterface {
+    Name: string,
+    Entry: string
+}

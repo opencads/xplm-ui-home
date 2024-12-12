@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DocumentInterface, IImportInput, ImportInterface, LocalSubscriber, PluginSubscriber } from "./interfaces";
+import { DocumentInterface, IImportInput, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
 import SparkMD5 from 'spark-md5';
 export type Guid = string;
 const Util = {
@@ -181,6 +181,29 @@ export class services {
         if (response.status === 200) {
             if (response.data.success) {
                 return response.data.data as LocalSubscriber[];
+            } else {
+                throw new Error(response.data.message);
+            }
+        }
+        else {
+            throw new Error(`${response.status}`);
+        }
+    }
+    public static async getPlugins() {
+        if (debug) {
+            return [{
+                Name: "openfile",
+                Entry: "openfile.exe {input}",
+            }, {
+                Name: "export",
+                Entry: "export.exe {input}",
+            }] as PluginInterface[];
+        }
+        let url = services.FormatUrl(`/api/v1/xplm/getPlugins`);
+        let response = await axios.get(url);
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data as PluginInterface[];
             } else {
                 throw new Error(response.data.message);
             }

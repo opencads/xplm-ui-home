@@ -45,6 +45,7 @@ export interface ConfigMarkdownLine {
     tableOptions?: {
         add?: boolean,
         remove?: boolean,
+        defaultType?: 'input' | 'text',
         keys: (string | {
             key: string,
             title?: string,
@@ -372,14 +373,19 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                         key: itemKey,
                         title: itemKey,
                         render: (recordText, record, recordIndex) => {
-                            return <Input value={record[itemKeyString]} onChange={e => {
-                                if (item.valueKey == undefined) {
-                                    throw `valueKey is undefined, ${item}`;
-                                }
-                                let newData = { ...data }
-                                newData[item.valueKey][recordIndex][itemKeyString] = e.target.value;
-                                updateData(newData);
-                            }}></Input>;
+                            if (item.tableOptions?.defaultType == undefined || item.tableOptions?.defaultType == 'input') {
+                                return <Input value={record[itemKeyString]} onChange={e => {
+                                    if (item.valueKey == undefined) {
+                                        throw `valueKey is undefined, ${item}`;
+                                    }
+                                    let newData = { ...data }
+                                    newData[item.valueKey][recordIndex][itemKeyString] = e.target.value;
+                                    updateData(newData);
+                                }}></Input>;
+                            }
+                            else if (item.tableOptions?.defaultType == 'text') {
+                                return <div>{record[itemKeyString]}</div>
+                            }
                         }
                     });
                 }
@@ -496,7 +502,7 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
             flex: 1,
             overflowY: 'auto'
         }} direction='column'>
-            <Flex style={{
+            <Flex spacing={'4px'} style={{
                 paddingInlineStart: '50px',
                 paddingBlockStart: '50px',
                 paddingInlineEnd: '50px',
