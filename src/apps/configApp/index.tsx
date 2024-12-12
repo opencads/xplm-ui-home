@@ -432,18 +432,20 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 }
 
             }
-            columns.push({
-                key: 'Operations',
-                title: 'Operations',
-                fixed: 'right',
-                width: '12em',
-                render: (text, record, index) => {
-                    return <Flex spacing={'4px'}>
-                        {enableAdd ? <Button type='text' onClick={handleAdd}>{"Add"}</Button> : undefined}
-                        {enableRemove ? <Button type='text' onClick={() => handleRemove(index)}>{"Remove"}</Button> : undefined}
-                    </Flex>;
-                }
-            });
+            if (item.tableOptions?.add != false && item.tableOptions?.remove != false) {
+                columns.push({
+                    key: 'Operations',
+                    title: 'Operations',
+                    fixed: 'right',
+                    width: '12em',
+                    render: (text, record, index) => {
+                        return <Flex spacing={'4px'}>
+                            {enableAdd ? <Button type='text' onClick={handleAdd}>{"Add"}</Button> : undefined}
+                            {enableRemove ? <Button type='text' onClick={() => handleRemove(index)}>{"Remove"}</Button> : undefined}
+                        </Flex>;
+                    }
+                });
+            }
             let tempData = data[item.valueKey];
             if (tempData == undefined && item.defaultValue) {
                 tempData = item.defaultValue;
