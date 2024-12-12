@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DocumentInterface, IImportInput, ImportInterface, PluginSubscriber } from "./interfaces";
+import { DocumentInterface, IImportInput, ImportInterface, LocalSubscriber, PluginSubscriber } from "./interfaces";
 import SparkMD5 from 'spark-md5';
 export type Guid = string;
 const Util = {
@@ -32,6 +32,11 @@ const Util = {
             };
         });
     }
+}
+
+const debug = import.meta.env.VITE_DEBUG === "true";
+if (debug) {
+    console.log("!!! Debug Mode");
 }
 export class services {
     public static FormatUrl(url: string) {
@@ -72,6 +77,9 @@ export class services {
         }
     }
     public static async getDefaultDirectory() {
+        if (debug) {
+            return "D:\\Documents\\xplm-import-test";
+        }
         let url = services.FormatUrl(`/api/v1/xplm/getDefaultDirectory`);
         let response = await axios.get(url);
         if (response.status === 200) {
@@ -102,6 +110,17 @@ export class services {
         }
     }
     public static async getPluginSubscribers() {
+        if (debug) {
+            return [{
+                url: "http://localhost:19780/api/v1/xplm",
+                name: "XplmPlugin",
+                type: 'git-release'
+            }, {
+                url: "http://localhost:19780/api/v1/xplm",
+                name: "XplmPlugin2",
+                type: 'git-repository'
+            }] as PluginSubscriber[];
+        }
         let url = services.FormatUrl(`/api/v1/xplm/getPluginSubscribers`);
         let response = await axios.get(url);
         if (response.status === 200) {
@@ -135,6 +154,46 @@ export class services {
         let url = services.FormatUrl(`/api/v1/xplm/addPluginSubscriber`);
         let response = await axios.post(url, {
             subscriber
+        });
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data;
+            } else {
+                throw new Error(response.data.message);
+            }
+        }
+        else {
+            throw new Error(`${response.status}`);
+        }
+    }
+    public static async getLocalSubscribers() {
+        if (debug) {
+            return [{
+                url: "http://localhost:19780/api/v1/xplm",
+                name: "XplmPlugin",
+            }, {
+                url: "http://localhost:19780/api/v1/xplm",
+                name: "XplmPlugin2",
+            }] as LocalSubscriber[];
+        }
+        let url = services.FormatUrl(`/api/v1/xplm/getLocalSubscribers`);
+        let response = await axios.get(url);
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data as LocalSubscriber[];
+            } else {
+                throw new Error(response.data.message);
+            }
+        }
+        else {
+            throw new Error(`${response.status}`);
+        }
+    }
+    //removeLocalSubscriber
+    public static async removeLocalSubscriber(name: string) {
+        let url = services.FormatUrl(`/api/v1/xplm/removeLocalSubscriber`);
+        let response = await axios.post(url, {
+            name
         });
         if (response.status === 200) {
             if (response.data.success) {

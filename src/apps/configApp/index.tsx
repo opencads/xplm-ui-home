@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Flex, InjectClass, useUpdate } from "../../natived";
-import { Button, Card, Input, List, Switch, Table, TableColumnsType, Tabs } from "antd";
+import { Button, Card, Input, List, Select, Switch, Table, TableColumnsType, Tabs } from "antd";
 import { ResizeButton } from "../../uilibs/ResizeButton";
 
 export interface IConfigAppProps {
@@ -32,7 +32,7 @@ background: linear-gradient(
 );
 `);
 
-export interface IConfigMarkdownLine {
+export interface ConfigMarkdownLine {
     valueKey?: string,
     type: '#' | '##' | '###' | 'card' | 'line' | 'tab' | 'line-switch' | 'line-input' | 'list' | 'table'
     text?: string,
@@ -43,9 +43,27 @@ export interface IConfigMarkdownLine {
         remove?: boolean
     },
     tableOptions?: {
-        keys: string[]
+        add?: boolean,
+        remove?: boolean,
+        keys: (string | {
+            key: string,
+            title?: string,
+            type: 'text' | 'input' | 'select'
+            selectOptions?: string[],
+            newValue?: any,
+            columnWidth?: number | string,
+            selectWidth?: number | string,
+        })[]
     },
     children?: IConfigMarkdownLine[]
+}
+
+export type IConfigMarkdownLine = ConfigMarkdownLine | string;
+
+const findMarkdownLine = (lines: IConfigMarkdownLine[], predicate: (value: ConfigMarkdownLine) => boolean): ConfigMarkdownLine | undefined => {
+    let result = lines?.find(line => typeof (line) == 'object' && predicate(line as ConfigMarkdownLine));
+    if (result != undefined) return result as ConfigMarkdownLine;
+    return undefined;
 }
 
 export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref) => {
@@ -66,11 +84,31 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
 
     useEffect(() => {
         if (currentTab == undefined || currentTab == "") {
-            setCurrentTab(props.markdownLines?.find(item => item.type == 'tab')?.text ?? "");
+            setCurrentTab(findMarkdownLine(props.markdownLines ?? [], item => item.type == 'tab')?.text);
         }
     }, [props.markdownLines]);
 
-    const renderItem = (items: IConfigMarkdownLine[], item: IConfigMarkdownLine, path: string, index: number) => {
+    const renderItem = (items: IConfigMarkdownLine[], item: IConfigMarkdownLine, path: string, index: number): JSX.Element | undefined => {
+        if (typeof (item) == 'string') {
+            if (item.startsWith('# ')) {
+                return renderItem(items, {
+                    type: '#', text: item.substring(2)
+                }, path, index);
+            }
+            else if (item.startsWith('## ')) {
+                return renderItem(items, {
+                    type: '##', text: item.substring(3)
+                }, path, index);
+            }
+            else if (item.startsWith('### ')) {
+                return renderItem(items, {
+                    type: '###', text: item.substring(4)
+                }, path, index);
+            }
+            else {
+                return <div key={`${path}/${index}`}>{item}</div>
+            }
+        }
         if (item.type == '#') {
             let key = `${path}/# ${item.text}`;
             return <Flex key={key}>
@@ -225,13 +263,17 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 newData[item.valueKey].splice(index, 1);
                 updateData(newData);
             };
-            return <List key={key} dataSource={listData == undefined || listData.length == 0 ? [""] : listData} renderItem={(listItem: any, index) => {
+            let enableAdd = item.listOperations?.add == undefined || item.listOperations?.add == true;
+            let enableRemove = item.listOperations?.remove == undefined || item.listOperations?.remove == true;
+            return <List key={key} dataSource={listData == undefined || listData.length == 0 ? (
+                enableAdd ? [""] : []
+            ) : listData} renderItem={(listItem: any, index) => {
                 if (item.valueKey == undefined) {
                     throw `valueKey is undefined, ${item}`;
                 }
 
                 let indexData = data[item.valueKey];
-                if (indexData == undefined || indexData.length == 0) {
+                if ((indexData == undefined || indexData.length == 0) && enableAdd) {
                     return <Flex verticalCenter style={{
                         padding: '2px 0px'
                     }}>
@@ -258,8 +300,8 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                             }}></Input>
                         </Flex>
                         <Flex spacing={'4px'}>
-                            <Button type='text' onClick={handleAdd}>{"Add"}</Button>
-                            <Button type='text' onClick={() => handleRemove(index)}>{"Remove"}</Button>
+                            {enableAdd ? <Button type='text' onClick={handleAdd}>{"Add"}</Button> : undefined}
+                            {enableRemove ? <Button type='text' onClick={() => handleRemove(index)}>{"Remove"}</Button> : undefined}
                         </Flex>
                     </Flex>
                 }
@@ -291,7 +333,24 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 }
                 let newItem = {} as any;
                 for (let itemKey of item.tableOptions?.keys ?? []) {
-                    newItem[itemKey] = "";
+                    if (typeof itemKey == "string") {
+                        newItem[itemKey] = "";
+                    } else {
+                        if (itemKey.newValue) {
+                            newItem[itemKey.key] = itemKey.newValue;
+                        }
+                        else if (itemKey.type == 'select') {
+                            if (itemKey.selectOptions && itemKey.selectOptions.length > 0) {
+                                newItem[itemKey.key] = itemKey.selectOptions[0];
+                            }
+                            else {
+                                throw `selectOptions is undefined, ${itemKey}, ${item}`;
+                            }
+                        }
+                        else {
+                            newItem[itemKey.key] = "";
+                        }
+                    }
                 }
                 newData[item.valueKey].push(newItem);
                 updateData(newData);
@@ -304,21 +363,68 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 newData[item.valueKey].splice(index, 1);
                 updateData(newData);
             };
+            let enableAdd = item.tableOptions?.add == undefined || item.tableOptions?.add == true;
+            let enableRemove = item.tableOptions?.remove == undefined || item.tableOptions?.remove == true;
             for (let itemKey of item.tableOptions?.keys ?? []) {
-                columns.push({
-                    key: itemKey,
-                    title: itemKey,
-                    render: (recordText, record, recordIndex) => {
-                        return <Input value={record[itemKey]} onChange={e => {
-                            if (item.valueKey == undefined) {
-                                throw `valueKey is undefined, ${item}`;
+                if (typeof itemKey == "string") {
+                    let itemKeyString = itemKey;
+                    columns.push({
+                        key: itemKey,
+                        title: itemKey,
+                        render: (recordText, record, recordIndex) => {
+                            return <Input value={record[itemKeyString]} onChange={e => {
+                                if (item.valueKey == undefined) {
+                                    throw `valueKey is undefined, ${item}`;
+                                }
+                                let newData = { ...data }
+                                newData[item.valueKey][recordIndex][itemKeyString] = e.target.value;
+                                updateData(newData);
+                            }}></Input>;
+                        }
+                    });
+                }
+                else {
+                    let itemKeyObject = itemKey;
+                    columns.push({
+                        key: itemKey.key,
+                        title: itemKey.title ?? itemKey.key,
+                        width: itemKeyObject.columnWidth,
+                        render: (recordText, record, recordIndex) => {
+                            if (itemKeyObject.type == 'select') {
+                                return <Select style={{
+                                    width: itemKeyObject.selectWidth
+                                }} value={record[itemKeyObject.key]} onChange={e => {
+                                    if (item.valueKey == undefined) {
+                                        throw `valueKey is undefined, ${item}`;
+                                    }
+                                    let newData = { ...data }
+                                    newData[item.valueKey][recordIndex][itemKeyObject.key] = e;
+                                    updateData(newData);
+                                }} options={itemKeyObject.selectOptions?.map(item => {
+                                    return {
+                                        value: item,
+                                        label: item
+                                    }
+                                })}>
+                                </Select>
                             }
-                            let newData = { ...data }
-                            newData[item.valueKey][recordIndex][itemKey] = e.target.value;
-                            updateData(newData);
-                        }}></Input>;
-                    }
-                });
+                            else if (itemKeyObject.type == 'text') {
+                                return <div>{record[itemKeyObject.key]}</div>
+                            }
+                            else {
+                                return <Input value={record[itemKeyObject.key]} onChange={e => {
+                                    if (item.valueKey == undefined) {
+                                        throw `valueKey is undefined, ${item}`;
+                                    }
+                                    let newData = { ...data }
+                                    newData[item.valueKey][recordIndex][itemKeyObject.key] = e.target.value;
+                                    updateData(newData);
+                                }}></Input>;
+                            }
+                        }
+                    });
+                }
+
             }
             columns.push({
                 key: 'Operations',
@@ -327,8 +433,8 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 width: '12em',
                 render: (text, record, index) => {
                     return <Flex spacing={'4px'}>
-                        <Button type='text' onClick={handleAdd}>{"Add"}</Button>
-                        <Button type='text' onClick={() => handleRemove(index)}>{"Remove"}</Button>
+                        {enableAdd ? <Button type='text' onClick={handleAdd}>{"Add"}</Button> : undefined}
+                        {enableRemove ? <Button type='text' onClick={() => handleRemove(index)}>{"Remove"}</Button> : undefined}
                     </Flex>;
                 }
             });
@@ -339,7 +445,7 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 newData[item.valueKey] = tempData;
                 updateData(newData);
             }
-            if (tempData == undefined || Object.keys(tempData).length == 0) {
+            if ((tempData == undefined || Object.keys(tempData).length == 0) && enableAdd) {
                 return <Button onClick={handleAdd} type='text' style={{
                     width: '100%'
                 }}>{"New"}</Button>
@@ -349,7 +455,7 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                     // minHeight: '300px'
                 }} scroll={{
                     y: '300px',
-                    x:'max-content'
+                    x: 'max-content'
                 }} key={key} dataSource={data[item.valueKey] ?? []} columns={columns} pagination={{
                     pageSize: 1000
                 }}>
@@ -357,7 +463,20 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 </Table>;
             }
         }
+        else {
 
+        }
+    };
+    const getCurrentTabPropsMarkdownLine = () => {
+        return findMarkdownLine(props.markdownLines ?? [], item => item.text == currentTab);
+    };
+    const getMarkdownLineText = (item: IConfigMarkdownLine) => {
+        if (typeof item == 'string') {
+            return item;
+        }
+        else {
+            return item.text ?? "";
+        }
     };
     return <Flex direction='row'
         style={{
@@ -384,8 +503,8 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 paddingBlockEnd: '50px',
             }} direction='column'>
                 {
-                    props.markdownLines?.find(item => item.text == currentTab)?.children?.map((item, itemIndex) => {
-                        return renderItem(props.markdownLines ?? [], item, item.text ?? "", itemIndex);
+                    getCurrentTabPropsMarkdownLine()?.children?.map((item, itemIndex) => {
+                        return renderItem(props.markdownLines ?? [], item, getMarkdownLineText(item), itemIndex);
                     })
                 }
             </Flex>

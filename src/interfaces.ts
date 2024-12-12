@@ -51,4 +51,10 @@ export interface IImportInput {
 export interface PluginSubscriber {
     url: string,
     name: string,
+    type: 'git-release' | 'git-repository'
+}
+
+export interface LocalSubscriber {
+    name: string,
+    url: string
 }

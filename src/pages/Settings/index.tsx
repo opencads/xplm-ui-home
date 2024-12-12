@@ -17,28 +17,24 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
     const defaultConfig = useRef<any>(undefined);
     const configRef = useRef<IConfigAppRef | null>(null);
     const [loading, updateLoading, loadingRef] = useUpdate(false);
+
     useEffect(() => {
         let func = async () => {
             updateLoading(true);
             try {
                 let currentConfig = {
                     defaultDirectory: await services.getDefaultDirectory(),
-                    subscribers: await services.getPluginSubscribers()
+                    subscribers: await services.getPluginSubscribers(),
+                    localSubscribers: await services.getLocalSubscribers()
                 };
                 defaultConfig.current = JSON.parse(JSON.stringify(currentConfig));
                 setMarkdownLines([
-                    {
-                        type: '#',
-                        text: 'Settings'
-                    },
+                    "# Settings",
                     {
                         type: 'tab',
                         text: "Workspace",
                         children: [
-                            {
-                                type: '##',
-                                text: "Master Workspace"
-                            },
+                            "## Master Workspace",
                             {
                                 type: 'card',
                                 children: [
@@ -56,10 +52,22 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
                         type: 'tab',
                         text: 'Plugins',
                         children: [
+                            "## Local Subscribers",
                             {
-                                type: '##',
-                                text: 'Subscribers'
+                                type: 'card',
+                                children: [
+                                    {
+                                        type: 'table',
+                                        valueKey: 'localSubscribers',
+                                        tableOptions: {
+                                            keys: ["name", "url"],
+                                            add: false
+                                        },
+                                        defaultValue: currentConfig.localSubscribers
+                                    },
+                                ]
                             },
+                            "## Subscribers",
                             {
                                 type: 'card',
                                 children: [
@@ -68,9 +76,26 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
                                         text: 'Subscribers:',
                                         valueKey: 'subscribers',
                                         tableOptions: {
-                                            keys: ["name", "url"]
+                                            keys: ["name", "url", {
+                                                key: "type",
+                                                type: 'select',
+                                                selectOptions: ["git-release", "git-repository"],
+                                                selectWidth: '12em',
+                                                columnWidth: '14em'
+                                            }],
                                         },
                                         defaultValue: currentConfig.subscribers
+                                    }
+                                ]
+                            },
+                            {
+                                type: 'card',
+                                children: [
+                                    {
+                                        type: 'line-switch',
+                                        text: 'Update Plugins After Apply:',
+                                        defaultValue: false,
+                                        valueKey: 'updatePluginsAfterApply'
                                     }
                                 ]
                             }
@@ -86,10 +111,9 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
         func();
     }, []);
     const handleApply = async () => {
-
         let currentConfig = configRef.current?.getConfig();
         console.log(`currentConfig: ${JSON.stringify(currentConfig)}`);
-        console.log(`defaultConfig: ${JSON.stringify(defaultConfig.current)}`); 
+        console.log(`defaultConfig: ${JSON.stringify(defaultConfig.current)}`);
         if (currentConfig == undefined) {
             console.log("config is undefined");
             return;
@@ -101,6 +125,16 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
             }
             if (JSON.stringify(defaultConfig.current.subscribers) != JSON.stringify(currentConfig.subscribers)) {
                 await services.setPluginSubscribers(currentConfig.subscribers);
+            }
+            if (JSON.stringify(defaultConfig.current.localSubscribers) != JSON.stringify(currentConfig.localSubscribers)) {
+                for (let oldSubscriber of defaultConfig.current.localSubscribers) {
+                    if (!currentConfig.localSubscribers.find((x: any) => x.name == oldSubscriber.name)) {
+                        await services.removeLocalSubscriber(oldSubscriber.name);
+                    }
+                }
+            }
+            if (currentConfig.updatePluginsAfterApply == true) {
+                await services.updatePlugins();
             }
         } catch (e: any) {
             console.log(e);
