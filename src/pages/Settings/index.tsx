@@ -169,12 +169,12 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
         <Spin spinning={loading} fullscreen></Spin>
         <Flex direction='column' style={{
             flex: 1,
-            overflow: 'y'
+            overflowY:'auto'
         }}>
             <ConfigApp ref={configRef} markdownLines={markdownLines} />
         </Flex>
         <Flex style={{
-            padding: '10px 50px 50px 0px'
+            padding: '30px 50px 30px 0px'
         }}>
             <div style={{
                 flex: 1
