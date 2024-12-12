@@ -150,7 +150,7 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
             flex: 1
         }} markdownLines={markdownLines} />
         <Flex style={{
-            padding: '10px 10px'
+            padding: '10px 50px 50px 0px'
         }}>
             <div style={{
                 flex: 1
