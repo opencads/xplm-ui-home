@@ -167,9 +167,12 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
         backgroundColor: 'rgb(247, 247, 247)',
     }} spacing={'4px'}>
         <Spin spinning={loading} fullscreen></Spin>
-        <ConfigApp ref={configRef} style={{
-            flex: 1
-        }} markdownLines={markdownLines} />
+        <Flex direction='column' style={{
+            flex: 1,
+            overflow: 'y'
+        }}>
+            <ConfigApp ref={configRef} markdownLines={markdownLines} />
+        </Flex>
         <Flex style={{
             padding: '10px 50px 50px 0px'
         }}>
