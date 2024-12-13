@@ -3,6 +3,8 @@ import { ConfigApp, IConfigAppRef, IConfigMarkdownLine } from "../../apps/Config
 import { Flex, useUpdate } from "../../natived";
 import { Button, Spin } from "antd";
 import { services } from "../../services";
+import { HomeOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 export interface ISettingsProps {
 
@@ -13,6 +15,7 @@ export interface ISettingsRef {
 }
 
 export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) => {
+    const navigate = useNavigate();
     const [markdownLines, setMarkdownLines] = useUpdate<IConfigMarkdownLine[]>([]);
     const defaultConfig = useRef<any>(undefined);
     const configRef = useRef<IConfigAppRef | null>(null);
@@ -167,12 +170,20 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
         backgroundColor: 'rgb(247, 247, 247)',
     }} spacing={'4px'}>
         <Spin spinning={loading} fullscreen></Spin>
+        <Flex>
+            <Flex style={{ flex: 1 }}></Flex>
+            <Flex>
+                <Button type='text' icon={<HomeOutlined />} onClick={() => {
+                    navigate('/');
+                }}></Button>
+            </Flex>
+        </Flex>
         <Flex direction='column' style={{
             flex: 1,
-            height:0
+            height: 0
             // overflowY:'auto'
         }}>
-            <ConfigApp style={{height:'100%'}} ref={configRef} markdownLines={markdownLines} />
+            <ConfigApp style={{ height: '100%' }} ref={configRef} markdownLines={markdownLines} />
         </Flex>
         <Flex style={{
             padding: '30px 50px 30px 0px'
