@@ -1,6 +1,7 @@
 import axios from "axios";
 import { DocumentInterface, IImportInput, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
 import SparkMD5 from 'spark-md5';
+import { IDocumentRecord } from "./apps/DocumentsApp";
 export type Guid = string;
 const Util = {
     calculateFileMD5: (file: File): Promise<string> => {
@@ -262,8 +263,8 @@ export class services {
             throw new Error(`${response.status}`);
         }
     }
-    public static async importFiles(input: IImportInput) {
-        return await services.runPlugin("import-files", input) as {
+    public static async importFilesToWorkspace(input: IImportInput) {
+        return await services.runPlugin("workspace-import-files", input) as {
             importResult: DocumentInterface[],
         };
     }
@@ -306,5 +307,13 @@ export class services {
         else {
             throw new Error(`${response.status}`);
         }
+    }
+    public static async getDocumentsFromWorkspace(path: string, remoteWorkspaceId: string) {
+        return await services.runPlugin("workspace-get-documents", {
+            path,
+            remoteWorkspaceId
+        }) as {
+            Documents: IDocumentRecord[],
+        };
     }
 }

@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef } from "react";
-import { ConfigApp, IConfigAppRef, IConfigMarkdownLine } from "../../apps/configApp";
+import { ConfigApp, IConfigAppRef, IConfigMarkdownLine } from "../../apps/ConfigApp";
 import { Flex, useUpdate } from "../../natived";
 import { Button, Spin } from "antd";
 import { services } from "../../services";
@@ -169,9 +169,10 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
         <Spin spinning={loading} fullscreen></Spin>
         <Flex direction='column' style={{
             flex: 1,
-            overflowY:'auto'
+            height:0
+            // overflowY:'auto'
         }}>
-            <ConfigApp ref={configRef} markdownLines={markdownLines} />
+            <ConfigApp style={{height:'100%'}} ref={configRef} markdownLines={markdownLines} />
         </Flex>
         <Flex style={{
             padding: '30px 50px 30px 0px'

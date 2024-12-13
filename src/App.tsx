@@ -48,34 +48,9 @@ function App() {
   }}>
     {contextHolder}
     <Flex direction='row'>
-      <ImportFileButton handleClick={async e => {
-        try {
-          let items = [] as {
-            fileName: string,
-            fileID: string,
-            file: File
-          }[];
-          if (e.target.files == undefined) {
-            throw `No files selected`;
-          }
-          for (let i = 0; i < e.target.files.length; i++) {
-            let file = e.target.files[i];
-            items.push({
-              fileName: file.name,
-              fileID: await services.Upload(file),
-              file: file,
-            });
-          }
-          for (let item of items) {
-            await services.downloadToDefaultDirectory(item.fileID, item.fileName);
-          }
-        }
-        catch (e: any) {
-          messageApi.error(e);
-        }
-      }}>{"Import Files"}</ImportFileButton>
+      
     </Flex>
-    <Table dataSource={data} columns={columns} ></Table>
+    
   </Flex>)
 }
 

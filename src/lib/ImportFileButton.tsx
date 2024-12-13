@@ -25,7 +25,7 @@ export const ImportFileButton = forwardRef<IImportFileButtonRef, IImportFileButt
 
     return (
         <div>
-            <Button type={props.type ?? "text"} onClick={handleButtonClick}>
+            <Button type={props.type} onClick={handleButtonClick}>
                 {props.children}
             </Button>
             <input
