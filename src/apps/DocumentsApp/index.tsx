@@ -17,11 +17,11 @@ export interface IDocumentRecord {
     fileName: string;
     number: string;
     partNumber: string;
-    remoteState: 'new' | 'checkedIn' | 'checkedOut';
+    remoteState: 'new' | 'checkedIn' | 'checkedOut' | 'unknown';
     remoteLastModifiedTime: string;
     lifeCycle: string;
     local: {
-        workspaceState: 'untracked' | 'modified' | 'archived';
+        workspaceState: 'untracked' | 'modified' | 'archived' | 'missing';
         localFilePath: string;
         localAttributes: {
             key: string,
@@ -56,17 +56,24 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 return <span style={{ fontSize: '10px', color: '#f5222d' }}>New</span>;
             } else if (state == 'checkedIn') {
                 return <span style={{ fontSize: '10px', color: '#389e0d' }}>Checked In</span>;
-            } else {
+            } else if (state == 'unknown') {
+                return <span style={{ fontSize: '10px', color: '#9e9c24' }}>Unknown</span>;
+            }
+            else if (state == 'checkedOut') {
                 return <span style={{ fontSize: '10px', color: '#1890ff' }}>Checked Out</span>;
             }
+
         };
         const renderLocalState = (state: IDocumentRecord["local"]["workspaceState"]) => {
             if (state == 'untracked') {
                 return <span style={{ fontSize: '10px', color: '#f5222d' }}>Untracked</span>;
             } else if (state == 'modified') {
                 return <span style={{ fontSize: '10px', color: '#389e0d' }}>Modified</span>;
-            } else {
+            } else if (state == 'archived') {
                 return <span style={{ fontSize: '10px', color: '#1890ff' }}>Archived</span>;
+            }
+            else if (state == 'missing') {
+                return <span style={{ fontSize: '10px', color: '#9e9c24' }}>Missing</span>;
             }
         };
         const [messageApi, contextHolder] = useMessage();
