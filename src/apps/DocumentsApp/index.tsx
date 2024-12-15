@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { Flex, useUpdate } from "../../natived";
 import { ImportFileApp } from "../ImportFileApp";
 import useMessage from "antd/es/message/useMessage";
-import { Button, Table, TableColumnsType } from "antd";
+import { Button, Table, TableColumnsType, Tag } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import ArchiveSvg from "../../svgs/Archive.svg?react";
 
@@ -57,27 +57,27 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
     (props, ref) => {
         const renderRemoteState = (state: IDocumentRecord["remoteState"]) => {
             if (state == 'new') {
-                return <span style={{ fontSize: '10px', color: '#f5222d' }}>New</span>;
+                return <Tag>New</Tag>;
             } else if (state == 'checkedIn') {
-                return <span style={{ fontSize: '10px', color: '#389e0d' }}>Checked In</span>;
+                return <Tag>Checked In</Tag>;
             } else if (state == 'unknown') {
-                return <span style={{ fontSize: '10px', color: '#9e9c24' }}>Unknown</span>;
+                return <Tag>Unknown</Tag>;
             }
             else if (state == 'checkedOut') {
-                return <span style={{ fontSize: '10px', color: '#1890ff' }}>Checked Out</span>;
+                return <Tag>Checked Out</Tag>;
             }
 
         };
         const renderLocalState = (state: IDocumentRecord["local"]["workspaceState"]) => {
             if (state == 'untracked') {
-                return <span style={{ fontSize: '10px', color: '#f5222d' }}>Untracked</span>;
+                return <Tag>Untracked</Tag>;
             } else if (state == 'modified') {
-                return <span style={{ fontSize: '10px', color: '#389e0d' }}>Modified</span>;
+                return <Tag>Modified</Tag>;
             } else if (state == 'archived') {
-                return <span style={{ fontSize: '10px', color: '#1890ff' }}>Archived</span>;
+                return <Tag>Archived</Tag>;
             }
             else if (state == 'missing') {
-                return <span style={{ fontSize: '10px', color: '#9e9c24' }}>Missing</span>;
+                return <Tag>Missing</Tag>;
             }
         };
         const [messageApi, contextHolder] = useMessage();
@@ -105,7 +105,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 key: 'state',
                 title: 'State',
                 render: (text, record) => {
-                    return <Flex>
+                    return <Flex spacing={'4px'}>
                         {renderRemoteState(record.remoteState)}
                         {renderLocalState(record.local.workspaceState)}
                     </Flex>
