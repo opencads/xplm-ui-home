@@ -5,8 +5,9 @@ import { SettingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { DocumentsApp, IDocumentRecord } from "../../apps/DocumentsApp";
 import { services } from "../../services";
-import Sidebar from "../../svgs/Sidebar.svg?react";
+import SidebarSvg from "../../svgs/Sidebar.svg?react";
 import Icon from "@ant-design/icons/lib/components/Icon";
+import { IImportInput } from "../../interfaces";
 
 
 export interface IHomeProps {
@@ -14,7 +15,8 @@ export interface IHomeProps {
 }
 
 export interface IHomeRef {
-    refresh: () => Promise<void>
+    refresh: () => Promise<void>,
+    archive: () => Promise<void>
 }
 
 export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
@@ -30,6 +32,30 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             catch (e) {
                 console.log(e);
             }
+        },
+        archive: async () => {
+            try {
+                let documents = await services.getDocumentsFromWorkspace(await services.getDefaultDirectory(), "");
+                let imports = {
+                    Items: []
+                } as IImportInput;
+                for(let document of documents.Documents) {
+                    if(document.local.workspaceState == 'untracked'){
+                        imports.Items.push({
+                            FilePath: document.local.localFilePath
+                        });
+                    }
+                    else if(document.local.workspaceState == 'modified') {
+                        imports.Items.push({
+                            FilePath: document.local.localFilePath
+                        });
+                    }
+                }
+                await services.importFilesToWorkspace(imports);
+            }
+            catch(e) {
+
+            }
         }
     });
     useImperativeHandle(ref, () => self.current);
@@ -43,13 +69,12 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
             <Flex style={{ flex: 1 }}>
-                <Button type='text' icon={<Sidebar></Sidebar>} onClick={() => {
+                <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);
                 }}></Button>
             </Flex>
             <Flex>
                 <Button type='text' icon={<SettingOutlined onClick={() => {
-                    // navigate('/settings');
                     let currentUrl = window.location.pathname;
                     services.openUrl(currentUrl + '/settings');
                 }} />}></Button>
@@ -75,7 +100,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 padding: '4px'
                 // overflowY: 'auto'
             }} direction='column'>
-                <DocumentsApp data={documents}></DocumentsApp>
+                <DocumentsApp data={documents} onRefresh={self.current.refresh} onArchive={self.current.archive}></DocumentsApp>
             </Flex>
         </Flex>
     </Flex>

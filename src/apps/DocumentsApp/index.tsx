@@ -3,6 +3,8 @@ import { Flex, useUpdate } from "../../natived";
 import { ImportFileApp } from "../ImportFileApp";
 import useMessage from "antd/es/message/useMessage";
 import { Button, Table, TableColumnsType } from "antd";
+import { ReloadOutlined } from "@ant-design/icons";
+import ArchiveSvg from "../../svgs/Archive.svg?react";
 
 export interface IDocumentsAppRef {
 
@@ -10,6 +12,8 @@ export interface IDocumentsAppRef {
 
 export interface IDocumentsAppProps {
     data: IDocumentRecord[];
+    onRefresh?: () => void;
+    onArchive?: () => void;
 }
 
 export interface IDocumentRecord {
@@ -125,8 +129,14 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
         ];
         return <Flex direction='column' spacing={'4px'}>
             {contextHolder}
-            <Flex spacing={'8px'}>
-                <ImportFileApp messageApi={messageApi} />
+            <Flex>
+                <Flex style={{ flex: 1 }} spacing={'8px'}>
+                    <ImportFileApp messageApi={messageApi} />
+                    <Button type='text' icon={<ArchiveSvg />} onClick={props.onArchive}>{"Archive"}</Button>
+                </Flex>
+                <Flex>
+                    <Button type='text' icon={<ReloadOutlined />} onClick={props.onRefresh}>{"Refresh"}</Button>
+                </Flex>
             </Flex>
             <Table dataSource={props.data} columns={columns} ></Table>
         </Flex>
