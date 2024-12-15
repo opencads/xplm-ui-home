@@ -1,6 +1,7 @@
 import { Button } from "antd";
 import { ButtonType } from "antd/es/button";
 import React, { forwardRef } from "react";
+import ImportSvg from "../svgs/Import.svg?react"
 
 export interface IImportFileButtonProps {
     handleClick?: (e: React.ChangeEvent<HTMLInputElement>) => void,
@@ -25,7 +26,7 @@ export const ImportFileButton = forwardRef<IImportFileButtonRef, IImportFileButt
 
     return (
         <div>
-            <Button type={props.type} onClick={handleButtonClick}>
+            <Button icon={<ImportSvg></ImportSvg>} type={props.type ?? 'text'} onClick={handleButtonClick}>
                 {props.children}
             </Button>
             <input

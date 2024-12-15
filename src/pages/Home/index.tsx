@@ -71,13 +71,13 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <Flex style={{ flex: 1 }}>
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);
-                }}></Button>
+                }}>{"侧边栏"}</Button>
             </Flex>
             <Flex>
                 <Button type='text' icon={<SettingOutlined onClick={() => {
                     let currentUrl = window.location.pathname;
                     services.openUrl(currentUrl + '/settings');
-                }} />}></Button>
+                }} />}>{"设置"}</Button>
             </Flex>
         </Flex>
         {/* 主体 */}
