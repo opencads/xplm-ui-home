@@ -63,3 +63,12 @@ export interface PluginInterface {
     Name: string,
     Entry: string
 }
+
+
+export interface ScanResult {
+    untrackedFiles: string[],
+    documents: DocumentInterface[],
+    modifiedDocuments: DocumentInterface[],
+    missingDocuments: DocumentInterface[],
+}
+

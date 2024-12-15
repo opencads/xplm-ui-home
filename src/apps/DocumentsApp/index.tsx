@@ -14,19 +14,64 @@ export interface IDocumentsAppProps {
 
 export interface IDocumentRecord {
     name: string;
+    fileName: string;
     number: string;
     partNumber: string;
-    state: 'new' | 'checkedIn' | 'checkedOut';
+    remoteState: 'new' | 'checkedIn' | 'checkedOut';
+    workspaceState: 'untracked' | 'modified' | 'archived';
+    remoteLastModifiedTime: string;
+    localLastModifiedTime: string;
     lifeCycle: string;
+    remoteAttributes: {
+        key: string,
+        value: string,
+        type: string
+    }[];
+    localAttributes: {
+        key: string,
+        value: string,
+        type: string
+    }[];
+    remoteChildren: {
+        fileName: string,
+        name: string,
+        number: string,
+        partNumber: string
+    }[];
+    localChildren: {
+        fileName: string,
+        name: string,
+        number: string,
+        partNumber: string
+    }[];
 }
 
 export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
     (props, ref) => {
+        const renderRemoteState = (state: IDocumentRecord["remoteState"]) => {
+            if (state == 'new') {
+                return <span style={{ fontSize: '10px', color: '#f5222d' }}>New</span>;
+            } else if (state == 'checkedIn') {
+                return <span style={{ fontSize: '10px', color: '#389e0d' }}>Checked In</span>;
+            } else {
+                return <span style={{ fontSize: '10px', color: '#1890ff' }}>Checked Out</span>;
+            }
+        };
+        const renderLocalState = (state: IDocumentRecord["workspaceState"]) => {
+            if (state == 'untracked') {
+                return <span style={{ fontSize: '10px', color: '#f5222d' }}>Untracked</span>;
+            } else if (state == 'modified') {
+                return <span style={{ fontSize: '10px', color: '#389e0d' }}>Modified</span>;
+            } else {
+                return <span style={{ fontSize: '10px', color: '#1890ff' }}>Archived</span>;
+            }
+        };
         const [messageApi, contextHolder] = useMessage();
         const columns: TableColumnsType<IDocumentRecord> = [
             {
                 key: 'No.',
                 title: 'No.',
+                fixed: 'left',
                 render: (text, record, index) => {
                     return index + 1;
                 }
@@ -45,7 +90,12 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             }, {
                 key: 'state',
                 title: 'State',
-                dataIndex: 'state'
+                render: (text, record) => {
+                    return <Flex>
+                        {renderRemoteState(record.remoteState)}
+                        {renderLocalState(record.workspaceState)}
+                    </Flex>
+                }
             }, {
                 key: 'lifeCycle',
                 title: 'Life Cycle',
@@ -54,6 +104,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             {
                 key: 'operations',
                 title: 'Operations',
+                fixed: 'right',
                 render: (text, record) => {
                     return <Flex spacing={'4px'}>
                         <Button type='text'>{"Check In"}</Button>
