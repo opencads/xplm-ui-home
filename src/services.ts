@@ -43,6 +43,22 @@ export class services {
     public static FormatUrl(url: string) {
         return `http://localhost:19799${url}`;
     }
+    public static FormatUIUrl(url: string) {
+        return `http://localhost:12332${url}`;
+    }
+
+    public static async openUrl(url:string){
+        ///api/v1/app/open/
+        let response = await axios.post(services.FormatUIUrl("/api/v1/app/open"), {
+            url: url,
+        });
+        if (response.status === 200) {
+            return true;
+        } else {
+            throw new Error(`${response.status}`);
+        }
+    }
+
     public static async import(data: ImportInterface[]) {
         let url = services.FormatUrl("/api/v1/xplm/import");
         let response = await axios.post(url, {

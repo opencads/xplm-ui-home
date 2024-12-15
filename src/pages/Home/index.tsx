@@ -49,7 +49,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             </Flex>
             <Flex>
                 <Button type='text' icon={<SettingOutlined onClick={() => {
-                    navigate('/settings');
+                    // navigate('/settings');
+                    let currentUrl = window.location.pathname;
+                    services.openUrl(currentUrl + '/settings');
                 }} />}></Button>
             </Flex>
         </Flex>
