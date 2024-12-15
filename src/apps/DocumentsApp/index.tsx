@@ -18,27 +18,30 @@ export interface IDocumentRecord {
     number: string;
     partNumber: string;
     remoteState: 'new' | 'checkedIn' | 'checkedOut';
-    workspaceState: 'untracked' | 'modified' | 'archived';
     remoteLastModifiedTime: string;
-    localLastModifiedTime: string;
     lifeCycle: string;
+    local: {
+        workspaceState: 'untracked' | 'modified' | 'archived';
+        localFilePath: string;
+        localAttributes: {
+            key: string,
+            value: string,
+            type: string
+        }[];
+        localChildren: {
+            fileName: string,
+            name: string,
+            number: string,
+            partNumber: string
+        }[];
+        localLastModifiedTime: string;
+    };
     remoteAttributes: {
         key: string,
         value: string,
         type: string
     }[];
-    localAttributes: {
-        key: string,
-        value: string,
-        type: string
-    }[];
     remoteChildren: {
-        fileName: string,
-        name: string,
-        number: string,
-        partNumber: string
-    }[];
-    localChildren: {
         fileName: string,
         name: string,
         number: string,
@@ -57,7 +60,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 return <span style={{ fontSize: '10px', color: '#1890ff' }}>Checked Out</span>;
             }
         };
-        const renderLocalState = (state: IDocumentRecord["workspaceState"]) => {
+        const renderLocalState = (state: IDocumentRecord["local"]["workspaceState"]) => {
             if (state == 'untracked') {
                 return <span style={{ fontSize: '10px', color: '#f5222d' }}>Untracked</span>;
             } else if (state == 'modified') {
@@ -93,7 +96,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 render: (text, record) => {
                     return <Flex>
                         {renderRemoteState(record.remoteState)}
-                        {renderLocalState(record.workspaceState)}
+                        {renderLocalState(record.local.workspaceState)}
                     </Flex>
                 }
             }, {
