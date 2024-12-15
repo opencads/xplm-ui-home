@@ -50,7 +50,7 @@ export class services {
     public static async openUrl(url:string){
         ///api/v1/app/open/
         let response = await axios.post(services.FormatUIUrl("/api/v1/app/open"), {
-            url: url,
+            url: window.location.origin+url,
         });
         if (response.status === 200) {
             return true;
