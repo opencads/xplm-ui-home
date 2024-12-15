@@ -170,14 +170,6 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
         backgroundColor: 'rgb(247, 247, 247)',
     }} spacing={'4px'}>
         <Spin spinning={loading} fullscreen></Spin>
-        <Flex>
-            <Flex style={{ flex: 1 }}></Flex>
-            <Flex>
-                <Button type='text' icon={<HomeOutlined />} onClick={() => {
-                    navigate('/');
-                }}></Button>
-            </Flex>
-        </Flex>
         <Flex direction='column' style={{
             flex: 1,
             height: 0
