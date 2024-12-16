@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { InjectClass, InjectStyle } from "../../natived";
 
 
@@ -17,6 +17,7 @@ background: linear-gradient(
 `);
 export interface IResizeButtonProps {
     onDeltaChange?: (width: number) => void,
+    style?:React.CSSProperties
 }
 
 export interface IResizeButtonRef {
@@ -74,5 +75,6 @@ export const ResizeButton = forwardRef<IResizeButtonRef, IResizeButtonProps>((pr
         ref={separatorRef}
         role="separator"
         onMouseDown={handleMouseDown}
+        style={props.style}
     ></div>
 });

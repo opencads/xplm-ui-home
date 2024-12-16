@@ -14,6 +14,7 @@ export interface IDocumentsAppProps {
     data: IDocumentRecord[];
     onRefresh?: () => void;
     onArchive?: () => void;
+    onRecordClick?: (record: IDocumentRecord) => void;
 }
 
 export interface IDocumentRecord {
@@ -138,7 +139,11 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                     <Button type='text' icon={<ReloadOutlined />} onClick={props.onRefresh}>{"Refresh"}</Button>
                 </Flex>
             </Flex>
-            <Table dataSource={props.data} columns={columns} ></Table>
+            <Table onRow={(record) => {
+                return {
+                    onClick: () => props.onRecordClick?.(record)
+                }
+            }} dataSource={props.data} columns={columns} ></Table>
         </Flex>
     },
 );

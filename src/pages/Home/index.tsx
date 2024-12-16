@@ -8,6 +8,8 @@ import { services } from "../../services";
 import SidebarSvg from "../../svgs/Sidebar.svg?react";
 import Icon from "@ant-design/icons/lib/components/Icon";
 import { IImportInput } from "../../interfaces";
+import { ResizeButton } from "../../uilibs/ResizeButton";
+import { IMarkdownLine, MarkdownApp, MarkdownLine } from "../../apps/MarkdownApp";
 
 
 export interface IHomeProps {
@@ -23,6 +25,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const [documents, updateDocuments, documentRef] = useUpdate<IDocumentRecord[]>([]);
     const [sidebarVisible, updateSidebarVisible, sidebarVisibleRef] = useUpdate(false);
     const [loading, updateLoading, loadingRef] = useUpdate(false);
+    const [detailsDelta, updateDetailsDelta, detailsDeltaRef] = useUpdate(0);
+    const [showDetails, updateShowDetails] = useUpdate(false);
+    const [detailsMarkdownLines, updateDetailsMarkdownLines, detailsMarkdownLinesRef] = useUpdate<IMarkdownLine[]>([]);
     let navigate = useNavigate();
     const self = useRef<IHomeRef>({
         refresh: async (showLoading: boolean) => {
@@ -67,6 +72,41 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     useEffect(() => {
         self.current?.refresh(true);
     }, []);
+    const createDetails = (record: IDocumentRecord) => {
+        let result = [] as IMarkdownLine[];
+        result.push(`## ${record.name}`);
+        if (record.remoteAttributes.length > 0) {
+            result.push(`### Remote Attributes`);
+            let attributesCard = {
+                type: 'card',
+                children: []
+            } as MarkdownLine;
+            result.push(attributesCard);
+            for (let attribute of record.remoteAttributes) {
+                attributesCard.children?.push({
+                    type: 'line-text',
+                    text: attribute.key,
+                    defaultValue: attribute.value
+                });
+            }
+        }
+        if (record.local?.localAttributes.length > 0) {
+            result.push(`### Local Attributes`);
+            let attributesCard = {
+                type: 'card',
+                children: []
+            } as MarkdownLine;
+            result.push(attributesCard);
+            for (let attribute of record.local?.localAttributes) {
+                attributesCard.children?.push({
+                    type: 'line-text',
+                    text: attribute.key,
+                    defaultValue: attribute.value
+                });
+            }
+        }
+        return result;
+    };
     return <Flex style={{
         ...props.style,
         backgroundColor: '#f4f4f4'
@@ -106,7 +146,20 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 padding: '4px'
                 // overflowY: 'auto'
             }} direction='column'>
-                <DocumentsApp data={documents} onRefresh={() => self.current.refresh(true)} onArchive={() => self.current.archive(true)}></DocumentsApp>
+                <DocumentsApp onRecordClick={record => {
+                    updateDetailsMarkdownLines(createDetails(record));
+                    updateShowDetails(true);
+                }} data={documents} onRefresh={() => self.current.refresh(true)} onArchive={() => self.current.archive(true)}></DocumentsApp>
+            </Flex>
+            <ResizeButton style={{
+                display: showDetails ? 'flex' : 'none'
+            }} onDeltaChange={updateDetailsDelta}></ResizeButton>
+            <Flex style={{
+                display: showDetails ? 'flex' : 'none',
+                margin: '0px 0px 0px 2px',
+                width: `${200 - detailsDelta}px`
+            }}>
+                <MarkdownApp markdownLines={detailsMarkdownLines}></MarkdownApp>
             </Flex>
         </Flex>
     </Flex>

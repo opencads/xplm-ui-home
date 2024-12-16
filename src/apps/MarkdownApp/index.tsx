@@ -2,15 +2,18 @@ import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } f
 import { Flex, InjectClass, useUpdate } from "../../natived";
 import { Button, Card, Input, List, Select, Switch, Table, TableColumnsType, Tabs } from "antd";
 import { ResizeButton } from "../../uilibs/ResizeButton";
-import { IMarkdownLine, MarkdownLine } from "../MarkdownApp";
 
-export interface IConfigAppProps {
+export interface IMarkdownAppProps {
     markdownLines?: IMarkdownLine[],
     style?: React.CSSProperties,
+    contentStyle?: React.CSSProperties,
+    currentTab?: string,
+    onTabChange?: (key: string) => void
 }
 
-export interface IConfigAppRef {
-    getConfig: () => { [key: string]: any }
+export interface IMarkdownAppRef {
+    getData: () => { [key: string]: any },
+    renderItem: (items: IMarkdownLine[], item: IMarkdownLine, path: string, index: number) => JSX.Element | undefined
 }
 
 const tabClass = InjectClass(`
@@ -33,33 +36,46 @@ background: linear-gradient(
 );
 `);
 
-const findMarkdownLine = (lines: IMarkdownLine[], predicate: (value: MarkdownLine) => boolean): MarkdownLine | undefined => {
-    let result = lines?.find(line => typeof (line) == 'object' && predicate(line as MarkdownLine));
-    if (result != undefined) return result as MarkdownLine;
-    return undefined;
+export interface MarkdownLine {
+    valueKey?: string,
+    type: '#' | '##' | '###' |
+    'card' | 'line' | 'tab' |
+    'line-switch' | 'line-input' | 'line-select' |
+    'line-text' | 'list' | 'table'
+    text?: string,
+    icon?: string,
+    defaultValue?: any,
+    listOperations?: {
+        add?: boolean,
+        remove?: boolean
+    },
+    tableOptions?: {
+        add?: boolean,
+        remove?: boolean,
+        defaultType?: 'input' | 'text',
+        keys: (string | {
+            key: string,
+            title?: string,
+            type: 'text' | 'input' | 'select'
+            selectOptions?: string[],
+            newValue?: any,
+            columnWidth?: number | string,
+            selectWidth?: number | string,
+        })[]
+    },
+    selectOptions?: {
+        options: string[]
+    }
+    children?: IMarkdownLine[]
 }
 
-export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref) => {
+export type IMarkdownLine = MarkdownLine | string;
+
+export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props, ref) => {
     const [data, updateData, dataRef] = useUpdate<{ [key: string]: any }>({});
-    const [leftDelta, setLeftDelta] = useUpdate<number>(0);
-    const [currentTab, setCurrentTab, currentTabRef] = useUpdate<string | undefined>(undefined);
     const renderIcon = (icon: string) => {
         return <div></div>
     };
-
-    const self = useRef<IConfigAppRef>({
-        getConfig: () => {
-            return dataRef.current;
-        }
-    });
-
-    useImperativeHandle(ref, () => self.current);
-
-    useEffect(() => {
-        if (currentTab == undefined || currentTab == "") {
-            setCurrentTab(findMarkdownLine(props.markdownLines ?? [], item => item.type == 'tab')?.text);
-        }
-    }, [props.markdownLines]);
 
     const renderItem = (items: IMarkdownLine[], item: IMarkdownLine, path: string, index: number): JSX.Element | undefined => {
         if (typeof (item) == 'string') {
@@ -123,7 +139,7 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
         else if (item.type == "tab") {
             let key = `${path}/${item.text}`;
             return <Flex style={{
-                backgroundColor: item.text == currentTab ? '#E5E5E5' : undefined,
+                backgroundColor: item.text == props.currentTab ? '#E5E5E5' : undefined,
                 border: '2px solid transparent',
                 borderRadius: '2px',
                 cursor: 'pointer',
@@ -131,9 +147,9 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 fontFamily: `"system-ui", sans-serif`,
                 padding: '6px 10px 6px 0px'
             }} key={key} onClick={() => {
-                setCurrentTab(item.text ?? "");
+                props.onTabChange && props.onTabChange(item.text ?? "");
             }}>
-                <div className={item.text == currentTab ? hilightBarClass : undefined} style={{
+                <div className={item.text == props.currentTab ? hilightBarClass : undefined} style={{
                     width: '3px'
                 }}></div>
                 <Flex className={tabClass}>
@@ -203,6 +219,59 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                     updateData(newData);
                     console.log(dataRef.current);
                 }}></Input>
+            </Flex>
+        }
+        else if (item.type == 'line-select') {
+            if (item.valueKey == undefined) {
+                throw `valueKey is undefined, ${item}`;
+            }
+            let key = `${path}/select ${item.valueKey}`;
+            let tempValue = data[item.valueKey];
+            if (tempValue == undefined && item.defaultValue) {
+                tempValue = item.defaultValue;
+                let newData = { ...data };
+                newData[item.valueKey] = tempValue;
+                updateData(newData);
+            }
+            return <Flex key={key}>
+                <Flex verticalCenter style={{
+                    flex: 1,
+                    padding: '0px 10px 0px 0px'
+                }}>
+                    {item.icon == undefined ? undefined : renderIcon(item.icon)}
+                    <span>{item.text}</span>
+                </Flex>
+                <Select value={data[item.valueKey]} onChange={e => {
+                    if (item.valueKey == undefined) {
+                        throw `valueKey is undefined, ${item}`;
+                    }
+                    let newData = { ...data };
+                    newData[item.valueKey] = e;
+                    updateData(newData);
+                }} options={item.selectOptions?.options?.map(e => {
+                    return {
+                        value: e,
+                        label: e
+                    }
+                })}></Select>
+            </Flex>
+        }
+        else if (item.type == 'line-text') {
+            if (item.valueKey == undefined) {
+                throw `valueKey is undefined, ${item}`;
+            }
+            let key = `${path}/text ${item.valueKey}`;
+            return <Flex key={key}>
+                <div style={{
+                    flex: 1,
+                    padding: '0px 10px',
+                    textWrap: 'nowrap',
+                }}>
+                    {item.text}
+                </div>
+                <div>
+                    {item.defaultValue}
+                </div>
             </Flex>
         }
         else if (item.type == 'list') {
@@ -447,9 +516,16 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
 
         }
     };
-    const getCurrentTabPropsMarkdownLine = () => {
-        return findMarkdownLine(props.markdownLines ?? [], item => item.text == currentTab);
-    };
+
+    const self = useRef<IMarkdownAppRef>({
+        getData: () => {
+            return dataRef.current;
+        },
+        renderItem: renderItem
+    });
+
+    useImperativeHandle(ref, () => self.current);
+
     const getMarkdownLineText = (item: IMarkdownLine) => {
         if (typeof item == 'string') {
             return item;
@@ -458,37 +534,16 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
             return item.text ?? "";
         }
     };
-
-    return <Flex direction='row'
-        style={{
-            backgroundColor: 'rgb(247, 247, 247)',
-            ...props.style
-        }}>
-        <Flex direction='column' style={{
-            width: `calc(${200}px + ${leftDelta}px)`,
-            padding: '30px 25px 0px 50px'
-        }} spacing={'4px'}>
-            {props.markdownLines?.map((item, itemIndex) => {
-                return renderItem(props.markdownLines ?? [], item, "", itemIndex);
-            })}
-        </Flex>
-        <ResizeButton onDeltaChange={setLeftDelta}></ResizeButton>
-        <Flex style={{
-            flex: 1,
-            overflowY: 'auto'
-        }} direction='column'>
-            <Flex spacing={'4px'} style={{
-                paddingInlineStart: '50px',
-                paddingBlockStart: '50px',
-                paddingInlineEnd: '50px',
-                paddingBlockEnd: '50px',
-            }} direction='column'>
-                {
-                    getCurrentTabPropsMarkdownLine()?.children?.map((item, itemIndex) => {
-                        return renderItem(props.markdownLines ?? [], item, getMarkdownLineText(item), itemIndex);
-                    })
-                }
-            </Flex>
+    return <Flex style={{
+        backgroundColor: 'rgb(247, 247, 247)',
+        ...props.style
+    }} direction='column'>
+        <Flex spacing={'4px'} style={props.contentStyle} direction='column'>
+            {
+                props.markdownLines?.map((item, itemIndex) => {
+                    return renderItem(props.markdownLines ?? [], item, getMarkdownLineText(item), itemIndex);
+                })
+            }
         </Flex>
     </Flex>
 });
