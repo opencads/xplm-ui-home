@@ -1,10 +1,11 @@
 import { forwardRef, useEffect, useRef } from "react";
-import { ConfigApp, IConfigAppRef, IConfigMarkdownLine } from "../../apps/ConfigApp";
+import { ConfigApp, IConfigAppRef } from "../../apps/ConfigApp";
 import { Flex, useUpdate } from "../../natived";
 import { Button, Spin } from "antd";
 import { services } from "../../services";
 import { HomeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { IMarkdownLine } from "../../apps/MarkdownApp";
 
 export interface ISettingsProps {
 
@@ -16,7 +17,7 @@ export interface ISettingsRef {
 
 export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) => {
     const navigate = useNavigate();
-    const [markdownLines, setMarkdownLines] = useUpdate<IConfigMarkdownLine[]>([]);
+    const [markdownLines, setMarkdownLines] = useUpdate<IMarkdownLine[]>([]);
     const defaultConfig = useRef<any>(undefined);
     const configRef = useRef<IConfigAppRef | null>(null);
     const [loading, updateLoading, loadingRef] = useUpdate(false);
