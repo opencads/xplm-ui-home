@@ -71,7 +71,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         ...props.style,
         backgroundColor: '#f4f4f4'
     }} direction='column'>
-        <Spin spinning={loading}></Spin>
+        <Spin spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
             <Flex style={{ flex: 1 }}>
@@ -106,7 +106,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 padding: '4px'
                 // overflowY: 'auto'
             }} direction='column'>
-                <DocumentsApp data={documents} onRefresh={()=>self.current.refresh(true)} onArchive={()=>self.current.archive(true)}></DocumentsApp>
+                <DocumentsApp data={documents} onRefresh={() => self.current.refresh(true)} onArchive={() => self.current.archive(true)}></DocumentsApp>
             </Flex>
         </Flex>
     </Flex>
