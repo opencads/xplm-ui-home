@@ -435,6 +435,7 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
                         key: itemKey.key,
                         title: itemKey.title ?? itemKey.key,
                         width: itemKeyObject.columnWidth,
+                        minWidth: (itemKey.title ?? itemKey.key).length * 10,
                         render: (recordText, record, recordIndex) => {
                             if (itemKeyObject.type == 'select') {
                                 return <Select style={{
