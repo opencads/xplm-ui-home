@@ -155,15 +155,21 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     }} direction='column'>
         <Spin spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
-        <Flex className={dragClass} onMouseDown={e => {
-            services.mouseDownDrag();
-            e.preventDefault();
-            e.stopPropagation();
-        }} direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
-            <Flex style={{ flex: 1 }}>
+        <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
+            <Flex>
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);
                 }}>{"Sidebar"}</Button>
+            </Flex>
+            <Flex className={dragClass} onMouseDown={e => {
+                services.mouseDownDrag();
+                e.preventDefault();
+                e.stopPropagation();
+            }} style={{
+                flex: 1,
+                userSelect: 'none'
+            }}>
+
             </Flex>
             <Flex>
                 <Button type='text' icon={<SettingOutlined />} onClick={() => {
