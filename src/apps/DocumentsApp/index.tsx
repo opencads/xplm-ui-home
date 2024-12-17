@@ -97,15 +97,17 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             }, {
                 key: 'name',
                 title: 'Name',
-                dataIndex: 'name'
+                dataIndex: 'name',
             }, {
                 key: 'number',
                 title: 'Number',
-                dataIndex: 'number'
+                dataIndex: 'number',
+                minWidth:100
             }, {
                 key: 'partNumber',
                 title: 'Part Number',
-                dataIndex: 'partNumber'
+                dataIndex: 'partNumber',
+                minWidth:100
             }, {
                 key: 'state',
                 title: 'State',
@@ -119,10 +121,6 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 key: 'lifeCycle',
                 title: 'Life Cycle',
                 dataIndex: 'lifeCycle'
-            },
-            {
-                key: 'other',
-                title: ''
             },
             {
                 key: 'operations',
