@@ -521,7 +521,7 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
         },
         renderItem: renderItem,
         clearData: () => {
-            dataRef.current = {};
+            updateData({});
         }
     });
 
