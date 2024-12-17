@@ -91,6 +91,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 key: 'No.',
                 title: 'No.',
                 fixed: 'left',
+                width: '3em',
                 render: (text, record, index) => {
                     return index + 1;
                 }
@@ -98,19 +99,21 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 key: 'name',
                 title: 'Name',
                 dataIndex: 'name',
+                width: '8em',
             }, {
                 key: 'number',
                 title: 'Number',
                 dataIndex: 'number',
-                width: '16em'
+                width: '8em'
             }, {
                 key: 'partNumber',
                 title: 'Part Number',
                 dataIndex: 'partNumber',
-                width: '16em'
+                width: '12em'
             }, {
                 key: 'state',
                 title: 'State',
+                width: '6em',
                 render: (text, record) => {
                     return <Flex spacing={'4px'}>
                         {renderRemoteState(record.remoteState)}
@@ -121,7 +124,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 key: 'lifeCycle',
                 title: 'Life Cycle',
                 dataIndex: 'lifeCycle',
-                width:'8em'
+                width: '8em'
             },
             {
                 key: 'operations',
