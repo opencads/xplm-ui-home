@@ -58,10 +58,29 @@ export class services {
             throw new Error(`${response.status}`);
         }
     }
+    
     public static async mouseDownDrag() {
         let webapplication = (window as any).webapplication;
         if (webapplication) {
             await axios.post(services.FormatUIUrl("/api/v1/app/mousedowndrag"), {
+                id: webapplication.id
+            });
+        }
+    }
+
+    public static async close() {
+        let webapplication = (window as any).webapplication;
+        if (webapplication) {
+            await axios.post(services.FormatUIUrl("/api/v1/app/close"), {
+                id: webapplication.id
+            });
+        }
+    }
+
+    public static async minimize() {
+        let webapplication = (window as any).webapplication;
+        if (webapplication) {
+            await axios.post(services.FormatUIUrl("/api/v1/app/minimize"), {
                 id: webapplication.id
             });
         }

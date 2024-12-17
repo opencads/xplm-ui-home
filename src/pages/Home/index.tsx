@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Flex, InjectClass, useUpdate } from "../../natived";
 import { Button, Spin } from "antd";
-import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
+import { CloseOutlined, MinusOutlined, SettingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { DocumentsApp, IDocumentRecord } from "../../apps/DocumentsApp";
 import { services } from "../../services";
@@ -171,11 +171,14 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             }}>
 
             </Flex>
-            <Flex>
+            <Flex spacing={'4px'}>
                 <Button type='text' icon={<SettingOutlined />} onClick={() => {
                     let currentUrl = window.location.pathname;
                     services.openUrl(currentUrl + '/settings');
                 }}>{"Settings"}</Button>
+                <Button type='text' icon={<CloseOutlined />} onClick={() => {
+                    services.close();
+                }}>{"Close"}</Button>
             </Flex>
         </Flex>
         {/* 主体 */}
@@ -229,7 +232,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 <Flex direction='row'>
                     <Flex style={{ flex: 1 }}></Flex>
                     <Flex>
-                        <Button type='text' icon={<CloseOutlined />} onClick={() => {
+                        <Button type='text' icon={<MinusOutlined />} onClick={() => {
                             updateShowDetails(false);
                         }}></Button>
                     </Flex>
