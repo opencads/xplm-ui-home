@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import { Flex, useUpdate } from "../../natived";
+import { Flex, InjectClass, useUpdate } from "../../natived";
 import { Button, Spin } from "antd";
 import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,9 @@ import { IImportInput } from "../../interfaces";
 import { ResizeButton } from "../../uilibs/ResizeButton";
 import { IMarkdownAppRef, IMarkdownLine, MarkdownApp, MarkdownLine } from "../../apps/MarkdownApp";
 
+const dragClass = InjectClass(`
+-webkit-app-region: drag;
+`);
 
 export interface IHomeProps {
     style?: React.CSSProperties;
@@ -69,7 +72,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             if (showLoading) updateLoading(false);
         }
     });
-    const titleRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => self.current);
     useEffect(() => {
         self.current?.refresh(true);
@@ -147,38 +149,17 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }
         return result;
     };
-    useEffect(() => {
-        const ref = titleRef.current;
-        if (ref) {
-            console.log('titleRef is not null');
-            // 修改样式
-            ref.style.setProperty('-webkit-app-region', 'drag');
-
-            // 添加事件监听
-            const handleMouseDown = async (evt: MouseEvent) => {
-                await services.mouseDownDrag();
-                evt.preventDefault();
-                evt.stopPropagation();
-            };
-
-            ref.addEventListener('mousedown', handleMouseDown);
-
-            // 清理函数，移除事件监听器
-            return () => {
-                ref.removeEventListener('mousedown', handleMouseDown);
-            };
-        }
-        else {
-            console.log('titleRef is null');
-        }
-    }, [titleRef]); // 只在挂载时执行
     return <Flex style={{
         ...props.style,
         backgroundColor: '#f4f4f4'
     }} direction='column'>
         <Spin spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
-        <Flex ref={titleRef} direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
+        <Flex className={dragClass} onMouseDown={e => {
+            services.mouseDownDrag();
+            e.preventDefault();
+            e.stopPropagation();
+        }} direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
             <Flex style={{ flex: 1 }}>
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);
