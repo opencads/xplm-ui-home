@@ -184,7 +184,10 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 backgroundColor: '#fff',
                 padding: '4px'
             }} direction='column'>
-                <DocumentsApp ref={markdownAppRef} onRecordClick={record => {
+                <DocumentsApp style={{
+                    flex: 1,
+                    height: 0
+                }} ref={markdownAppRef} onRecordClick={record => {
                     updateDetailsMarkdownLines(createDetails(record));
                     updateShowDetails(true);
                 }} data={documents} onRefresh={() => self.current.refresh(true)} onArchive={async () => {

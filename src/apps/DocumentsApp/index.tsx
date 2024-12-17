@@ -12,6 +12,7 @@ export interface IDocumentsAppRef {
 }
 
 export interface IDocumentsAppProps {
+    style?: React.CSSProperties;
     data: IDocumentRecord[];
     onRefresh?: () => void;
     onArchive?: () => void;
@@ -129,9 +130,12 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                         <Button type='text'>{"Check Out"}</Button>
                     </Flex>
                 }
+            }, {
+                key: 'other',
+                title: ''
             }
         ];
-        return <Flex direction='column' spacing={'4px'}>
+        return <Flex direction='column' spacing={'4px'} style={props.style}>
             {contextHolder}
             <Flex>
                 <Flex style={{ flex: 1 }} spacing={'8px'}>

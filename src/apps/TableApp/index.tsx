@@ -112,7 +112,7 @@ export const TableApp = forwardRef<ITableRef, ITableProps>((props, ref) => {
     }} ref={tableContainerRef}>
         <AntdTable {...props} scroll={{
             y: tableBodyHeight,
-            x: props.scroll?.x
+            x: props.scroll?.x ?? 'max-content'
         }} style={{
             ...props.style
         }} pagination={getPagination()}>
