@@ -110,6 +110,40 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 }]
             });
         }
+        if (record.remoteChildren.length > 0) {
+            result.push(`### Remote Children`);
+            result.push({
+                type: 'card',
+                children: [{
+                    type: 'table',
+                    valueKey: 'localChildren',
+                    tableOptions: {
+                        add: false,
+                        remove: false,
+                        keys: ["fileName", "name", "number", "partNumber"],
+                        defaultType: 'text'
+                    },
+                    defaultValue: record.remoteChildren
+                }]
+            });
+        }
+        if (record.local?.localChildren.length > 0) {
+            result.push(`### Local Children`);
+            result.push({
+                type: 'card',
+                children: [{
+                    type: 'table',
+                    valueKey: 'localChildren',
+                    tableOptions: {
+                        add: false,
+                        remove: false,
+                        keys: ["fileName", "name", "number", "partNumber"],
+                        defaultType: 'text'
+                    },
+                    defaultValue: record.local?.localChildren
+                }]
+            });
+        }
         return result;
     };
     return <Flex style={{
