@@ -154,7 +154,19 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 <DocumentsApp ref={markdownAppRef} onRecordClick={record => {
                     updateDetailsMarkdownLines(createDetails(record));
                     updateShowDetails(true);
-                }} data={documents} onRefresh={() => self.current.refresh(true)} onArchive={() => self.current.archive(true)}></DocumentsApp>
+                }} data={documents} onRefresh={() => self.current.refresh(true)} onArchive={async () => {
+                    updateLoading(true);
+                    try {
+                        await self.current.archive(false);
+                        await self.current.refresh(false);
+                    }
+                    catch {
+
+                    }
+                    updateLoading(false);
+                }} onImported={async () => {
+                    await self.current.refresh(false);
+                }}></DocumentsApp>
             </Flex>
             <ResizeButton style={{
                 display: showDetails ? 'flex' : 'none'

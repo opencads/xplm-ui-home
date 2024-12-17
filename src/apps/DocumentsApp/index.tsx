@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { Flex, useUpdate } from "../../natived";
 import { ImportFileApp } from "../ImportFileApp";
 import useMessage from "antd/es/message/useMessage";
-import { Button, Table, TableColumnsType, Tag } from "antd";
+import { Button, Spin, Table, TableColumnsType, Tag } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import ArchiveSvg from "../../svgs/Archive.svg?react";
 
@@ -15,6 +15,8 @@ export interface IDocumentsAppProps {
     onRefresh?: () => void;
     onArchive?: () => void;
     onRecordClick?: (record: IDocumentRecord) => void;
+    showLoading?: (loading: boolean) => Promise<void>;
+    onImported?: () => Promise<void>;
 }
 
 export interface IDocumentRecord {
@@ -132,7 +134,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             {contextHolder}
             <Flex>
                 <Flex style={{ flex: 1 }} spacing={'8px'}>
-                    <ImportFileApp messageApi={messageApi} />
+                    <ImportFileApp onImported={props.onImported} showLoading={props.showLoading} messageApi={messageApi} />
                     <Button type='text' icon={<ArchiveSvg />} onClick={props.onArchive}>{"Archive"}</Button>
                 </Flex>
                 <Flex>

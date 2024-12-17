@@ -6,13 +6,16 @@ import { IImportInput } from "../../interfaces";
 import { Path } from "../../natived";
 
 export interface IImportFileAppProps {
-    messageApi: MessageInstance
+    messageApi: MessageInstance,
+    showLoading?: (loading: boolean) => void,
+    onImported?: () => Promise<void>,
 }
 
 export interface IImportFileAppRef { }
 
 export const ImportFileApp = forwardRef<IImportFileAppRef, IImportFileAppProps>((props, ref) => {
     return <ImportFileButton handleClick={async e => {
+        props.showLoading?.(true);
         try {
             let items = [] as {
                 fileName: string,
@@ -42,9 +45,14 @@ export const ImportFileApp = forwardRef<IImportFileAppRef, IImportFileAppProps>(
                 });
             }
             await services.importFilesToWorkspace(imports);
+            if (props.onImported) {
+                await props.onImported();
+            }
+
         }
         catch (e: any) {
-            props.messageApi.error(e);
+            props.messageApi.error(e.message ?? "");
         }
+        props.showLoading?.(false);
     }}>{"Import Files"}</ImportFileButton>;
 });
