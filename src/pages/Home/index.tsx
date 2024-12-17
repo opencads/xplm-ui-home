@@ -69,6 +69,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             if (showLoading) updateLoading(false);
         }
     });
+    const titleRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => self.current);
     useEffect(() => {
         self.current?.refresh(true);
@@ -146,13 +147,34 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }
         return result;
     };
+    useEffect(() => {
+        const ref = titleRef.current;
+        if (ref) {
+            // 修改样式
+            ref.style.setProperty('-webkit-app-region', 'drag');
+
+            // 添加事件监听
+            const handleMouseDown = async (evt: MouseEvent) => {
+                await services.mouseDownDrag();
+                evt.preventDefault();
+                evt.stopPropagation();
+            };
+
+            ref.addEventListener('mousedown', handleMouseDown);
+
+            // 清理函数，移除事件监听器
+            return () => {
+                ref.removeEventListener('mousedown', handleMouseDown);
+            };
+        }
+    }, []); // 只在挂载时执行
     return <Flex style={{
         ...props.style,
         backgroundColor: '#f4f4f4'
     }} direction='column'>
         <Spin spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
-        <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
+        <Flex ref={titleRef} direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
             <Flex style={{ flex: 1 }}>
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);

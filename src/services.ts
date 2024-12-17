@@ -47,15 +47,23 @@ export class services {
         return `http://localhost:12332${url}`;
     }
 
-    public static async openUrl(url:string){
+    public static async openUrl(url: string) {
         ///api/v1/app/open/
         let response = await axios.post(services.FormatUIUrl("/api/v1/app/open"), {
-            url: window.location.origin+url,
+            url: window.location.origin + url,
         });
         if (response.status === 200) {
             return true;
         } else {
             throw new Error(`${response.status}`);
+        }
+    }
+    public static async mouseDownDrag() {
+        let webapplication = (window as any).webapplication;
+        if (webapplication) {
+            await axios.post(services.FormatUIUrl("/api/v1/app/mousedowndrag"), {
+                id: webapplication.id
+            });
         }
     }
 
