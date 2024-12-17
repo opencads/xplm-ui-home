@@ -102,12 +102,12 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 key: 'number',
                 title: 'Number',
                 dataIndex: 'number',
-                minWidth: 80
+                width: '32em'
             }, {
                 key: 'partNumber',
                 title: 'Part Number',
                 dataIndex: 'partNumber',
-                minWidth: 80
+                width: '32em'
             }, {
                 key: 'state',
                 title: 'State',
@@ -121,7 +121,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 key: 'lifeCycle',
                 title: 'Life Cycle',
                 dataIndex: 'lifeCycle',
-                minWidth: 80
+                width:'16em'
             },
             {
                 key: 'operations',
@@ -154,8 +154,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 flex: 1,
                 height: 0
             }} scroll={{
-                // x: "max-content",
-                x:'100%'
+                x: "max-content"
             }} onRow={(record) => {
                 return {
                     onClick: () => props.onRecordClick?.(record)

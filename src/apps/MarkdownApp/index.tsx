@@ -411,7 +411,7 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
                     columns.push({
                         key: itemKey,
                         title: itemKey,
-                        minWidth: itemKey.length * 10,
+                        width: '32em',
                         render: (recordText, record, recordIndex) => {
                             if (item.tableOptions?.defaultType == undefined || item.tableOptions?.defaultType == 'input') {
                                 return <Input value={record[itemKeyString]} onChange={e => {
@@ -434,8 +434,7 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
                     columns.push({
                         key: itemKey.key,
                         title: itemKey.title ?? itemKey.key,
-                        width: itemKeyObject.columnWidth,
-                        minWidth: (itemKey.title ?? itemKey.key).length * 10,
+                        width: itemKeyObject.columnWidth ?? "32em",
                         render: (recordText, record, recordIndex) => {
                             if (itemKeyObject.type == 'select') {
                                 return <Select style={{
