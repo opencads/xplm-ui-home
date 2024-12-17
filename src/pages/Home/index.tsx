@@ -171,7 +171,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         else {
             console.log('titleRef is null');
         }
-    }, []); // 只在挂载时执行
+    }, [titleRef]); // 只在挂载时执行
     return <Flex style={{
         ...props.style,
         backgroundColor: '#f4f4f4'
