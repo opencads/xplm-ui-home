@@ -5,6 +5,7 @@ import useMessage from "antd/es/message/useMessage";
 import { Button, Spin, Table, TableColumnsType, Tag } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import ArchiveSvg from "../../svgs/Archive.svg?react";
+import { TableApp } from "../TableApp";
 
 export interface IDocumentsAppRef {
 
@@ -141,13 +142,16 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                     <Button type='text' icon={<ReloadOutlined />} onClick={props.onRefresh}>{"Refresh"}</Button>
                 </Flex>
             </Flex>
-            <Table scroll={{
+            <TableApp style={{
+                flex: 1,
+                height: 0
+            }} scroll={{
                 x: "max-content",
             }} onRow={(record) => {
                 return {
                     onClick: () => props.onRecordClick?.(record)
                 }
-            }} dataSource={props.data} columns={columns} ></Table>
+            }} dataSource={props.data} columns={columns} ></TableApp>
         </Flex>
     },
 );

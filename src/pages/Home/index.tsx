@@ -181,10 +181,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <Flex style={{
                 flex: 1,
                 width: 0,
-                overflowY: 'auto',
                 backgroundColor: '#fff',
                 padding: '4px'
-                // overflowY: 'auto'
             }} direction='column'>
                 <DocumentsApp ref={markdownAppRef} onRecordClick={record => {
                     updateDetailsMarkdownLines(createDetails(record));
