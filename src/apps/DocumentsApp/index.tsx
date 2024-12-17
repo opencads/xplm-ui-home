@@ -141,7 +141,9 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                     <Button type='text' icon={<ReloadOutlined />} onClick={props.onRefresh}>{"Refresh"}</Button>
                 </Flex>
             </Flex>
-            <Table onRow={(record) => {
+            <Table scroll={{
+                x: "max-content"
+            }} onRow={(record) => {
                 return {
                     onClick: () => props.onRecordClick?.(record)
                 }
