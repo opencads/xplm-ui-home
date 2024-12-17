@@ -3,7 +3,7 @@ import { ConfigApp, IConfigAppRef } from "../../apps/ConfigApp";
 import { Flex, useUpdate } from "../../natived";
 import { Button, Spin } from "antd";
 import { services } from "../../services";
-import { HomeOutlined } from "@ant-design/icons";
+import { CloseOutlined, HomeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { IMarkdownLine } from "../../apps/MarkdownApp";
 
@@ -171,6 +171,22 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
         backgroundColor: 'rgb(247, 247, 247)',
     }} spacing={'4px'}>
         <Spin spinning={loading} fullscreen></Spin>
+        <Flex>
+            <Flex style={{
+                flex: 1
+            }}>
+
+            </Flex>
+            <Button type='text'
+                icon={<CloseOutlined></CloseOutlined>} onClick={() => {
+                    services.close();
+                }}>
+                {"Close"}
+            </Button>
+            <Flex>
+
+            </Flex>
+        </Flex>
         <Flex direction='column' style={{
             flex: 1,
             height: 0
