@@ -85,7 +85,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                     tableOptions: {
                         add: false,
                         remove: false,
-                        keys: ["key", "value"]
+                        keys: ["key", "value"],
+                        defaultType: 'text'
                     },
                     defaultValue: record.remoteAttributes
                 }]
@@ -101,7 +102,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                     tableOptions: {
                         add: false,
                         remove: false,
-                        keys: ["key", "value"]
+                        keys: ["key", "value"],
+                        defaultType: 'text'
                     },
                     defaultValue: record.local.localAttributes
                 }]
@@ -159,7 +161,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <MarkdownApp style={{
                 display: showDetails ? 'flex' : 'none',
                 margin: '0px 0px 0px 2px',
-                width: `${400 - detailsDelta}px`
+                width: `calc(50% - ${detailsDelta}px)`
             }} markdownLines={detailsMarkdownLines}></MarkdownApp>
         </Flex>
     </Flex>
