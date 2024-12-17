@@ -150,6 +150,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     useEffect(() => {
         const ref = titleRef.current;
         if (ref) {
+            console.log('titleRef is not null');
             // 修改样式
             ref.style.setProperty('-webkit-app-region', 'drag');
 
@@ -166,6 +167,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             return () => {
                 ref.removeEventListener('mousedown', handleMouseDown);
             };
+        }
+        else {
+            console.log('titleRef is null');
         }
     }, []); // 只在挂载时执行
     return <Flex style={{
