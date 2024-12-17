@@ -154,13 +154,11 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <ResizeButton style={{
                 display: showDetails ? 'flex' : 'none'
             }} onDeltaChange={updateDetailsDelta}></ResizeButton>
-            <Flex style={{
+            <MarkdownApp style={{
                 display: showDetails ? 'flex' : 'none',
                 margin: '0px 0px 0px 2px',
                 width: `${200 - detailsDelta}px`
-            }}>
-                <MarkdownApp markdownLines={detailsMarkdownLines}></MarkdownApp>
-            </Flex>
+            }} markdownLines={detailsMarkdownLines}></MarkdownApp>
         </Flex>
     </Flex>
 });

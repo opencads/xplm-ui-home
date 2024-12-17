@@ -6,7 +6,7 @@ import { ResizeButton } from "../../uilibs/ResizeButton";
 export interface IMarkdownAppProps {
     markdownLines?: IMarkdownLine[],
     style?: React.CSSProperties,
-    contentStyle?: React.CSSProperties,
+    // contentStyle?: React.CSSProperties,
     currentTab?: string,
     onTabChange?: (key: string) => void
 }
@@ -532,15 +532,11 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
         }
     };
     return <Flex style={{
-        backgroundColor: 'rgb(247, 247, 247)',
+        // backgroundColor: 'rgb(247, 247, 247)',
         ...props.style
     }} direction='column'>
-        <Flex spacing={'4px'} style={props.contentStyle} direction='column'>
-            {
-                props.markdownLines?.map((item, itemIndex) => {
-                    return renderItem(props.markdownLines ?? [], item, getMarkdownLineText(item), itemIndex);
-                })
-            }
-        </Flex>
+        {props.markdownLines?.map((item, itemIndex) => {
+            return renderItem(props.markdownLines ?? [], item, getMarkdownLineText(item), itemIndex);
+        })}
     </Flex>
 });
