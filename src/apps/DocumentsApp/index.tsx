@@ -97,7 +97,8 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             }, {
                 key: 'name',
                 title: 'Name',
-                dataIndex: 'name'
+                dataIndex: 'name',
+                minWidth: 100
             }, {
                 key: 'number',
                 title: 'Number',
