@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Flex, useUpdate } from "../../natived";
 import { Button, Spin } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import { CloseOutlined, SettingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { DocumentsApp, IDocumentRecord } from "../../apps/DocumentsApp";
 import { services } from "../../services";
@@ -158,11 +158,26 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <ResizeButton style={{
                 display: showDetails ? 'flex' : 'none'
             }} onDeltaChange={updateDetailsDelta}></ResizeButton>
-            <MarkdownApp style={{
+            <Flex style={{
+                backgroundColor: '#fff',
                 display: showDetails ? 'flex' : 'none',
                 margin: '0px 0px 0px 2px',
                 width: `calc(35% - ${detailsDelta}px)`
-            }} markdownLines={detailsMarkdownLines}></MarkdownApp>
+            }}>
+                <Flex direction='row'>
+                    <Flex style={{ flex: 1 }}></Flex>
+                    <Flex>
+                        <Button type='text' icon={<CloseOutlined />} onClick={() => {
+                            updateShowDetails(false);
+                        }}>{"Close"}</Button>
+                    </Flex>
+                </Flex>
+                <MarkdownApp style={{
+                    flex: 1,
+                    height: 0,
+                    overflowY: 'auto'
+                }} markdownLines={detailsMarkdownLines}></MarkdownApp>
+            </Flex>
         </Flex>
     </Flex>
 });
