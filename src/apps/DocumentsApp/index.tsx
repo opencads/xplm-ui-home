@@ -154,7 +154,8 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 flex: 1,
                 height: 0
             }} scroll={{
-                x: "max-content",
+                // x: "max-content",
+                x:'100%'
             }} onRow={(record) => {
                 return {
                     onClick: () => props.onRecordClick?.(record)
