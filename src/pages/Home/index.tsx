@@ -77,33 +77,35 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         result.push(`## ${record.name}`);
         if (record.remoteAttributes.length > 0) {
             result.push(`### Remote Attributes`);
-            let attributesCard = {
+            result.push({
                 type: 'card',
-                children: []
-            } as MarkdownLine;
-            result.push(attributesCard);
-            for (let attribute of record.remoteAttributes) {
-                attributesCard.children?.push({
-                    type: 'line-text',
-                    text: attribute.key,
-                    defaultValue: attribute.value
-                });
-            }
+                children: [{
+                    type: 'table',
+                    valueKey: 'remoteAttributes',
+                    tableOptions: {
+                        add: false,
+                        remove: false,
+                        keys: ["key", "value"]
+                    },
+                    defaultValue: record.remoteAttributes
+                }]
+            });
         }
         if (record.local?.localAttributes.length > 0) {
             result.push(`### Local Attributes`);
-            let attributesCard = {
+            result.push({
                 type: 'card',
-                children: []
-            } as MarkdownLine;
-            result.push(attributesCard);
-            for (let attribute of record.local?.localAttributes) {
-                attributesCard.children?.push({
-                    type: 'line-text',
-                    text: attribute.key,
-                    defaultValue: attribute.value
-                });
-            }
+                children: [{
+                    type: 'table',
+                    valueKey: 'localAttributes',
+                    tableOptions: {
+                        add: false,
+                        remove: false,
+                        keys: ["key", "value"]
+                    },
+                    defaultValue: record.local.localAttributes
+                }]
+            });
         }
         return result;
     };
@@ -157,7 +159,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <MarkdownApp style={{
                 display: showDetails ? 'flex' : 'none',
                 margin: '0px 0px 0px 2px',
-                width: `${200 - detailsDelta}px`
+                width: `${400 - detailsDelta}px`
             }} markdownLines={detailsMarkdownLines}></MarkdownApp>
         </Flex>
     </Flex>
