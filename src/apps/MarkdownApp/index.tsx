@@ -160,7 +160,7 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
         }
         else if (item.type == 'line-switch') {
             if (item.valueKey == undefined) {
-                throw `valueKey is undefined, ${item}`;
+                throw `valueKey is undefined, ${JSON.stringify(item)}`;
             }
             let key = `${path}/switch ${item.valueKey}`;
             let tempValue = data[item.valueKey];
@@ -190,7 +190,7 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
         }
         else if (item.type == 'line-input') {
             if (item.valueKey == undefined) {
-                throw `valueKey is undefined, ${item}`;
+                throw `valueKey is undefined, ${JSON.stringify(item)}`;
             }
             let key = `${path}/input ${item.valueKey}`;
             let tempValue = data[item.valueKey];
@@ -223,7 +223,7 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
         }
         else if (item.type == 'line-select') {
             if (item.valueKey == undefined) {
-                throw `valueKey is undefined, ${item}`;
+                throw `valueKey is undefined, ${JSON.stringify(item)}`;
             }
             let key = `${path}/select ${item.valueKey}`;
             let tempValue = data[item.valueKey];
@@ -257,10 +257,7 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
             </Flex>
         }
         else if (item.type == 'line-text') {
-            if (item.valueKey == undefined) {
-                throw `valueKey is undefined, ${item}`;
-            }
-            let key = `${path}/text ${item.valueKey}`;
+            let key = `${path}/text ${item.text}`;
             return <Flex key={key}>
                 <div style={{
                     flex: 1,
