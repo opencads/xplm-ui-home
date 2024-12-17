@@ -535,6 +535,10 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
             return item.text ?? "";
         }
     };
+
+    useEffect(() => {
+        updateData({});
+    }, [props.markdownLines]);
     return <Flex style={{
         ...props.style
     }} direction='column'>

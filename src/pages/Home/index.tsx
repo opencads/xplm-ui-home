@@ -152,7 +152,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 // overflowY: 'auto'
             }} direction='column'>
                 <DocumentsApp ref={markdownAppRef} onRecordClick={record => {
-                    markdownAppRef?.current?.clearData();
                     updateDetailsMarkdownLines(createDetails(record));
                     updateShowDetails(true);
                 }} data={documents} onRefresh={() => self.current.refresh(true)} onArchive={() => self.current.archive(true)}></DocumentsApp>
