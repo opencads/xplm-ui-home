@@ -102,12 +102,12 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 key: 'number',
                 title: 'Number',
                 dataIndex: 'number',
-                width: '32em'
+                width: '16em'
             }, {
                 key: 'partNumber',
                 title: 'Part Number',
                 dataIndex: 'partNumber',
-                width: '32em'
+                width: '16em'
             }, {
                 key: 'state',
                 title: 'State',
@@ -121,7 +121,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 key: 'lifeCycle',
                 title: 'Life Cycle',
                 dataIndex: 'lifeCycle',
-                width:'16em'
+                width:'8em'
             },
             {
                 key: 'operations',
