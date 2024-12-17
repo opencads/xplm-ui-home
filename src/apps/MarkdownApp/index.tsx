@@ -411,6 +411,7 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
                     columns.push({
                         key: itemKey,
                         title: itemKey,
+                        minWidth: itemKey.length * 10,
                         render: (recordText, record, recordIndex) => {
                             if (item.tableOptions?.defaultType == undefined || item.tableOptions?.defaultType == 'input') {
                                 return <Input value={record[itemKeyString]} onChange={e => {
