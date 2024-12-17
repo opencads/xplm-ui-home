@@ -121,13 +121,13 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <Flex style={{ flex: 1 }}>
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);
-                }}>{"侧边栏"}</Button>
+                }}>{"Sidebar"}</Button>
             </Flex>
             <Flex>
                 <Button type='text' icon={<SettingOutlined />} onClick={() => {
                     let currentUrl = window.location.pathname;
                     services.openUrl(currentUrl + '/settings');
-                }}>{"设置"}</Button>
+                }}>{"Settings"}</Button>
             </Flex>
         </Flex>
         {/* 主体 */}
@@ -169,7 +169,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                     <Flex>
                         <Button type='text' icon={<CloseOutlined />} onClick={() => {
                             updateShowDetails(false);
-                        }}>{"Close"}</Button>
+                        }}></Button>
                     </Flex>
                 </Flex>
                 <MarkdownApp style={{
