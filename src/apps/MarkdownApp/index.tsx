@@ -13,6 +13,7 @@ export interface IMarkdownAppProps {
 
 export interface IMarkdownAppRef {
     getData: () => { [key: string]: any },
+    clearData: () => void,
     renderItem: (items: IMarkdownLine[], item: IMarkdownLine, path: string, index: number) => JSX.Element | undefined
 }
 
@@ -518,7 +519,10 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
         getData: () => {
             return dataRef.current;
         },
-        renderItem: renderItem
+        renderItem: renderItem,
+        clearData: () => {
+            dataRef.current = {};
+        }
     });
 
     useImperativeHandle(ref, () => self.current);
@@ -532,7 +536,6 @@ export const MarkdownApp = forwardRef<IMarkdownAppRef, IMarkdownAppProps>((props
         }
     };
     return <Flex style={{
-        // backgroundColor: 'rgb(247, 247, 247)',
         ...props.style
     }} direction='column'>
         {props.markdownLines?.map((item, itemIndex) => {

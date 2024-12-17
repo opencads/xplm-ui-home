@@ -9,7 +9,7 @@ import SidebarSvg from "../../svgs/Sidebar.svg?react";
 import Icon from "@ant-design/icons/lib/components/Icon";
 import { IImportInput } from "../../interfaces";
 import { ResizeButton } from "../../uilibs/ResizeButton";
-import { IMarkdownLine, MarkdownApp, MarkdownLine } from "../../apps/MarkdownApp";
+import { IMarkdownAppRef, IMarkdownLine, MarkdownApp, MarkdownLine } from "../../apps/MarkdownApp";
 
 
 export interface IHomeProps {
@@ -29,6 +29,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const [showDetails, updateShowDetails] = useUpdate(false);
     const [detailsMarkdownLines, updateDetailsMarkdownLines, detailsMarkdownLinesRef] = useUpdate<IMarkdownLine[]>([]);
     let navigate = useNavigate();
+    const markdownAppRef = useRef<IMarkdownAppRef>(null);
     const self = useRef<IHomeRef>({
         refresh: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
@@ -150,7 +151,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 padding: '4px'
                 // overflowY: 'auto'
             }} direction='column'>
-                <DocumentsApp onRecordClick={record => {
+                <DocumentsApp ref={markdownAppRef} onRecordClick={record => {
+                    markdownAppRef?.current?.clearData();
                     updateDetailsMarkdownLines(createDetails(record));
                     updateShowDetails(true);
                 }} data={documents} onRefresh={() => self.current.refresh(true)} onArchive={() => self.current.archive(true)}></DocumentsApp>
@@ -161,7 +163,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <Flex direction='column' style={{
                 backgroundColor: '#fff',
                 display: showDetails ? 'flex' : 'none',
-                margin: '0px 0px 0px 2px',
+                margin: '0px 0px 0px 0px',
                 width: `calc(35% - ${detailsDelta}px)`
             }}>
                 <Flex direction='row'>
@@ -175,7 +177,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 <MarkdownApp style={{
                     flex: 1,
                     height: 0,
-                    overflowY: 'auto'
+                    overflowY: 'auto',
+                    padding: '0px 10px'
                 }} markdownLines={detailsMarkdownLines}></MarkdownApp>
             </Flex>
         </Flex>
