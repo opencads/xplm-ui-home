@@ -142,7 +142,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 </Flex>
             </Flex>
             <Table scroll={{
-                x: "max-content"
+                x: "max-content",
             }} onRow={(record) => {
                 return {
                     onClick: () => props.onRecordClick?.(record)
