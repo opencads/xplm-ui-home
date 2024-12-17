@@ -158,7 +158,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <ResizeButton style={{
                 display: showDetails ? 'flex' : 'none'
             }} onDeltaChange={updateDetailsDelta}></ResizeButton>
-            <Flex style={{
+            <Flex direction='column' style={{
                 backgroundColor: '#fff',
                 display: showDetails ? 'flex' : 'none',
                 margin: '0px 0px 0px 2px',
