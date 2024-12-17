@@ -97,8 +97,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             }, {
                 key: 'name',
                 title: 'Name',
-                dataIndex: 'name',
-                minWidth: 100
+                dataIndex: 'name'
             }, {
                 key: 'number',
                 title: 'Number',
@@ -122,6 +121,10 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 dataIndex: 'lifeCycle'
             },
             {
+                key: 'other',
+                title: ''
+            },
+            {
                 key: 'operations',
                 title: 'Operations',
                 fixed: 'right',
@@ -131,9 +134,6 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                         <Button type='text'>{"Check Out"}</Button>
                     </Flex>
                 }
-            }, {
-                key: 'other',
-                title: ''
             }
         ];
         return <Flex direction='column' spacing={'4px'} style={props.style}>
