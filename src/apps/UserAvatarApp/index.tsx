@@ -20,11 +20,12 @@ export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>(
             items: []
         }} dropdownRender={() => {
             return <Card style={{
-                backgroundColor: '#eee'
+                backgroundColor: '#e8e8e8'
             }}>
                 <Flex direction='column' style={{ width: '280px' }}>
                     <Flex direction='row' verticalCenter spacing={'12px'} style={{
-                        padding: '12px 16px'
+                        padding: '12px 16px',
+                        backgroundColor:'#ddd'
                     }}>
                         <Avatar icon={<UserOutlined />} src={props.info.avatar_url} shape={'circle'} size={'large'}></Avatar>
                         <div style={{ flex: 1 }}>{props.info.name}</div>
