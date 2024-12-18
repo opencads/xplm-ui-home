@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DocumentInterface, IImportInput, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
+import { DocumentInterface, IImportInput, IUserInfomation, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
 import SparkMD5 from 'spark-md5';
 import { IDocumentRecord } from "./apps/DocumentsApp";
 export type Guid = string;
@@ -58,7 +58,7 @@ export class services {
             throw new Error(`${response.status}`);
         }
     }
-    
+
     public static async mouseDownDrag() {
         let webapplication = (window as any).webapplication;
         if (webapplication) {
@@ -310,6 +310,15 @@ export class services {
         return await services.runPlugin("workspace-import-files", input) as {
             importResult: DocumentInterface[],
         };
+    }
+    public static async login(username: string, password: string) {
+        return await services.runPlugin("login", {
+            username,
+            password
+        }) as IUserInfomation;
+    }
+    public static async getLoginInfo() {
+        return await services.runPlugin("get-login-info", {}) as IUserInfomation;
     }
     public static async downloadToDefaultDirectory(fileID: Guid, fileName: string) {
         let url = services.FormatUrl(`/api/v1/xplm/downloadToDefaultDirectory`);

@@ -1,15 +1,16 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Flex, InjectClass, useUpdate } from "../../natived";
-import { Button, Spin } from "antd";
+import { Avatar, Button, Spin } from "antd";
 import { CloseOutlined, MinusOutlined, SettingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { DocumentsApp, IDocumentRecord } from "../../apps/DocumentsApp";
 import { services } from "../../services";
 import SidebarSvg from "../../svgs/Sidebar.svg?react";
 import Icon from "@ant-design/icons/lib/components/Icon";
-import { IImportInput } from "../../interfaces";
+import { IImportInput, IUserInfomation } from "../../interfaces";
 import { ResizeButton } from "../../uilibs/ResizeButton";
 import { IMarkdownAppRef, IMarkdownLine, MarkdownApp, MarkdownLine } from "../../apps/MarkdownApp";
+import { UserAvatarApp } from "../../apps/UserAvatarApp";
 
 const dragClass = InjectClass(`
 -webkit-app-region: drag;
@@ -21,7 +22,8 @@ export interface IHomeProps {
 
 export interface IHomeRef {
     refresh: (showLoading: boolean) => Promise<void>,
-    archive: (showLoading: boolean) => Promise<void>
+    archive: (showLoading: boolean) => Promise<void>,
+    refreshUserInfo: () => Promise<void>
 }
 
 export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
@@ -31,6 +33,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const [detailsDelta, updateDetailsDelta, detailsDeltaRef] = useUpdate(0);
     const [showDetails, updateShowDetails] = useUpdate(false);
     const [detailsMarkdownLines, updateDetailsMarkdownLines, detailsMarkdownLinesRef] = useUpdate<IMarkdownLine[]>([]);
+    const [userInfo, updateUserInfo] = useUpdate<IUserInfomation>({
+        isLogin: false
+    });
     let navigate = useNavigate();
     const markdownAppRef = useRef<IMarkdownAppRef>(null);
     const self = useRef<IHomeRef>({
@@ -70,11 +75,27 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
 
             }
             if (showLoading) updateLoading(false);
+        },
+        refreshUserInfo: async () => {
+            let userInfo = await services.getLoginInfo();
+            updateUserInfo(userInfo);
         }
     });
     useImperativeHandle(ref, () => self.current);
     useEffect(() => {
-        self.current?.refresh(true);
+        let func = async () => {
+            updateLoading(true);
+            try {
+                let task1 = self.current?.refreshUserInfo();
+                let task2 = self.current?.refresh(false);
+                await Promise.all([task1, task2]);
+            }
+            catch {
+
+            }
+            updateLoading(false);
+        }
+        func();
     }, []);
     const createDetails = (record: IDocumentRecord) => {
         let result = [] as IMarkdownLine[];
@@ -157,6 +178,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
             <Flex>
+                <UserAvatarApp info={userInfo}></UserAvatarApp>
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);
                 }}>{"Sidebar"}</Button>
