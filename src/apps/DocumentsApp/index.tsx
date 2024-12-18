@@ -6,6 +6,9 @@ import { Button, Spin, Table, TableColumnsType, Tag } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import ArchiveSvg from "../../svgs/Archive.svg?react";
 import { TableApp } from "../TableApp";
+import CheckInSvg from "../../svgs/CheckIn.svg?react";
+import CheckOutSvg from "../../svgs/CheckOut.svg?react";
+import DetailSvg from "../../svgs/Detail.svg?react";
 
 export interface IDocumentsAppRef {
 
@@ -132,8 +135,9 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 fixed: 'right',
                 render: (text, record) => {
                     return <Flex spacing={'4px'}>
-                        <Button type='text'>{"Check In"}</Button>
-                        <Button type='text'>{"Check Out"}</Button>
+                        <Button type='text' icon={<CheckInSvg/>}>{"Check In"}</Button>
+                        <Button type='text' icon={<CheckOutSvg />}>{"Check Out"}</Button>
+                        <Button type='text' icon={<DetailSvg />}>{"Check Out"}</Button>
                     </Flex>
                 }
             },
@@ -160,7 +164,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 x: "max-content"
             }} onRow={(record) => {
                 return {
-                    onClick: () => props.onRecordClick?.(record)
+                    // onClick: () => props.onRecordClick?.(record)
                 }
             }} dataSource={props.data} columns={columns} ></TableApp>
         </Flex>
