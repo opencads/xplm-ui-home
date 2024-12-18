@@ -101,6 +101,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         self.current?.refresh(true);
     }, []);
     useLocalStorageListener("login", data => {
+        if(loadingRef.current)return;
         updateUserInfo(JSON.parse(data));
         self.current?.refreshDocuments(true);
     });
