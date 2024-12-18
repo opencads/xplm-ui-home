@@ -6,6 +6,7 @@ import { services } from "../../services";
 import { CloseOutlined, HomeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { IMarkdownLine } from "../../apps/MarkdownApp";
+import { dragClass } from "../Home";
 
 export interface ISettingsProps {
 
@@ -172,8 +173,13 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
     }} spacing={'4px'}>
         <Spin spinning={loading} fullscreen></Spin>
         <Flex>
-            <Flex style={{
-                flex: 1
+            <Flex className={dragClass} onMouseDown={e => {
+                services.mouseDownDrag();
+                e.preventDefault();
+                e.stopPropagation();
+            }} style={{
+                flex: 1,
+                userSelect: 'none'
             }}>
 
             </Flex>

@@ -4,6 +4,7 @@ import { LoginApp } from "../../apps/LoginApp";
 import { Button, Spin } from "antd";
 import { services } from "../../services";
 import { CloseOutlined } from "@ant-design/icons";
+import { dragClass } from "../Home";
 
 export interface ILoginRef {
 
@@ -32,8 +33,13 @@ export const Login = forwardRef<ILoginRef, ILoginProps>((props, ref) => {
         height: '100vh'
     }}>
         <Flex>
-            <Flex style={{
-                flex: 1
+            <Flex className={dragClass} onMouseDown={e => {
+                services.mouseDownDrag();
+                e.preventDefault();
+                e.stopPropagation();
+            }} style={{
+                flex: 1,
+                userSelect: 'none'
             }}>
 
             </Flex>

@@ -12,7 +12,7 @@ import { ResizeButton } from "../../uilibs/ResizeButton";
 import { IMarkdownAppRef, IMarkdownLine, MarkdownApp, MarkdownLine } from "../../apps/MarkdownApp";
 import { UserAvatarApp } from "../../apps/UserAvatarApp";
 
-const dragClass = InjectClass(`
+export const dragClass = InjectClass(`
 -webkit-app-region: drag;
 `);
 
