@@ -12,6 +12,7 @@ import { ResizeButton } from "../../uilibs/ResizeButton";
 import { IMarkdownAppRef, IMarkdownLine, MarkdownApp, MarkdownLine } from "../../apps/MarkdownApp";
 import { UserAvatarApp } from "../../apps/UserAvatarApp";
 import { useLocalStorageListener } from "../../utils";
+import DocumentsSvg from "../../svgs/Documents.svg?react"
 
 export const dragClass = InjectClass(`
 -webkit-app-region: drag;
@@ -38,8 +39,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const [userInfo, updateUserInfo] = useUpdate<IUserInfomation>({
         isLogin: false
     });
+    const [currentTab, updateCurrentTab] = useUpdate<'documents' | 'workspaces'>("documents");
     let navigate = useNavigate();
-    const markdownAppRef = useRef<IMarkdownAppRef>(null);
     const self = useRef<IHomeRef>({
         refreshDocuments: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
@@ -101,7 +102,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         self.current?.refresh(true);
     }, []);
     useLocalStorageListener("login", data => {
-        if(loadingRef.current)return;
+        if (loadingRef.current) return;
         updateUserInfo(JSON.parse(data));
         self.current?.refreshDocuments(true);
     });
@@ -178,6 +179,27 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }
         return result;
     };
+    const renderContent = () => {
+        if (currentTab == 'documents') return <DocumentsApp style={{
+            flex: 1,
+            height: 0
+        }} onRecordClick={record => {
+            updateDetailsMarkdownLines(createDetails(record));
+            updateShowDetails(true);
+        }} data={documents} onRefresh={() => self.current.refreshDocuments(true)} onArchive={async () => {
+            updateLoading(true);
+            try {
+                await self.current.archive(false);
+                await self.current.refreshDocuments(false);
+            }
+            catch {
+
+            }
+            updateLoading(false);
+        }} onImported={async () => {
+            await self.current.refreshDocuments(false);
+        }}></DocumentsApp>
+    };
     return <Flex style={{
         ...props.style,
         backgroundColor: '#f4f4f4'
@@ -222,7 +244,12 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 backgroundColor: '#fff',
                 margin: '0px 2px 0px 0px',
                 display: sidebarVisible ? 'flex' : 'none'
-            }} direction='column'></Flex>
+            }} direction='column'>
+                <Button type='text' icon={<DocumentsSvg></DocumentsSvg>} onClick={() => {
+                    updateCurrentTab('documents');
+                    updateDetailsMarkdownLines([]);
+                }}>{"Documents"}</Button>
+            </Flex>
             {/* 内容 */}
             <Flex style={{
                 flex: 1,
@@ -230,25 +257,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 backgroundColor: '#fff',
                 padding: '4px'
             }} direction='column'>
-                <DocumentsApp style={{
-                    flex: 1,
-                    height: 0
-                }} ref={markdownAppRef} onRecordClick={record => {
-                    updateDetailsMarkdownLines(createDetails(record));
-                    updateShowDetails(true);
-                }} data={documents} onRefresh={() => self.current.refreshDocuments(true)} onArchive={async () => {
-                    updateLoading(true);
-                    try {
-                        await self.current.archive(false);
-                        await self.current.refreshDocuments(false);
-                    }
-                    catch {
-
-                    }
-                    updateLoading(false);
-                }} onImported={async () => {
-                    await self.current.refreshDocuments(false);
-                }}></DocumentsApp>
+                {renderContent()}
             </Flex>
             <ResizeButton style={{
                 display: showDetails ? 'flex' : 'none'
