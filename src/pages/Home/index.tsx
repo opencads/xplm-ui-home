@@ -240,11 +240,11 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }} direction='row'>
             {/* 侧边 */}
             <Flex style={{
-                width: '100px',
+                width: '160px',
                 backgroundColor: '#fff',
                 margin: '0px 2px 0px 0px',
                 display: sidebarVisible ? 'flex' : 'none'
-            }} direction='column'>
+            }} direction='column' spacing={'10px'} spacingStart={'10px'}>
                 <Button type='text' icon={<DocumentsSvg></DocumentsSvg>} onClick={() => {
                     updateCurrentTab('documents');
                     updateDetailsMarkdownLines([]);
