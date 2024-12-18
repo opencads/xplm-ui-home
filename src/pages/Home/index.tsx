@@ -177,8 +177,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         <Spin spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
-            <Flex style={{
-                padding:'0px 4px'
+            <Flex verticalCenter style={{
+                padding: '0px 4px'
             }}>
                 <UserAvatarApp info={userInfo}></UserAvatarApp>
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
