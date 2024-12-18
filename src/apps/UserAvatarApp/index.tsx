@@ -18,14 +18,16 @@ export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>(
     if (props.info.isLogin) {
         return <Dropdown menu={{
             items: []
-        }} dropdownRender={menu => {
-            return <Card>
+        }} dropdownRender={() => {
+            return <Card style={{
+                backgroundColor:'#eee'
+            }}>
                 <Flex direction='column' style={{ width: '280px' }}>
                     <Flex verticalCenter spacing={'8px'} style={{
                         padding: '12px 16px'
                     }}>
-                        <Avatar src={props.info.avatar_url} shape={'circle'} size={'large'}></Avatar>
-                        <div style={{ flex: 1 }}>{props.info.name}</div>
+                        <Avatar icon={<UserOutlined />} src={props.info.avatar_url} shape={'circle'} size={'large'}></Avatar>
+                        <div style={{ flex: 1,padding:'0px 0px 0px 4px' }}>{props.info.name}</div>
                     </Flex>
                     <Flex direction='column' style={{
                         padding: '8px'
