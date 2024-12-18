@@ -243,8 +243,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 width: '160px',
                 backgroundColor: '#fff',
                 margin: '0px 2px 0px 0px',
-                display: sidebarVisible ? 'flex' : 'none'
-            }} direction='column' spacing={'10px'} spacingStart={'10px'}>
+                display: sidebarVisible ? 'flex' : 'none',
+                padding:'0px 4px'
+            }} direction='column' spacing={'8px'} spacingStart={'4px'}>
                 <Button type='text' icon={<DocumentsSvg></DocumentsSvg>} onClick={() => {
                     updateCurrentTab('documents');
                     updateDetailsMarkdownLines([]);
