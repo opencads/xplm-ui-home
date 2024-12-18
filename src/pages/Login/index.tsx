@@ -27,7 +27,10 @@ export const Login = forwardRef<ILoginRef, ILoginProps>((props, ref) => {
             updateLoading(false);
         }
     });
-    return <Flex direction='column'>
+    return <Flex direction='column' style={{
+        width: '100vw',
+        height: '100vh'
+    }}>
         <Flex>
             <Flex style={{
                 flex: 1

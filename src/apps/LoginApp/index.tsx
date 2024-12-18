@@ -19,20 +19,20 @@ export const LoginApp = forwardRef<ILoginAppRef, ILoginAppProps>((props, ref) =>
             padding: '8px 16px',
             ...props.style
         }}>
-            <div style={{ width: '12em' }}>{"Username:"}</div>
+            <div style={{ width: '8em' }}>{"Username:"}</div>
             <Input style={{ flex: 1 }} value={username} onChange={e => {
                 updateUsername(e.target.value)
             }} />
         </Flex>
-        <Flex style={{
+        <Flex verticalCenter style={{
             padding: '8px 16px'
         }}>
-            <div style={{ width: '12em' }}>{"Password:"}</div>
+            <div style={{ width: '8em' }}>{"Password:"}</div>
             <Input.Password style={{ flex: 1 }} value={password} onChange={e => {
                 updatePassword(e.target.value)
             }} />
         </Flex>
-        <Flex style={{
+        <Flex verticalCenter style={{
             padding: '8px 16px'
         }}>
             <Button style={{ flex: 1 }} onClick={() => {
