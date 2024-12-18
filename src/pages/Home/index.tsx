@@ -176,7 +176,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     }} direction='column'>
         <Spin spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
-        <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px' }}>
+        <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px', padding: '0px 0px 0px 4px' }}>
             <Flex verticalCenter>
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);
