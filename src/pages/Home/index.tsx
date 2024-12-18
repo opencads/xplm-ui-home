@@ -83,7 +83,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             updateUserInfo(userInfo);
         },
         refresh: async (showLoading: boolean) => {
-            updateLoading(showLoading);
+            if (showLoading) updateLoading(true);
             try {
                 let task1 = self.current?.refreshUserInfo();
                 let task2 = self.current?.refreshDocuments(false);
@@ -92,7 +92,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             catch {
 
             }
-            updateLoading(showLoading);
+            if (showLoading) updateLoading(false);
         }
     });
     useImperativeHandle(ref, () => self.current);
@@ -100,7 +100,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         self.current?.refresh(true);
     }, []);
     useLocalStorageListener("login", data => {
-        if (loadingRef.current) return;
         updateUserInfo(JSON.parse(data));
         self.current?.refreshDocuments(true);
     });
