@@ -11,6 +11,7 @@ import { IImportInput, IUserInfomation } from "../../interfaces";
 import { ResizeButton } from "../../uilibs/ResizeButton";
 import { IMarkdownAppRef, IMarkdownLine, MarkdownApp, MarkdownLine } from "../../apps/MarkdownApp";
 import { UserAvatarApp } from "../../apps/UserAvatarApp";
+import { useLocalStorageListener } from "../../utils";
 
 export const dragClass = InjectClass(`
 -webkit-app-region: drag;
@@ -21,9 +22,10 @@ export interface IHomeProps {
 }
 
 export interface IHomeRef {
-    refresh: (showLoading: boolean) => Promise<void>,
+    refreshDocuments: (showLoading: boolean) => Promise<void>,
     archive: (showLoading: boolean) => Promise<void>,
-    refreshUserInfo: () => Promise<void>
+    refreshUserInfo: () => Promise<void>,
+    refresh: (showLoading: boolean) => Promise<void>
 }
 
 export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
@@ -39,7 +41,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     let navigate = useNavigate();
     const markdownAppRef = useRef<IMarkdownAppRef>(null);
     const self = useRef<IHomeRef>({
-        refresh: async (showLoading: boolean) => {
+        refreshDocuments: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
             try {
                 let documents = await services.getDocumentsFromWorkspace(await services.getDefaultDirectory(), "");
@@ -79,24 +81,28 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         refreshUserInfo: async () => {
             let userInfo = await services.getLoginInfo();
             updateUserInfo(userInfo);
-        }
-    });
-    useImperativeHandle(ref, () => self.current);
-    useEffect(() => {
-        let func = async () => {
-            updateLoading(true);
+        },
+        refresh: async (showLoading: boolean) => {
+            updateLoading(showLoading);
             try {
                 let task1 = self.current?.refreshUserInfo();
-                let task2 = self.current?.refresh(false);
+                let task2 = self.current?.refreshDocuments(false);
                 await Promise.all([task1, task2]);
             }
             catch {
 
             }
-            updateLoading(false);
+            updateLoading(showLoading);
         }
-        func();
+    });
+    useImperativeHandle(ref, () => self.current);
+    useEffect(() => {
+        self.current?.refresh(true);
     }, []);
+    useLocalStorageListener("login", data => {
+        updateUserInfo(JSON.parse(data));
+        self.current?.refreshDocuments(true);
+    });
     const createDetails = (record: IDocumentRecord) => {
         let result = [] as IMarkdownLine[];
         result.push(`## ${record.name}`);
@@ -228,18 +234,18 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 }} ref={markdownAppRef} onRecordClick={record => {
                     updateDetailsMarkdownLines(createDetails(record));
                     updateShowDetails(true);
-                }} data={documents} onRefresh={() => self.current.refresh(true)} onArchive={async () => {
+                }} data={documents} onRefresh={() => self.current.refreshDocuments(true)} onArchive={async () => {
                     updateLoading(true);
                     try {
                         await self.current.archive(false);
-                        await self.current.refresh(false);
+                        await self.current.refreshDocuments(false);
                     }
                     catch {
 
                     }
                     updateLoading(false);
                 }} onImported={async () => {
-                    await self.current.refresh(false);
+                    await self.current.refreshDocuments(false);
                 }}></DocumentsApp>
             </Flex>
             <ResizeButton style={{

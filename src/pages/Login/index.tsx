@@ -20,8 +20,9 @@ export const Login = forwardRef<ILoginRef, ILoginProps>((props, ref) => {
         login: async (username: string, password: string) => {
             updateLoading(true);
             try {
-                await services.login(username, password);
+                let info = await services.login(username, password);
                 await services.close();
+                localStorage.setItem('login', JSON.stringify(info));
             }
             catch {
 
