@@ -81,6 +81,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         refreshUserInfo: async () => {
             let userInfo = await services.getLoginInfo();
             updateUserInfo(userInfo);
+            localStorage.setItem("login", JSON.stringify(userInfo));
         },
         refresh: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
