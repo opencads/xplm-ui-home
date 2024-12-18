@@ -25,7 +25,7 @@ const Flex = forwardRef<IFlexRef, IFlexProps>((props, ref) => {
     const renderSpacing = (spacing: JSX.Element | string | number | undefined) => {
         if (spacing === undefined) return undefined;
         else if (typeof spacing === 'string' || typeof spacing === 'number') return <span style={{
-            width: props.direction === 'row' ? spacing : undefined,
+            width: (props.direction === 'row' || props.direction === undefined) ? spacing : undefined,
             height: props.direction === 'column' ? spacing : undefined
         }}></span>
         else return React.cloneElement(spacing, {
@@ -45,7 +45,17 @@ const Flex = forwardRef<IFlexRef, IFlexProps>((props, ref) => {
                 </React.Fragment>
             })
         }
-        else return children;
+        else {
+            let tempChildren = [children] as React.ReactNode[];
+            return tempChildren.map((child, index) => {
+                return <React.Fragment key={index}>
+                    {index === 0 && props.spacingStart !== undefined ? renderSpacing(props.spacingStart) : undefined}
+                    {child}
+                    {index < tempChildren.length - 1 ? renderSpacing(props.spacing) : undefined}
+                    {index === tempChildren.length - 1 && props.spacingEnd !== undefined ? renderSpacing(props.spacingEnd) : undefined}
+                </React.Fragment>
+            })
+        }
     }
     return <div
         id={props.id}
