@@ -14,7 +14,7 @@ export interface ILoginAppProps {
 export const LoginApp = forwardRef<ILoginAppRef, ILoginAppProps>((props, ref) => {
     const [username, updateUsername] = useUpdate("");
     const [password, updatePassword] = useUpdate("")
-    return <Flex direction='row' spacing={'4px'}>
+    return <Flex direction='column' spacing={'4px'}>
         <Flex style={{
             padding: '8px 16px',
             ...props.style
