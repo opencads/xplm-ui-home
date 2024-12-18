@@ -25,7 +25,7 @@ export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>(
                 <Flex direction='column' style={{ width: '280px' }}>
                     <Flex direction='row' verticalCenter spacing={'12px'} style={{
                         padding: '12px 16px',
-                        backgroundColor:'#ddd'
+                        // backgroundColor:'#ddd'
                     }}>
                         <Avatar icon={<UserOutlined />} src={props.info.avatar_url} shape={'circle'} size={'large'}></Avatar>
                         <div style={{ flex: 1 }}>{props.info.name}</div>
