@@ -21,6 +21,7 @@ export const Login = forwardRef<ILoginRef, ILoginProps>((props, ref) => {
             updateLoading(true);
             try {
                 await services.login(username, password);
+                await services.close();
             }
             catch {
 
