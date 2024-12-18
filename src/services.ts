@@ -317,8 +317,8 @@ export class services {
             password
         }) as IUserInfomation;
     }
-    public static async getLoginInfo() {
-        return await services.runPlugin("get-login-info", {}) as IUserInfomation;
+    public static async getUserInfo() {
+        return await services.runPlugin("get-user-info", {}) as IUserInfomation;
     }
     public static async downloadToDefaultDirectory(fileID: Guid, fileName: string) {
         let url = services.FormatUrl(`/api/v1/xplm/downloadToDefaultDirectory`);
