@@ -40,11 +40,9 @@ export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>(
                             <div >{props.info.email}</div>
                         </Flex>
                     </Flex>
-                    <Flex direction='column' style={{
-                        padding: '8px'
-                    }}>
-                        <Button type='text'>{"Logout"}</Button>
-                    </Flex>
+                    <Button style={{
+                        // padding: '8px'
+                    }}>{"Logout"}</Button>
                 </Flex>
             </Card>
         }}>
