@@ -3,13 +3,15 @@ import { forwardRef } from "react";
 import { IUserInfomation } from "../../interfaces";
 import { Flex } from "../../natived";
 import { services } from "../../services";
+import { UserOutlined } from "@ant-design/icons";
 
 export interface IUserAvatarAppRef {
 
 }
 
 export interface IUserAvatarAppProps {
-    info: IUserInfomation
+    info: IUserInfomation,
+    style?: React.CSSProperties
 }
 
 export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>((props, ref) => {
@@ -44,12 +46,18 @@ export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>(
                 </Flex>
             </Card>
         }}>
-            <Avatar shape={'circle'} src={props.info.avatar_url}>
+            <Avatar icon={<UserOutlined />} size={'small'} style={{
+                cursor: 'pointer',
+                ...props.style
+            }} shape={'circle'} src={props.info.avatar_url}>
             </Avatar>
         </Dropdown>
     }
     else {
-        return <Avatar shape={'circle'} onClick={() => {
+        return <Avatar icon={<UserOutlined />} size={'small'} style={{
+            cursor: 'pointer',
+            ...props.style
+        }} shape={'circle'} onClick={() => {
             let currentUrl = window.location.pathname;
             services.openUrl(currentUrl + '/login');
         }}>
