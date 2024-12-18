@@ -49,7 +49,7 @@ export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>(
         </Dropdown>
     }
     else {
-        <Avatar shape={'circle'} onClick={() => {
+        return <Avatar shape={'circle'} onClick={() => {
             let currentUrl = window.location.pathname;
             services.openUrl(currentUrl + '/login');
         }}>
