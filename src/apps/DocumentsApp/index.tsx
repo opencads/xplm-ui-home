@@ -135,9 +135,11 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 fixed: 'right',
                 render: (text, record) => {
                     return <Flex spacing={'4px'}>
-                        <Button type='text' icon={<CheckInSvg/>}>{"Check In"}</Button>
+                        <Button type='text' icon={<CheckInSvg />}>{"Check In"}</Button>
                         <Button type='text' icon={<CheckOutSvg />}>{"Check Out"}</Button>
-                        <Button type='text' icon={<DetailSvg />}>{"Detail"}</Button>
+                        <Button onClick={() => {
+                            props.onRecordClick?.(record);
+                        }} type='text' icon={<DetailSvg />}>{"Detail"}</Button>
                     </Flex>
                 }
             },
