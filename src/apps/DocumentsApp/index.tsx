@@ -69,7 +69,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             } else if (state == 'checkedIn') {
                 return <Tag>Checked In</Tag>;
             } else if (state == 'unknown') {
-                return <Tag>Unknown</Tag>;
+                return <Tag color='#f50'>Unknown</Tag>;
             }
             else if (state == 'checkedOut') {
                 return <Tag>Checked Out</Tag>;
@@ -78,14 +78,17 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
         };
         const renderLocalState = (state: IDocumentRecord["local"]["workspaceState"]) => {
             if (state == 'untracked') {
-                return <Tag>Untracked</Tag>;
+                return <Tag color='#f50'>Untracked</Tag>;
             } else if (state == 'modified') {
-                return <Tag>Modified</Tag>;
+                return <Tag color='geekblue'>Modified</Tag>;
             } else if (state == 'archived') {
-                return <Tag>Archived</Tag>;
+                return <Tag color='green'>Archived</Tag>;
             }
             else if (state == 'missing') {
-                return <Tag>Missing</Tag>;
+                return <Tag color='red'>Missing</Tag>;
+            }
+            else if (state == 'todownload') {
+                return <Tag color='volcano'>To Download</Tag>;
             }
         };
         const [messageApi, contextHolder] = useMessage();
