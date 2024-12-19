@@ -33,7 +33,7 @@ export interface IDocumentRecord {
     remoteLastModifiedTime: string;
     lifeCycle: string;
     local: {
-        workspaceState: 'untracked' | 'modified' | 'archived' | 'missing';
+        workspaceState: 'untracked' | 'modified' | 'archived' | 'missing' | 'todownload';
         localFilePath: string;
         localAttributes: {
             key: string,
@@ -135,8 +135,8 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 fixed: 'right',
                 render: (text, record) => {
                     return <Flex spacing={'4px'}>
-                        <Button type='text' icon={<CheckInSvg />}>{"Check In"}</Button>
-                        <Button type='text' icon={<CheckOutSvg />}>{"Check Out"}</Button>
+                        {record.remoteState != 'checkedIn' && record.remoteState != 'unknown' ? <Button type='text' icon={<CheckInSvg />}>{"Check In"}</Button> : undefined}
+                        {record.remoteState == 'checkedIn' ? <Button type='text' icon={<CheckOutSvg />}>{"Check Out"}</Button> : undefined}
                         <Button onClick={() => {
                             props.onRecordClick?.(record);
                         }} type='text' icon={<DetailSvg />}>{"Detail"}</Button>
