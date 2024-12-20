@@ -106,11 +106,10 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                         FilePath: record.local.localFilePath
                     });
                 }
-                let result = await services.checkinDocuments(checkInInput);
-                console.log('checkin result', result);
+                await services.checkinDocuments(checkInInput);
             }
-            catch {
-
+            catch(e) {
+                console.log(e);
             }
             if (showLoading) updateLoading(false);
         }

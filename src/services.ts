@@ -369,23 +369,6 @@ export class services {
         };
     }
     public static async checkinDocuments(input: ICheckInInput) {
-        let response = await axios.post(services.FormatUrl(`/api/v1/tasks/run`), {
-            Input: input,
-            Processor: {
-                Type: "Plugin",
-                Name: "checkin"
-            }
-        });
-        console.log(response);
-        if (response.status === 200) {
-            if (response.data.success) {
-                return response.data.data.Output;
-            } else {
-                throw new Error(response.data.message);
-            }
-        }
-        else {
-            throw new Error(`${response.status}`);
-        }
+        return await services.runPlugin("checkin", input);
     }
 }
