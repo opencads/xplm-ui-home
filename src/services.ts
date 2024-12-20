@@ -368,8 +368,7 @@ export class services {
             Documents: IDocumentRecord[],
         };
     }
-    public static async checkin(input:ICheckInInput) {
-        console.log(`checkin, ${JSON.stringify(input)}`);
-        return await services.runPlugin("checkin", input) as ICheckInOutput;
+    public static async checkin(input: ICheckInInput) {
+        return await services.runPlugin("checkin", input);
     }
 }

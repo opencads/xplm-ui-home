@@ -106,7 +106,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                         FilePath: record.local.localFilePath
                     });
                 }
-                await services.checkin(checkInInput);
+                let result = await services.checkin(checkInInput);
+                console.log('checkin result', result);
             }
             catch {
 
@@ -216,10 +217,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }} onImported={async () => {
             await self.current.refreshDocuments(false);
         }} onCheckIn={async records => {
-            console.log('on checkin');
             updateLoading(true);
             try {
-                console.log(`checkin records:${JSON.stringify(records)}`);
                 await self.current.checkIn(records, false);
                 await self.current.refreshDocuments(false);
             }
