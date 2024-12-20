@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DocumentInterface, IImportInput, IUserInfomation, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
+import { DocumentInterface, ICheckInInput, ICheckInOutput, IImportInput, IUserInfomation, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
 import SparkMD5 from 'spark-md5';
 import { IDocumentRecord } from "./apps/DocumentsApp";
 export type Guid = string;
@@ -367,5 +367,8 @@ export class services {
         }) as {
             Documents: IDocumentRecord[],
         };
+    }
+    public static async checkin(input:ICheckInInput) {
+        return await services.runPlugin("checkin", input) as ICheckInOutput;
     }
 }

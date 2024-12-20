@@ -7,7 +7,7 @@ import { DocumentsApp, IDocumentRecord } from "../../apps/DocumentsApp";
 import { services } from "../../services";
 import SidebarSvg from "../../svgs/Sidebar.svg?react";
 import Icon from "@ant-design/icons/lib/components/Icon";
-import { IImportInput, IUserInfomation } from "../../interfaces";
+import { ICheckInInput, IImportInput, IUserInfomation } from "../../interfaces";
 import { ResizeButton } from "../../uilibs/ResizeButton";
 import { IMarkdownAppRef, IMarkdownLine, MarkdownApp, MarkdownLine } from "../../apps/MarkdownApp";
 import { UserAvatarApp } from "../../apps/UserAvatarApp";
@@ -26,7 +26,8 @@ export interface IHomeRef {
     refreshDocuments: (showLoading: boolean) => Promise<void>,
     archive: (showLoading: boolean) => Promise<void>,
     refreshUserInfo: () => Promise<void>,
-    refresh: (showLoading: boolean) => Promise<void>
+    refresh: (showLoading: boolean) => Promise<void>,
+    checkIn: (records: IDocumentRecord[], showLoading: boolean) => Promise<void>
 }
 
 export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
@@ -90,6 +91,22 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 let task1 = self.current?.refreshUserInfo();
                 let task2 = self.current?.refreshDocuments(false);
                 await Promise.all([task1, task2]);
+            }
+            catch {
+
+            }
+            if (showLoading) updateLoading(false);
+        },
+        checkIn: async (records: IDocumentRecord[], showLoading: boolean) => {
+            if (showLoading) updateLoading(true);
+            try {
+                let checkInInput = {} as ICheckInInput;
+                for (let record of records) {
+                    checkInInput.Items.push({
+                        FilePath: record.local.localFilePath
+                    });
+                }
+                await services.checkin(checkInInput);
             }
             catch {
 
@@ -198,6 +215,16 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             updateLoading(false);
         }} onImported={async () => {
             await self.current.refreshDocuments(false);
+        }} onCheckIn={async records => {
+            updateLoading(true);
+            try {
+                await self.current.checkIn(records, false);
+                await self.current.refreshDocuments(false);
+            }
+            catch {
+
+            }
+            updateLoading(false);
         }}></DocumentsApp>
     };
     return <Flex style={{
@@ -244,7 +271,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 backgroundColor: '#fff',
                 margin: '0px 2px 0px 0px',
                 display: sidebarVisible ? 'flex' : 'none',
-                padding:'0px 4px'
+                padding: '0px 4px'
             }} direction='column' spacing={'8px'} spacingStart={'4px'}>
                 <Button type='text' icon={<DocumentsSvg></DocumentsSvg>} onClick={() => {
                     updateCurrentTab('documents');

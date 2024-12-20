@@ -81,3 +81,13 @@ export interface IUserInfomation {
     avatar_url?: string,
     html_url?: string
 }
+
+export interface ICheckInInput {
+    Items: {
+        FilePath: string
+    }[]
+}
+
+export interface ICheckInOutput {
+
+}
