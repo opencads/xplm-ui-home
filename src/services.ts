@@ -368,7 +368,7 @@ export class services {
             Documents: IDocumentRecord[],
         };
     }
-    public static async checkin(input: ICheckInInput) {
+    public static async checkinDocuments(input: ICheckInInput) {
         let response = await axios.post(services.FormatUrl(`/api/v1/tasks/run`), {
             Input: input,
             Processor: {
@@ -376,6 +376,7 @@ export class services {
                 Name: "checkin"
             }
         });
+        console.log(response);
         if (response.status === 200) {
             if (response.data.success) {
                 return response.data.data.Output;
