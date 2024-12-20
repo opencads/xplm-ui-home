@@ -19,7 +19,7 @@ export interface IDocumentsAppProps {
     data: IDocumentRecord[];
     onRefresh?: () => void;
     onArchive?: () => void;
-    onRecordClick?: (record: IDocumentRecord) => void;
+    onDetail?: (record: IDocumentRecord) => void;
     showLoading?: (loading: boolean) => Promise<void>;
     onImported?: () => Promise<void>;
     onCheckIn?: (records: IDocumentRecord[]) => Promise<void>;
@@ -140,11 +140,12 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 render: (text, record) => {
                     return <Flex spacing={'4px'}>
                         {record.remoteState != 'checkedIn' && record.remoteState != 'unknown' && record.local.localFilePath.length > 0 ? <Button type='text' icon={<CheckInSvg />} onClick={async () => {
+                            console.log(`checkin`);
                             props.onCheckIn?.([record]);
                         }}>{"Check In"}</Button> : undefined}
                         {record.remoteState == 'checkedIn' ? <Button type='text' icon={<CheckOutSvg />}>{"Check Out"}</Button> : undefined}
                         <Button onClick={() => {
-                            props.onRecordClick?.(record);
+                            props.onDetail?.(record);
                         }} type='text' icon={<DetailSvg />}>{"Detail"}</Button>
                     </Flex>
                 }

@@ -200,7 +200,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         if (currentTab == 'documents') return <DocumentsApp style={{
             flex: 1,
             height: 0
-        }} onRecordClick={record => {
+        }} onDetail={record => {
             updateDetailsMarkdownLines(createDetails(record));
             updateShowDetails(true);
         }} data={documents} onRefresh={() => self.current.refreshDocuments(true)} onArchive={async () => {
@@ -216,8 +216,10 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }} onImported={async () => {
             await self.current.refreshDocuments(false);
         }} onCheckIn={async records => {
+            console.log('on checkin');
             updateLoading(true);
             try {
+                console.log(`checkin records:${JSON.stringify(records)}`);
                 await self.current.checkIn(records, false);
                 await self.current.refreshDocuments(false);
             }
