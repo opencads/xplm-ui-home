@@ -369,25 +369,22 @@ export class services {
         };
     }
     public static async checkin(input: ICheckInInput) {
-        let _runPlugin = async (pluginName: string, input: any) => {
-            let response = await axios.post(services.FormatUrl(`/api/v1/tasks/run`), {
-                Input: input,
-                Processor: {
-                    Type: "Plugin",
-                    Name: pluginName
-                }
-            });
-            if (response.status === 200) {
-                if (response.data.success) {
-                    return response.data.data.Output;
-                } else {
-                    throw new Error(response.data.message);
-                }
+        let response = await axios.post(services.FormatUrl(`/api/v1/tasks/run`), {
+            Input: input,
+            Processor: {
+                Type: "Plugin",
+                Name: "checkin"
             }
-            else {
-                throw new Error(`${response.status}`);
+        });
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data.Output;
+            } else {
+                throw new Error(response.data.message);
             }
         }
-        return await _runPlugin("checkin", input);
+        else {
+            throw new Error(`${response.status}`);
+        }
     }
 }
