@@ -100,7 +100,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         checkIn: async (records: IDocumentRecord[], showLoading: boolean) => {
             if (showLoading) updateLoading(true);
             try {
-                let checkInInput = {} as ICheckInInput;
+                let checkInInput = {
+                    Items: []
+                } as ICheckInInput;
                 for (let record of records) {
                     checkInInput.Items.push({
                         FilePath: record.local.localFilePath
@@ -108,7 +110,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 }
                 await services.checkinDocuments(checkInInput);
             }
-            catch(e) {
+            catch (e) {
                 console.log(e);
             }
             if (showLoading) updateLoading(false);
