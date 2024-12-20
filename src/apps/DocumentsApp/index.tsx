@@ -140,7 +140,6 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 render: (text, record) => {
                     return <Flex spacing={'4px'}>
                         {record.remoteState != 'checkedIn' && record.remoteState != 'unknown' && record.local.localFilePath.length > 0 ? <Button type='text' icon={<CheckInSvg />} onClick={async () => {
-                            console.log(`checkin`);
                             props.onCheckIn?.([record]);
                         }}>{"Check In"}</Button> : undefined}
                         {record.remoteState == 'checkedIn' ? <Button type='text' icon={<CheckOutSvg />}>{"Check Out"}</Button> : undefined}
