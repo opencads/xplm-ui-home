@@ -317,6 +317,10 @@ export class services {
             password
         }) as IUserInfomation;
     }
+    public static async logout() {
+        return await services.runPlugin("logout", {
+        });
+    }
     public static async getUserInfo() {
         return await services.runPlugin("get-user-info", {}) as IUserInfomation;
     }

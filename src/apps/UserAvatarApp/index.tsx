@@ -10,6 +10,7 @@ export interface IUserAvatarAppRef {
 }
 
 export interface IUserAvatarAppProps {
+    onLogout?: () => Promise<void>,
     info: IUserInfomation,
     style?: React.CSSProperties
 }
@@ -43,7 +44,7 @@ export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>(
                     </Flex>
                     <Button style={{
                         // padding: '8px'
-                    }}>{"Logout"}</Button>
+                    }} onClick={props.onLogout}>{"Logout"}</Button>
                 </Flex>
             </Card>
         }}>

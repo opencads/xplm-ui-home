@@ -240,7 +240,16 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);
                 }}>{"Sidebar"}</Button>
-                <UserAvatarApp style={{ padding: '0px 4px' }} info={userInfo}></UserAvatarApp>
+                <UserAvatarApp onLogout={async () => {
+                    updateLoading(true);
+                    try {
+                        await services.logout();
+                    }
+                    catch (e: any) {
+                        console.log(e);
+                    }
+                    updateLoading(false);
+                }} style={{ padding: '0px 4px' }} info={userInfo}></UserAvatarApp>
             </Flex>
             <Flex className={dragClass} onMouseDown={e => {
                 services.mouseDownDrag();
