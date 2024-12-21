@@ -244,6 +244,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                     updateLoading(true);
                     try {
                         await services.logout();
+                        updateUserInfo({
+                            isLogin:false
+                        });
                     }
                     catch (e: any) {
                         console.log(e);
