@@ -46,20 +46,24 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     let navigate = useNavigate();
     const self = useRef<IHomeRef>({
         refreshDocuments: async (showLoading: boolean) => {
-            updateLoadingPercent(0);
-            updateLoadingTip('');
             if (showLoading) updateLoading(true);
             try {
                 let documents = await services.getDocumentsFromWorkspaceAsync(await services.getDefaultDirectory(), "", progress => {
-                    updateLoadingPercent(progress.Progress*100);
-                    updateLoadingTip(progress.Message);
+                    if (showLoading) {
+                        updateLoadingPercent(progress.Progress * 100);
+                        updateLoadingTip(progress.Message);
+                    }
                 });
                 updateDocuments(documents.Documents);
             }
             catch (e) {
                 console.log(e);
             }
-            if (showLoading) updateLoading(false);
+            if (showLoading) {
+                updateLoading(false);
+                updateLoadingPercent(undefined);
+                updateLoadingTip("");
+            }
         },
         archive: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
@@ -240,7 +244,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         ...props.style,
         backgroundColor: '#f4f4f4'
     }} direction='column'>
-        <Spin tip={loadingTip} percent={loadingPercent} spinning={loading} fullscreen></Spin>
+        <Spin size={'large'} tip={<div style={{
+            padding:'4px'
+        }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px', padding: '0px 0px 0px 4px' }}>
             <Flex verticalCenter>
