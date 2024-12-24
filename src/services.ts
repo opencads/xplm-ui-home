@@ -340,10 +340,10 @@ export class services {
                 }));
             }
             ws.onmessage = (event) => {
-                console.log(`event`,event);
-                let ungzipData = pako.ungzip(new Uint8Array(event.data), { to: 'string' });
-                console.log(`ungzipData: `, ungzipData);
-                let data = JSON.parse(ungzipData);
+                // console.log(`event`,event);
+                // let ungzipData = pako.ungzip(new Uint8Array(event.data), { to: 'string' });
+                // console.log(`ungzipData: `, ungzipData);
+                let data = JSON.parse(event.data);
                 if (data.progress) {
                     onProgress(data.progress);
                 }
