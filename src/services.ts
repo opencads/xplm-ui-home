@@ -2,6 +2,7 @@ import axios from "axios";
 import { DocumentInterface, ICheckInInput, ICheckInOutput, IImportInput, IUserInfomation, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
 import SparkMD5 from 'spark-md5';
 import { IDocumentRecord } from "./apps/DocumentsApp";
+import pako from 'pako';
 export type Guid = string;
 const Util = {
     calculateFileMD5: (file: File): Promise<string> => {
@@ -338,7 +339,7 @@ export class services {
                 }));
             }
             ws.onmessage = (event) => {
-                let data = JSON.parse(event.data);
+                let data = JSON.parse(pako.ungzip(new Uint8Array(event.data), { to: 'string' }));
                 if (data.progress) {
                     onProgress(data.progress);
                 }
