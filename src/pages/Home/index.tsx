@@ -245,7 +245,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         backgroundColor: '#f4f4f4'
     }} direction='column'>
         <Spin size={'large'} tip={<div style={{
-            padding:'4px'
+            margin:'10px'
         }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px', padding: '0px 0px 0px 4px' }}>
