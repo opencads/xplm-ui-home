@@ -34,6 +34,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const [documents, updateDocuments, documentRef] = useUpdate<IDocumentRecord[]>([]);
     const [sidebarVisible, updateSidebarVisible, sidebarVisibleRef] = useUpdate(false);
     const [loading, updateLoading, loadingRef] = useUpdate(false);
+    const [loadingPercent, updateLoadingPercent, loadingPercentRef] = useUpdate<number | undefined>(undefined);
+    const [loadingTip, updateLoadingTip, loadingTipRef] = useUpdate('');
     const [detailsDelta, updateDetailsDelta, detailsDeltaRef] = useUpdate(0);
     const [showDetails, updateShowDetails] = useUpdate(false);
     const [detailsMarkdownLines, updateDetailsMarkdownLines, detailsMarkdownLinesRef] = useUpdate<IMarkdownLine[]>([]);
@@ -46,7 +48,11 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         refreshDocuments: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
             try {
-                let documents = await services.getDocumentsFromWorkspace(await services.getDefaultDirectory(), "");
+                let documents = await services.getDocumentsFromWorkspaceAsync(await services.getDefaultDirectory(), "", progress => {
+                    // updateLoadingPercent(progress.percent);
+                    // updateLoadingTip(progress.tip);
+                    console.log(progress);
+                });
                 updateDocuments(documents.Documents);
             }
             catch (e) {
@@ -233,7 +239,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         ...props.style,
         backgroundColor: '#f4f4f4'
     }} direction='column'>
-        <Spin spinning={loading} fullscreen></Spin>
+        <Spin tip={loadingTip} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px', padding: '0px 0px 0px 4px' }}>
             <Flex verticalCenter>

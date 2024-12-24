@@ -43,6 +43,9 @@ export class services {
     public static FormatUrl(url: string) {
         return `http://localhost:19799${url}`;
     }
+    public static GetHost() {
+        return "127.0.0.1:19799";
+    }
     public static FormatUIUrl(url: string) {
         return `http://localhost:12332${url}`;
     }
@@ -306,6 +309,57 @@ export class services {
             throw new Error(`${response.status}`);
         }
     }
+    private static async pluginRunAsync(pluginName: string, input: any) {
+        let response = await axios.post(services.FormatUrl(`/api/v1/tasks/plugin/runasync`), input, {
+            params: {
+                pluginName: pluginName
+            }
+        });
+        if (response.status === 200) {
+            if (response.data.success) {
+                return response.data.data as string;
+            } else {
+                throw new Error(response.data.message);
+            }
+        }
+        else {
+            throw new Error(`${response.status}`);
+        }
+    }
+    public static async runPluginAsync(pluginName: string, input: { [key: string]: any }, onProgress: (progress: any) => void) {
+        let task_id = await services.pluginRunAsync(pluginName, input);
+        let subscribeProgress = new Promise<void>((resolve, reject) => {
+            // 建立websocket连接，订阅
+            let ws = new WebSocket(`wss://${services.GetHost()}/`);
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    task_id: task_id,
+                    url: "/api/v1/tasks/subscribeprogress"
+                }));
+            }
+            ws.onmessage = (event) => {
+                let data = JSON.parse(event.data);
+                if (data.progress) {
+                    onProgress(data.progress);
+                }
+            }
+            ws.onclose = () => {
+                resolve();
+            }
+        });
+        await subscribeProgress;
+        let response = await axios.get(services.FormatUrl("/api/v1/tasks/query"), {
+            params: {
+                id: task_id
+            }
+        });
+        if (response.data.success) {
+            return response.data.data.Output;
+        }
+        else {
+            throw new Error(response.data.message)
+        }
+    }
     public static async importFilesToWorkspace(input: IImportInput) {
         return await services.runPlugin("workspace-import-files", input) as {
             importResult: DocumentInterface[],
@@ -369,6 +423,14 @@ export class services {
             path,
             remoteWorkspaceId
         }) as {
+            Documents: IDocumentRecord[],
+        };
+    }
+    public static async getDocumentsFromWorkspaceAsync(path: string, remoteWorkspaceId: string, onProgress: (progress: any) => void) {
+        return await services.runPluginAsync("workspace-get-documents", {
+            path,
+            remoteWorkspaceId
+        }, onProgress) as {
             Documents: IDocumentRecord[],
         };
     }

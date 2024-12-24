@@ -31,6 +31,7 @@ export interface IDocumentRecord {
     number: string;
     partNumber: string;
     remote: {
+        success: boolean;
         remoteState: 'new' | 'checkedIn' | 'checkedOut' | 'unknown';
         remoteLastModifiedTime: string;
         lifeCycle: string;
@@ -48,6 +49,7 @@ export interface IDocumentRecord {
         raw?: any
     },
     local: {
+        success: boolean;
         workspaceState: 'untracked' | 'modified' | 'archived' | 'missing' | 'todownload';
         localFilePath: string;
         localAttributes: {
