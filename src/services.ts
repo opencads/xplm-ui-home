@@ -330,7 +330,7 @@ export class services {
         let task_id = await services.pluginRunAsync(pluginName, input);
         let subscribeProgress = new Promise<void>((resolve, reject) => {
             // 建立websocket连接，订阅
-            let ws = new WebSocket(`wss://${services.GetHost()}/`);
+            let ws = new WebSocket(`ws://${services.GetHost()}/`);
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     task_id: task_id,
