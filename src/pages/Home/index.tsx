@@ -49,7 +49,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             if (showLoading) updateLoading(true);
             try {
                 let documents = await services.getDocumentsFromWorkspaceAsync(await services.getDefaultDirectory(), "", progress => {
-                    updateLoadingPercent(progress.Progress);
+                    updateLoadingPercent(progress.Progress*100);
                     updateLoadingTip(progress.Message);
                 });
                 updateDocuments(documents.Documents);
