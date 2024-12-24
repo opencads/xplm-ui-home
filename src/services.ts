@@ -339,7 +339,9 @@ export class services {
                 }));
             }
             ws.onmessage = (event) => {
-                let data = JSON.parse(pako.ungzip(new Uint8Array(event.data), { to: 'string' }));
+                let ungzipData = pako.ungzip(new Uint8Array(event.data), { to: 'string' });
+                console.log(`ungzipData: `, ungzipData);
+                let data = JSON.parse(ungzipData);
                 if (data.progress) {
                     onProgress(data.progress);
                 }
