@@ -93,3 +93,10 @@ export interface ICheckInInput {
 export interface ICheckInOutput {
 
 }
+
+export interface IProgress {
+    "DateTime": string,
+    "Scope": string,
+    "Progress": number,
+    "Message": string
+}

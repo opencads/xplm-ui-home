@@ -49,9 +49,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             if (showLoading) updateLoading(true);
             try {
                 let documents = await services.getDocumentsFromWorkspaceAsync(await services.getDefaultDirectory(), "", progress => {
-                    // updateLoadingPercent(progress.percent);
-                    // updateLoadingTip(progress.tip);
-                    console.log(progress);
+                    updateLoadingPercent(progress.Progress);
+                    updateLoadingTip(progress.Message);
                 });
                 updateDocuments(documents.Documents);
             }

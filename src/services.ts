@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DocumentInterface, ICheckInInput, ICheckInOutput, IImportInput, IUserInfomation, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
+import { DocumentInterface, ICheckInInput, ICheckInOutput, IImportInput, IProgress, IUserInfomation, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
 import SparkMD5 from 'spark-md5';
 import { IDocumentRecord } from "./apps/DocumentsApp";
 import pako from 'pako';
@@ -327,7 +327,7 @@ export class services {
             throw new Error(`${response.status}`);
         }
     }
-    public static async runPluginAsync(pluginName: string, input: { [key: string]: any }, onProgress: (progress: any) => void) {
+    public static async runPluginAsync(pluginName: string, input: { [key: string]: any }, onProgress: (progress: IProgress) => void) {
         let task_id = await services.pluginRunAsync(pluginName, input);
         let subscribeProgress = new Promise<void>((resolve, reject) => {
             // 建立websocket连接，订阅
@@ -345,7 +345,7 @@ export class services {
                 // console.log(`ungzipData: `, ungzipData);
                 let data = JSON.parse(event.data);
                 if (data.progress) {
-                    onProgress(data.progress);
+                    onProgress(data.progress as IProgress);
                 }
             }
             ws.onclose = () => {
@@ -431,7 +431,7 @@ export class services {
             Documents: IDocumentRecord[],
         };
     }
-    public static async getDocumentsFromWorkspaceAsync(path: string, remoteWorkspaceId: string, onProgress: (progress: any) => void) {
+    public static async getDocumentsFromWorkspaceAsync(path: string, remoteWorkspaceId: string, onProgress: (progress: IProgress) => void) {
         return await services.runPluginAsync("workspace-get-documents", {
             path,
             remoteWorkspaceId
