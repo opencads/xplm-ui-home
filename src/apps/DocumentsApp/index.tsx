@@ -30,9 +30,23 @@ export interface IDocumentRecord {
     fileName: string;
     number: string;
     partNumber: string;
-    remoteState: 'new' | 'checkedIn' | 'checkedOut' | 'unknown';
-    remoteLastModifiedTime: string;
-    lifeCycle: string;
+    remote: {
+        remoteState: 'new' | 'checkedIn' | 'checkedOut' | 'unknown';
+        remoteLastModifiedTime: string;
+        lifeCycle: string;
+        remoteAttributes: {
+            key: string,
+            value: string,
+            type: string
+        }[];
+        remoteChildren: {
+            fileName: string,
+            name: string,
+            number: string,
+            partNumber: string
+        }[];
+        raw?: any
+    },
     local: {
         workspaceState: 'untracked' | 'modified' | 'archived' | 'missing' | 'todownload';
         localFilePath: string;
@@ -48,23 +62,13 @@ export interface IDocumentRecord {
             partNumber: string
         }[];
         localLastModifiedTime: string;
+        raw?: any
     };
-    remoteAttributes: {
-        key: string,
-        value: string,
-        type: string
-    }[];
-    remoteChildren: {
-        fileName: string,
-        name: string,
-        number: string,
-        partNumber: string
-    }[];
 }
 
 export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
     (props, ref) => {
-        const renderRemoteState = (state: IDocumentRecord["remoteState"]) => {
+        const renderRemoteState = (state: IDocumentRecord["remote"]["remoteState"]) => {
             if (state == 'new') {
                 return <Tag>New</Tag>;
             } else if (state == 'checkedIn') {
@@ -123,7 +127,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 width: '8em',
                 render: (text, record) => {
                     return <Flex spacing={'4px'}>
-                        {renderRemoteState(record.remoteState)}
+                        {renderRemoteState(record.remote.remoteState)}
                         {renderLocalState(record.local.workspaceState)}
                     </Flex>
                 }
@@ -139,10 +143,10 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 fixed: 'right',
                 render: (text, record) => {
                     return <Flex spacing={'4px'}>
-                        {record.remoteState != 'checkedIn' && record.remoteState != 'unknown' && record.local.localFilePath.length > 0 ? <Button type='text' icon={<CheckInSvg />} onClick={async () => {
+                        {record.remote.remoteState != 'checkedIn' && record.remote.remoteState != 'unknown' && record.local.localFilePath.length > 0 ? <Button type='text' icon={<CheckInSvg />} onClick={async () => {
                             props.onCheckIn?.([record]);
                         }}>{"Check In"}</Button> : undefined}
-                        {record.remoteState == 'checkedIn' ? <Button type='text' icon={<CheckOutSvg />}>{"Check Out"}</Button> : undefined}
+                        {record.remote.remoteState == 'checkedIn' ? <Button type='text' icon={<CheckOutSvg />}>{"Check Out"}</Button> : undefined}
                         <Button onClick={() => {
                             props.onDetail?.(record);
                         }} type='text' icon={<DetailSvg />}>{"Detail"}</Button>

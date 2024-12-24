@@ -84,7 +84,9 @@ export interface IUserInfomation {
 
 export interface ICheckInInput {
     Items: {
-        FilePath: string
+        FilePath: string,
+        remoteRaw?: any,
+        localRaw?: any,
     }[]
 }
 

@@ -128,7 +128,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const createDetails = (record: IDocumentRecord) => {
         let result = [] as IMarkdownLine[];
         result.push(`## ${record.name}`);
-        if (record.remoteAttributes.length > 0) {
+        if (record.remote.remoteAttributes.length > 0) {
             result.push(`### Remote Attributes`);
             result.push({
                 type: 'card',
@@ -141,7 +141,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                         keys: ["key", "value"],
                         defaultType: 'text'
                     },
-                    defaultValue: record.remoteAttributes
+                    defaultValue: record.remote.remoteAttributes
                 }]
             });
         }
@@ -162,7 +162,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 }]
             });
         }
-        if (record.remoteChildren.length > 0) {
+        if (record.remote.remoteChildren.length > 0) {
             result.push(`### Remote Children`);
             result.push({
                 type: 'card',
@@ -175,7 +175,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                         keys: ["fileName", "name", "number", "partNumber"],
                         defaultType: 'text'
                     },
-                    defaultValue: record.remoteChildren
+                    defaultValue: record.remote.remoteChildren
                 }]
             });
         }
@@ -245,7 +245,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                     try {
                         await services.logout();
                         updateUserInfo({
-                            isLogin:false
+                            isLogin: false
                         });
                     }
                     catch (e: any) {
