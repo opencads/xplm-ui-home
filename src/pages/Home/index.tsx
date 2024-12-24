@@ -46,6 +46,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     let navigate = useNavigate();
     const self = useRef<IHomeRef>({
         refreshDocuments: async (showLoading: boolean) => {
+            updateLoadingPercent(0);
+            updateLoadingTip('');
             if (showLoading) updateLoading(true);
             try {
                 let documents = await services.getDocumentsFromWorkspaceAsync(await services.getDefaultDirectory(), "", progress => {
