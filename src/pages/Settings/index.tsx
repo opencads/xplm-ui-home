@@ -27,7 +27,7 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
     const foreachKey = async (value: any, validKeys: string[], onKeyValue: (obj: any, key: string, value: any) => Promise<any>) => {
         if (Array.isArray(value)) {
             for (let item of value) {
-                foreachKey(item, validKeys, onKeyValue);
+               await foreachKey(item, validKeys, onKeyValue);
             }
         }
         else if (typeof value === 'object') {
