@@ -47,7 +47,6 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
             try {
                 let settings = await services.getSettings();
                 let defaultValues = {} as any;
-                console.log('original settings: ', settings);
                 // 获取getter数量
                 let getterCount = 0;
                 await foreachKey(settings, ["getter"], async (obj, key, value) => {
@@ -71,7 +70,6 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
                 });
                 updateMarkdownLines(settings);
                 defaultConfig.current = JSON.parse(JSON.stringify(defaultValues));
-                console.log('computed default config: ', defaultConfig.current);
             }
             catch (e: any) {
                 console.log(e);
