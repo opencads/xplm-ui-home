@@ -340,9 +340,6 @@ export class services {
                 }));
             }
             ws.onmessage = (event) => {
-                // console.log(`event`,event);
-                // let ungzipData = pako.ungzip(new Uint8Array(event.data), { to: 'string' });
-                // console.log(`ungzipData: `, ungzipData);
                 let data = JSON.parse(event.data);
                 if (data.progress) {
                     onProgress(data.progress as IProgress);
@@ -441,5 +438,8 @@ export class services {
     }
     public static async checkinDocuments(input: ICheckInInput) {
         return await services.runPlugin("checkin", input);
+    }
+    public static async getSettings() {
+        return await services.runPlugin("get-settings", {});
     }
 }

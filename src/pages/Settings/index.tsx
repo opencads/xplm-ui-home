@@ -18,117 +18,67 @@ export interface ISettingsRef {
 
 export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) => {
     const navigate = useNavigate();
-    const [markdownLines, setMarkdownLines] = useUpdate<IMarkdownLine[]>([]);
+    const [markdownLines, updateMarkdownLines] = useUpdate<IMarkdownLine[]>([]);
+    const [loading, updateLoading, loadingRef] = useUpdate(false);
+    const [loadingPercent, updateLoadingPercent, loadingPercentRef] = useUpdate<number | undefined>(undefined);
+    const [loadingTip, updateLoadingTip, loadingTipRef] = useUpdate('');
     const defaultConfig = useRef<any>(undefined);
     const configRef = useRef<IConfigAppRef | null>(null);
-    const [loading, updateLoading, loadingRef] = useUpdate(false);
+    const foreachKey = async (value: any, validKeys: string[], onKeyValue: (obj: any, key: string, value: any) => Promise<any>) => {
+        if (Array.isArray(value)) {
+            for (let item of value) {
+                foreachKey(item, validKeys, onKeyValue);
+            }
+        }
+        else if (typeof value === 'object') {
+            for (let key in value) {
+                if (validKeys.includes(key)) {
+                    await onKeyValue(value, key, value[key]);
+                }
+            }
+            for (let key in value) {
+                await foreachKey(value[key], validKeys, onKeyValue);
+            }
+        }
+    };
     const self = useRef({
         refresh: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
             try {
-                let currentConfig = {
-                    defaultDirectory: await services.getDefaultDirectory(),
-                    subscribers: await services.getPluginSubscribers(),
-                    localSubscribers: await services.getLocalSubscribers(),
-                    plugins: await services.getPlugins()
-                };
-                defaultConfig.current = JSON.parse(JSON.stringify(currentConfig));
-                setMarkdownLines([
-                    "# Settings",
-                    {
-                        type: 'tab',
-                        text: "Workspace",
-                        children: [
-                            "## Master Workspace",
-                            {
-                                type: 'card',
-                                children: [
-                                    {
-                                        type: 'line-input',
-                                        text: 'Default Workspace:',
-                                        valueKey: 'defaultDirectory',
-                                        defaultValue: currentConfig.defaultDirectory
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        type: 'tab',
-                        text: 'Plugins',
-                        children: [
-                            "## Subscribers",
-                            {
-                                type: 'card',
-                                children: [
-                                    {
-                                        type: 'table',
-                                        text: 'Subscribers:',
-                                        valueKey: 'subscribers',
-                                        tableOptions: {
-                                            keys: ["name", "url", {
-                                                key: "type",
-                                                type: 'select',
-                                                selectOptions: ["git-release", "git-repository"],
-                                                selectWidth: '12em',
-                                                columnWidth: '14em'
-                                            }],
-                                        },
-                                        defaultValue: currentConfig.subscribers
-                                    }
-                                ]
-                            },
-                            {
-                                type: 'card',
-                                children: [
-                                    {
-                                        type: 'line-switch',
-                                        text: 'Update Plugins After Apply',
-                                        defaultValue: false,
-                                        valueKey: 'updatePluginsAfterApply'
-                                    }
-                                ]
-                            },
-                            "## Local Subscribers",
-                            {
-                                type: 'card',
-                                children: [
-                                    {
-                                        type: 'table',
-                                        valueKey: 'localSubscribers',
-                                        tableOptions: {
-                                            keys: ["name", "url"],
-                                            add: false
-                                        },
-                                        defaultValue: currentConfig.localSubscribers
-                                    },
-                                ]
-                            },
-                            "## Plugins",
-                            {
-                                type: 'card',
-                                children: [
-                                    {
-                                        type: 'table',
-                                        valueKey: 'plugins',
-                                        tableOptions: {
-                                            defaultType: 'text',
-                                            keys: ["Name", "Entry"],
-                                            add: false,
-                                            remove: false
-                                        },
-                                        defaultValue: currentConfig.plugins
-                                    }
-                                ]
-                            }
-                        ]
+                let settings = await services.getSettings();
+                let defaultValues = {} as any;
+                console.log('original settings: ', settings);
+                // 获取getter数量
+                let getterCount = 0;
+                await foreachKey(settings, ["getter"], async (obj, key, value) => {
+                    if (typeof value == 'string' && value.startsWith("$plugin:")) getterCount++;
+                });
+                // 遍历所有的key，如果是getter，则调用并且赋值给defaultValue
+                let getterIndex = 0;
+                await foreachKey(settings, ["getter"], async (obj, key, value) => {
+                    if (key == "getter") {
+                        if (typeof value == 'string' && value.startsWith("$plugin:")) {
+                            let pluginName = value.substring(8);
+                            let valueKey = obj['valueKey'];
+                            updateLoadingTip(`正在获取 ${valueKey} 配置`);
+                            updateLoadingPercent(getterIndex / getterCount * 100);
+                            obj["defaultValue"] = await services.runPlugin(pluginName, {});
+                            defaultValues[obj['valueKey']] = obj["defaultValue"];
+                            getterIndex++;
+                        }
                     }
-                ]);
+                    return value;
+                });
+                updateMarkdownLines(settings);
+                defaultConfig.current = JSON.parse(JSON.stringify(defaultValues));
+                console.log('computed default config: ', defaultConfig.current);
             }
             catch (e: any) {
                 console.log(e);
             }
             if (showLoading) updateLoading(false);
+            updateLoadingPercent(undefined);
+            updateLoadingTip('');
         }
     });
     useEffect(() => {
@@ -144,34 +94,44 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
         }
         updateLoading(true);
         try {
-            if (JSON.stringify(defaultConfig.current.defaultDirectory) != JSON.stringify(currentConfig.defaultDirectory)) {
-                await services.setDefaultDirectory(currentConfig.defaultDirectory);
-            }
-            if (JSON.stringify(defaultConfig.current.subscribers) != JSON.stringify(currentConfig.subscribers)) {
-                await services.setPluginSubscribers(currentConfig.subscribers);
-            }
-            if (JSON.stringify(defaultConfig.current.localSubscribers) != JSON.stringify(currentConfig.localSubscribers)) {
-                for (let oldSubscriber of defaultConfig.current.localSubscribers) {
-                    if (!currentConfig.localSubscribers.find((x: any) => x.name == oldSubscriber.name)) {
-                        await services.removeLocalSubscriber(oldSubscriber.name);
+            let setterCount = 0;
+            await foreachKey(markdownLines, ["setter"], async (obj, key, value) => {
+                if (key == "setter") {
+                    if (typeof value == 'string' && value.startsWith("$plugin:")) setterCount++;
+                }
+            });
+            let setterIndex = 0;
+            await foreachKey(markdownLines, ["setter"], async (obj, key, value) => {
+                if (key == "setter") {
+                    if (typeof value == 'string' && value.startsWith("$plugin:")) {
+                        let pluginName = value.substring(8);
+                        if (currentConfig) {
+                            updateLoadingTip(`正在设置 ${obj['valueKey']} 配置`);
+                            await services.runPlugin(pluginName, {
+                                currentValue: currentConfig[obj['valueKey']],
+                                defaultValue: defaultConfig.current[obj['valueKey']]
+                            });
+                            updateLoadingPercent(setterIndex / setterCount * 100);
+                        }
                     }
                 }
-            }
-            if (currentConfig.updatePluginsAfterApply == true) {
-                await services.updatePlugins();
-            }
+                return value;
+            });
         } catch (e: any) {
             console.log(e);
         }
         self.current.refresh(false);
-
         updateLoading(false);
+        updateLoadingPercent(undefined);
+        updateLoadingTip('');
     };
     return <Flex direction='column' style={{
         height: '100vh',
         backgroundColor: 'rgb(247, 247, 247)',
     }} spacing={'4px'}>
-        <Spin spinning={loading} fullscreen></Spin>
+        <Spin size={'large'} tip={<div style={{
+            marginTop: '32px'
+        }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         <Flex>
             <Flex className={dragClass} onMouseDown={e => {
                 services.mouseDownDrag();
