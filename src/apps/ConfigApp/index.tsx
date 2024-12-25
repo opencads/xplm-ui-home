@@ -404,7 +404,7 @@ export const ConfigApp = forwardRef<IConfigAppRef, IConfigAppProps>((props, ref)
                 }
 
             }
-            if (item.tableOptions?.add != false && item.tableOptions?.remove != false) {
+            if (enableAdd || enableRemove) {
                 columns.push({
                     key: 'Operations',
                     title: 'Operations',

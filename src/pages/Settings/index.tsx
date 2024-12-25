@@ -60,12 +60,10 @@ export const Settings = forwardRef<ISettingsRef, ISettingsProps>((props, ref) =>
                         if (typeof value == 'string' && value.startsWith("$plugin:")) {
                             let pluginName = value.substring(8);
                             let valueKey = obj['valueKey'];
-                            console.log(`valueKey: ${valueKey}`);
                             updateLoadingTip(`正在获取 ${valueKey} 配置`);
                             updateLoadingPercent(getterIndex / getterCount * 100);
                             obj["defaultValue"] = await services.runPlugin(pluginName, {});
                             defaultValues[valueKey] = obj["defaultValue"];
-                            console.log(`defaultValues:`,defaultValues);
                             getterIndex++;
                         }
                     }
