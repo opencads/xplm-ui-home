@@ -63,7 +63,7 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
         <Flex>
 
         </Flex>
-        <TableApp dataSource={props.workspaces} style={{ flex: 1, height: 0 }}>
+        <TableApp columns={columns} dataSource={props.workspaces} style={{ flex: 1, height: 0 }}>
 
         </TableApp>
     </Flex>
