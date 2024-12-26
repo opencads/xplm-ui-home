@@ -69,6 +69,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 console.log(e);
             }
             if (showLoading) {
+                console.log('refreshDocuments done');
                 updateLoading(false);
             }
             updateLoadingPercent(undefined);
@@ -98,7 +99,10 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             catch (e) {
 
             }
-            if (showLoading) updateLoading(false);
+            if (showLoading) {
+                console.log('archive done');
+                updateLoading(false);
+            }
         },
         refreshUserInfo: async () => {
             let userInfo = await services.getUserInfo();
@@ -116,7 +120,10 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             catch {
 
             }
-            if (showLoading) updateLoading(false);
+            if (showLoading) {
+                console.log('refresh done');
+                updateLoading(false);
+            }
         },
         checkIn: async (records: IDocumentRecord[], showLoading: boolean) => {
             if (showLoading) updateLoading(true);
@@ -134,7 +141,10 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             catch (e) {
                 console.log(e);
             }
-            if (showLoading) updateLoading(false);
+            if (showLoading) {
+                console.log('checkIn done');
+                updateLoading(false);
+            }
         },
         refreshLayoutTabs: async () => {
             let layout = await services.getLayout();
@@ -146,9 +156,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     useEffect(() => {
         self.current?.refresh(true);
     }, []);
-    useEffect(()=>{
+    useEffect(() => {
         console.log(`loading:${loadingRef.current}`);
-    },[loading]);
+    }, [loading]);
     useLocalStorageListener("login", data => {
         if (loadingRef.current) return;
         updateUserInfo(JSON.parse(data));
@@ -255,6 +265,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             catch {
 
             }
+            console.log('archive done');
             updateLoading(false);
         }} onImported={async () => {
             await self.current.refreshDocuments(false);
@@ -268,6 +279,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
 
             }
             updateLoading(false);
+            console.log('checkIn done');
         }}></DocumentsApp>
         else if (tab.url.startsWith('/')) {
             return <iframe key={tab.url} src={tab.url} style={{
@@ -304,6 +316,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                         console.log(e);
                     }
                     updateLoading(false);
+                    console.log('logout done');
                 }} style={{ padding: '0px 4px' }} info={userInfo}></UserAvatarApp>
             </Flex>
             <Flex className={dragClass} onMouseDown={e => {
