@@ -146,6 +146,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     useEffect(() => {
         self.current?.refresh(true);
     }, []);
+    useEffect(()=>{
+        console.log(`loading:${loadingRef.current}`);
+    },[loading]);
     useLocalStorageListener("login", data => {
         if (loadingRef.current) return;
         updateUserInfo(JSON.parse(data));
