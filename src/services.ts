@@ -473,6 +473,6 @@ export class services {
         };
     }
     public static async getRemoteWorkspaces() {
-        return await services.runPlugin("get-remote-workspaces", {}) as IWorkspaceRecord[];
+        return await services.runPlugin("remote-workspaces-get", {}) as IWorkspaceRecord[];
     }
 }
