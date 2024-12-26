@@ -140,7 +140,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             updateLayoutTabs(layout.tabs ?? []);
         }
     });
-    const uiCache = useRef<{ [key: string]: ReactNode }>({});
+    const contentsCache = useRef<JSX.Element[]>([]);
     useImperativeHandle(ref, () => self.current);
     useEffect(() => {
         self.current?.refreshLayoutTabs();
@@ -235,10 +235,11 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             updateDetailsMarkdownLines([]);
         }}>{tab.title}</Button>
     };
-    const _renderContentByUrl = (url: string) => {
-        if (url == "native://documents") return <DocumentsApp style={{
+    const renderContentByUrl = (tab: ILayoutTab) => {
+        if (tab.url == "native://documents") return <DocumentsApp key={tab.url} style={{
             flex: 1,
-            height: 0
+            height: 0,
+            display: currentTab == tab.key ? 'flex' : 'none'
         }} onDetail={record => {
             updateDetailsMarkdownLines(createDetails(record));
             updateShowDetails(true);
@@ -265,24 +266,16 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             }
             updateLoading(false);
         }}></DocumentsApp>
-        else if (url.startsWith('/')) {
-            return <iframe src={url} style={{
+        else if (tab.url.startsWith('/')) {
+            return <iframe key={tab.url} src={tab.url} style={{
                 flex: 1,
                 height: 0,
-                border: 'none'
+                border: 'none',
+                display: currentTab == tab.key ? 'block' : 'none'
             }}></iframe>
         }
     };
-    const renderContentByUrl = (url: string) => {
-        if (uiCache.current[url]) return uiCache.current[url];
-        let result = _renderContentByUrl(url);
-        uiCache.current[url] = result;
-        return result;
-    }
-    const renderContent = () => {
-        let tab = layoutTabs.find(tab => tab.key == currentTab);
-        if (tab) return renderContentByUrl(tab.url);
-    };
+
     return <Flex style={{
         ...props.style,
         backgroundColor: '#f4f4f4'
@@ -358,7 +351,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 backgroundColor: '#fff',
                 padding: '4px'
             }} direction='column'>
-                {renderContent()}
+                {layoutTabs.map(item => renderContentByUrl(item))}
             </Flex>
             <ResizeButton style={{
                 display: showDetails ? 'flex' : 'none'
