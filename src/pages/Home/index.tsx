@@ -55,6 +55,16 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const [layoutTabs, updateLayoutTabs] = useUpdate<ILayoutTab[]>([]);
     const [currentTab, updateCurrentTab] = useUpdate<string>("documents");
     let navigate = useNavigate();
+    const tryAll = async (tasks: Promise<any>[]) => {
+        for (let task of tasks) {
+            try {
+                await task;
+            }
+            catch (e) {
+                console.log(e);
+            }
+        }
+    }
     const self = useRef<IHomeRef>({
         refreshDocuments: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
@@ -115,9 +125,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 await self.current?.refreshLayoutTabs();
                 let task1 = self.current?.refreshUserInfo();
                 let task2 = self.current?.refreshDocuments(false);
-                await Promise.all([task1, task2]);
+                await tryAll([task1, task2]);
             }
-            catch(e) {
+            catch (e) {
                 console.log(e);
             }
             if (showLoading) {
