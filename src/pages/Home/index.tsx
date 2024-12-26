@@ -319,8 +319,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                     services.openUrl(currentUrl + '/settings', {
                         x: 'center',
                         y: "center",
-                        width: 450,
-                        height: 600
+                        width: '80%',
+                        height: '80%'
                     });
                 }}>{"Settings"}</Button>
                 <Button type='text' icon={<CloseOutlined />} onClick={() => {

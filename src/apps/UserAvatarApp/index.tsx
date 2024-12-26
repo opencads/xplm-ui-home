@@ -61,7 +61,12 @@ export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>(
             ...props.style
         }} shape={'circle'} onClick={() => {
             let currentUrl = window.location.pathname;
-            services.openUrl(currentUrl + '/login');
+            services.openUrl(currentUrl + '/login', {
+                x: 'center',
+                y: "center",
+                width: 450,
+                height: 600
+            });
         }}>
         </Avatar>
     }
