@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import React, { ReactNode, forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Flex, InjectClass, useUpdate } from "../../natived";
 import { Avatar, Button, Spin } from "antd";
 import { CloseOutlined, MinusOutlined, SettingOutlined } from "@ant-design/icons";
@@ -140,6 +140,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             updateLayoutTabs(layout.tabs ?? []);
         }
     });
+    const uiCache = useRef<{ [key: string]: ReactNode }>({});
     useImperativeHandle(ref, () => self.current);
     useEffect(() => {
         self.current?.refreshLayoutTabs();
@@ -234,7 +235,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             updateDetailsMarkdownLines([]);
         }}>{tab.title}</Button>
     };
-    const renderContentByUrl = (url: string) => {
+    const _renderContentByUrl = (url: string) => {
+
         if (url == "native://documents") return <DocumentsApp style={{
             flex: 1,
             height: 0
@@ -272,6 +274,12 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             }}></iframe>
         }
     };
+    const renderContentByUrl = (url: string) => {
+        if (uiCache.current[url]) return uiCache.current[url];
+        let result = _renderContentByUrl(url);
+        uiCache.current[url] = result;
+        return result;
+    }
     const renderContent = () => {
         let tab = layoutTabs.find(tab => tab.key == currentTab);
         if (tab) return renderContentByUrl(tab.url);

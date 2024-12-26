@@ -11,7 +11,7 @@ export interface IWorkspaceAppRef {
 
 export interface IWorkspaceAppProps {
     style?: React.CSSProperties,
-    workspaces: IWorkspaceRecord[],
+    workspaces?: IWorkspaceRecord[],
 }
 
 export interface IWorkspaceRecord {
@@ -63,7 +63,7 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
         <Flex>
 
         </Flex>
-        <TableApp columns={columns} dataSource={props.workspaces} style={{ flex: 1, height: 0 }}>
+        <TableApp columns={columns} dataSource={props.workspaces ?? []} style={{ flex: 1, height: 0 }}>
 
         </TableApp>
     </Flex>
