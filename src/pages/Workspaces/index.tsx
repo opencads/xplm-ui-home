@@ -22,5 +22,8 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
     useEffect(() => {
         self.current.refreshWorkspaces();
     }, []);
-    return <WorkspacesApp workspaces={workspaces} />;
+    return <WorkspacesApp style={{
+        width:'100vw',
+        height:'100vh'
+    }} workspaces={workspaces} />;
 });
