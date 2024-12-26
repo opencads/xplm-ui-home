@@ -288,7 +288,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <Flex verticalCenter>
                 <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                     updateSidebarVisible(!sidebarVisible);
-                }}>{"Sidebar"}</Button>
+                }}></Button>
                 <UserAvatarApp onLogout={async () => {
                     updateLoading(true);
                     try {
@@ -330,11 +330,12 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }} direction='row'>
             {/* 侧边 */}
             <Flex style={{
-                width: '160px',
+                width: '120px',
                 backgroundColor: '#fff',
                 margin: '0px 2px 0px 0px',
                 display: sidebarVisible ? 'flex' : 'none',
-                padding: '0px 4px'
+                padding: '0px 4px',
+                alignItems: 'start'
             }} direction='column' spacing={'8px'} spacingStart={'4px'}>
                 {layoutTabs.map(tab => renderTab(tab))}
             </Flex>
