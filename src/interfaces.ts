@@ -1,3 +1,5 @@
+import { IDocumentRecord } from "./apps/DocumentsApp";
+
 export type Guid = string;
 export type DateTime = string;
 
@@ -85,8 +87,7 @@ export interface IUserInfomation {
 export interface ICheckInInput {
     Items: {
         FilePath: string,
-        remoteRaw?: any,
-        localRaw?: any,
+        Document:IDocumentRecord
     }[]
 }
 

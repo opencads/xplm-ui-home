@@ -80,7 +80,8 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
                 } as ICheckInInput;
                 for (let record of records) {
                     checkInInput.Items.push({
-                        FilePath: record.local.localFilePath
+                        FilePath: record.local.localFilePath,
+                        Document: record
                     });
                 }
                 await services.checkinDocuments(checkInInput);
@@ -179,8 +180,8 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
     }}>
         <Spin spinning={loading} tip={loadingTip} percent={loadingPercent} fullscreen size='large'></Spin>
         <Flex style={{
-            flex:1,
-            height:0
+            flex: 1,
+            height: 0
         }}>
             <DocumentsApp style={{
                 flex: 1,
