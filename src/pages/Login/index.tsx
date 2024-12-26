@@ -1,4 +1,4 @@
-import { forwardRef, useRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { Flex, useUpdate } from "../../natived";
 import { LoginApp } from "../../apps/LoginApp";
 import { Button, Spin } from "antd";
@@ -48,10 +48,14 @@ export const Login = forwardRef<ILoginRef, ILoginProps>((props, ref) => {
                 updateLoading(false);
         }
     });
+    useEffect(() => {
+        self.current.refreshInfo(true);
+    }, []);
     return <Flex direction='column' style={{
         width: '100vw',
         height: '100vh'
     }}>
+        <Spin spinning={loading} fullscreen></Spin>
         <Flex>
             <Flex className={dragClass} onMouseDown={e => {
                 services.mouseDownDrag();
