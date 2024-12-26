@@ -117,8 +117,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 let task2 = self.current?.refreshDocuments(false);
                 await Promise.all([task1, task2]);
             }
-            catch {
-
+            catch(e) {
+                console.log(e);
             }
             if (showLoading) {
                 console.log('refresh done');
