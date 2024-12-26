@@ -51,7 +51,7 @@ export class services {
         return `http://localhost:12332${url}`;
     }
 
-    public static async openUrl(url: string, ratio: number = 0.6) {
+    public static async openUrl(url: string, ratio?: number) {
         ///api/v1/app/open/
         let response = await axios.post(services.FormatUIUrl("/api/v1/app/open"), {
             url: window.location.origin + url,
