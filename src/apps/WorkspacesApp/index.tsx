@@ -52,8 +52,7 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
             render: (value, record) => {
                 return <Flex>
                     {record.active ? <Button icon={<Icon component={ActiveSvg} style={{
-                        color: 'red',
-                        border: '1px solid red',
+                        color: 'red'
                     }}></Icon>}>{"Active"}</Button> : undefined}
                 </Flex>;
             }
