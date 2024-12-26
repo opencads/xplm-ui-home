@@ -442,4 +442,18 @@ export class services {
     public static async getSettings() {
         return await services.runPlugin("get-settings", {});
     }
+    public static async getLoginInfo() {
+        return await services.runPlugin("get-login-info", {}) as {
+            username?: string,
+            password?: string,
+            remember?: boolean
+        };
+    }
+    public static async setLoginInfo(username: string, password: string, remember: boolean) {
+        return await services.runPlugin("set-login-info", {
+            username,
+            password,
+            remember
+        });
+    }
 }
