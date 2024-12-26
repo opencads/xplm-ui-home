@@ -108,6 +108,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         refresh: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
             try {
+                await self.current?.refreshLayoutTabs();
                 let task1 = self.current?.refreshUserInfo();
                 let task2 = self.current?.refreshDocuments(false);
                 await Promise.all([task1, task2]);
@@ -143,7 +144,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const contentsCache = useRef<JSX.Element[]>([]);
     useImperativeHandle(ref, () => self.current);
     useEffect(() => {
-        self.current?.refreshLayoutTabs();
         self.current?.refresh(true);
     }, []);
     useLocalStorageListener("login", data => {
