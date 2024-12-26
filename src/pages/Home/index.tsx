@@ -13,6 +13,7 @@ import { IMarkdownAppRef, IMarkdownLine, MarkdownApp, MarkdownLine } from "../..
 import { UserAvatarApp } from "../../apps/UserAvatarApp";
 import { useLocalStorageListener } from "../../utils";
 import DocumentsSvg from "../../svgs/Documents.svg?react"
+import WorkspacesSvg from "../../svgs/Workspaces.svg?react"
 
 export const dragClass = InjectClass(`
 -webkit-app-region: drag;
@@ -27,8 +28,17 @@ export interface IHomeRef {
     archive: (showLoading: boolean) => Promise<void>,
     refreshUserInfo: () => Promise<void>,
     refresh: (showLoading: boolean) => Promise<void>,
-    checkIn: (records: IDocumentRecord[], showLoading: boolean) => Promise<void>
+    checkIn: (records: IDocumentRecord[], showLoading: boolean) => Promise<void>,
+    refreshLayoutTabs: () => Promise<void>
 }
+
+export interface ILayoutTab {
+    key: string,
+    icon?: string,
+    title: string,
+    url: string
+}
+
 
 export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const [documents, updateDocuments, documentRef] = useUpdate<IDocumentRecord[]>([]);
@@ -42,7 +52,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     const [userInfo, updateUserInfo] = useUpdate<IUserInfomation>({
         isLogin: false
     });
-    const [currentTab, updateCurrentTab] = useUpdate<'documents' | 'workspaces'>("documents");
+    const [layoutTabs, updateLayoutTabs] = useUpdate<ILayoutTab[]>([]);
+    const [currentTab, updateCurrentTab] = useUpdate<string>("documents");
     let navigate = useNavigate();
     const self = useRef<IHomeRef>({
         refreshDocuments: async (showLoading: boolean) => {
@@ -123,10 +134,15 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 console.log(e);
             }
             if (showLoading) updateLoading(false);
+        },
+        refreshLayoutTabs: async () => {
+            let layout = await services.getLayout();
+            updateLayoutTabs(layout.tabs ?? []);
         }
     });
     useImperativeHandle(ref, () => self.current);
     useEffect(() => {
+        self.current?.refreshLayoutTabs();
         self.current?.refresh(true);
     }, []);
     useLocalStorageListener("login", data => {
@@ -207,8 +223,19 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }
         return result;
     };
-    const renderContent = () => {
-        if (currentTab == 'documents') return <DocumentsApp style={{
+    const renderIcon = (icon?: string) => {
+        if (icon == "documents") return <DocumentsSvg></DocumentsSvg>;
+        else if (icon == "workspaces") return <WorkspacesSvg></WorkspacesSvg>
+        else return <></>;
+    };
+    const renderTab = (tab: ILayoutTab) => {
+        return <Button type='text' icon={renderIcon(tab.icon)} onClick={() => {
+            updateCurrentTab(tab.key);
+            updateDetailsMarkdownLines([]);
+        }}>{tab.title}</Button>
+    };
+    const renderContentByUrl = (url: string) => {
+        if (url == "native://documents") return <DocumentsApp style={{
             flex: 1,
             height: 0
         }} onDetail={record => {
@@ -237,6 +264,17 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             }
             updateLoading(false);
         }}></DocumentsApp>
+        else if (url.startsWith('/')) {
+            return <iframe src={url} style={{
+                flex: 1,
+                height: 0,
+                border: 'none'
+            }}></iframe>
+        }
+    };
+    const renderContent = () => {
+        let tab = layoutTabs.find(tab => tab.key == currentTab);
+        if (tab) return renderContentByUrl(tab.url);
     };
     return <Flex style={{
         ...props.style,
@@ -278,7 +316,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <Flex spacing={'4px'}>
                 <Button type='text' icon={<SettingOutlined />} onClick={() => {
                     let currentUrl = window.location.pathname;
-                    services.openUrl(currentUrl + '/settings', 1);
+                    services.openUrl(currentUrl + '/settings', 0.9);
                 }}>{"Settings"}</Button>
                 <Button type='text' icon={<CloseOutlined />} onClick={() => {
                     services.close();
@@ -298,10 +336,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 display: sidebarVisible ? 'flex' : 'none',
                 padding: '0px 4px'
             }} direction='column' spacing={'8px'} spacingStart={'4px'}>
-                <Button type='text' icon={<DocumentsSvg></DocumentsSvg>} onClick={() => {
-                    updateCurrentTab('documents');
-                    updateDetailsMarkdownLines([]);
-                }}>{"Documents"}</Button>
+                {layoutTabs.map(tab => renderTab(tab))}
             </Flex>
             {/* 内容 */}
             <Flex style={{

@@ -3,6 +3,7 @@ import { DocumentInterface, ICheckInInput, ICheckInOutput, IImportInput, IProgre
 import SparkMD5 from 'spark-md5';
 import { IDocumentRecord } from "./apps/DocumentsApp";
 import pako from 'pako';
+import { ILayoutTab } from "./pages/Home";
 export type Guid = string;
 const Util = {
     calculateFileMD5: (file: File): Promise<string> => {
@@ -456,5 +457,10 @@ export class services {
             password,
             remember
         });
+    }
+    public static async getLayout() {
+        return await services.runPlugin("get-layout", {}) as {
+            tabs?: ILayoutTab[]
+        };
     }
 }
