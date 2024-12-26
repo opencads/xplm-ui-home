@@ -16,6 +16,7 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
     const self = useRef({
         refreshWorkspaces: async () => {
             let workspaces = await services.getRemoteWorkspaces();
+            console.log(workspaces)
             updateWorkspaces(workspaces);
         }
     });
@@ -23,7 +24,7 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
         self.current.refreshWorkspaces();
     }, []);
     return <WorkspacesApp style={{
-        width:'100vw',
-        height:'100vh'
+        width: '100vw',
+        height: '100vh'
     }} workspaces={workspaces} />;
 });
