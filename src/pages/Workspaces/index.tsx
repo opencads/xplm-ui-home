@@ -16,7 +16,6 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
     const self = useRef({
         refreshWorkspaces: async () => {
             let workspaces = await services.getRemoteWorkspaces();
-            console.log(workspaces)
             updateWorkspaces(workspaces);
         }
     });
