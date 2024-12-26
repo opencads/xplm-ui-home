@@ -41,10 +41,11 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
             }
             try {
                 await services.activeRemoteWorkspaces(workspaceRecord);
-                workspaces.forEach(workspace => {
+                let temp = [...workspacesRef.current];
+                temp.forEach(workspace => {
                     workspace.active = workspaceRecord.key === workspace.key;
                 });
-                updateWorkspaces([...workspaces]);
+                updateWorkspaces(temp);
             }
             catch (e) {
                 console.log(e);
