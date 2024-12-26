@@ -28,6 +28,7 @@ root.render(
         <Route path="/" element={<Home style={{ width: '100vw', height: '100vh' }} />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/workspaces" element={<Login />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

@@ -4,6 +4,7 @@ import SparkMD5 from 'spark-md5';
 import { IDocumentRecord } from "./apps/DocumentsApp";
 import pako from 'pako';
 import { ILayoutTab } from "./pages/Home";
+import { IWorkspaceRecord } from "./apps/WorkspacesApp";
 export type Guid = string;
 const Util = {
     calculateFileMD5: (file: File): Promise<string> => {
@@ -462,5 +463,8 @@ export class services {
         return await services.runPlugin("get-layout", {}) as {
             tabs?: ILayoutTab[]
         };
+    }
+    public static async getRemoteWorkspaces() {
+        return await services.runPlugin("get-remote-workspaces", {}) as IWorkspaceRecord[];
     }
 }
