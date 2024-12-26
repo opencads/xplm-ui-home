@@ -278,7 +278,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             <Flex spacing={'4px'}>
                 <Button type='text' icon={<SettingOutlined />} onClick={() => {
                     let currentUrl = window.location.pathname;
-                    services.openUrl(currentUrl + '/settings');
+                    services.openUrl(currentUrl + '/settings', 1);
                 }}>{"Settings"}</Button>
                 <Button type='text' icon={<CloseOutlined />} onClick={() => {
                     services.close();
