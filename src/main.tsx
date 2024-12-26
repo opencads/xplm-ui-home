@@ -8,6 +8,7 @@ import { Settings } from './pages/Settings';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Workspace } from './pages/Workspaces';
+import { Documents } from './pages/Documents';
 const VITE_PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL;
 console.log(`build time:${import.meta.env.VITE_APP_BUILD_TIME}`);
 InjectStyle(`
@@ -30,6 +31,7 @@ root.render(
         <Route path="/settings" element={<Settings />} />
         <Route path="/login" element={<Login />} />
         <Route path="/workspaces" element={<Workspace />} />
+        <Route path="/documents" element={<Documents />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

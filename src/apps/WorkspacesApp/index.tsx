@@ -12,9 +12,11 @@ export interface IWorkspaceAppRef {
 export interface IWorkspaceAppProps {
     style?: React.CSSProperties,
     workspaces?: IWorkspaceRecord[],
+    onActive?: (workspace: IWorkspaceRecord) => void
 }
 
 export interface IWorkspaceRecord {
+    key:string,
     name: string,
     active?: boolean
 }
@@ -50,9 +52,11 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
             fixed: 'right',
             render: (value, record) => {
                 return <Flex>
-                    {record.active==false ? <Button icon={<Icon component={ActiveSvg} style={{
+                    {record.active == false ? <Button icon={<Icon component={ActiveSvg} style={{
                         color: 'red'
-                    }}></Icon>}>{"Active"}</Button> : undefined}
+                    }}></Icon>} onClick={() => {
+                        props.onActive?.(record);
+                    }}>{"Active"}</Button> : undefined}
                 </Flex>;
             }
         }

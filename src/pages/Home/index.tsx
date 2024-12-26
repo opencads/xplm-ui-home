@@ -24,11 +24,9 @@ export interface IHomeProps {
 }
 
 export interface IHomeRef {
-    refreshDocuments: (showLoading: boolean) => Promise<void>,
-    archive: (showLoading: boolean) => Promise<void>,
+
     refreshUserInfo: () => Promise<void>,
     refresh: (showLoading: boolean) => Promise<void>,
-    checkIn: (records: IDocumentRecord[], showLoading: boolean) => Promise<void>,
     refreshLayoutTabs: () => Promise<void>
 }
 
@@ -41,14 +39,10 @@ export interface ILayoutTab {
 
 
 export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
-    const [documents, updateDocuments, documentRef] = useUpdate<IDocumentRecord[]>([]);
     const [sidebarVisible, updateSidebarVisible, sidebarVisibleRef] = useUpdate(false);
     const [loading, updateLoading, loadingRef] = useUpdate(false);
     const [loadingPercent, updateLoadingPercent, loadingPercentRef] = useUpdate<number | undefined>(undefined);
     const [loadingTip, updateLoadingTip, loadingTipRef] = useUpdate('');
-    const [detailsDelta, updateDetailsDelta, detailsDeltaRef] = useUpdate(0);
-    const [showDetails, updateShowDetails] = useUpdate(false);
-    const [detailsMarkdownLines, updateDetailsMarkdownLines, detailsMarkdownLinesRef] = useUpdate<IMarkdownLine[]>([]);
     const [userInfo, updateUserInfo] = useUpdate<IUserInfomation>({
         isLogin: false
     });
@@ -66,52 +60,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }
     }
     const self = useRef<IHomeRef>({
-        refreshDocuments: async (showLoading: boolean) => {
-            if (showLoading) updateLoading(true);
-            try {
-                let documents = await services.getDocumentsFromWorkspaceAsync(await services.getDefaultDirectory(), "", progress => {
-                    updateLoadingPercent(progress.Progress * 100);
-                    updateLoadingTip(progress.Message);
-                });
-                updateDocuments(documents.Documents);
-            }
-            catch (e) {
-                console.log(e);
-            }
-            if (showLoading) {
-                updateLoading(false);
-            }
-            updateLoadingPercent(undefined);
-            updateLoadingTip("");
-        },
-        archive: async (showLoading: boolean) => {
-            if (showLoading) updateLoading(true);
-            try {
-                let documents = await services.getDocumentsFromWorkspace(await services.getDefaultDirectory(), "");
-                let imports = {
-                    Items: []
-                } as IImportInput;
-                for (let document of documents.Documents) {
-                    if (document.local.workspaceState == 'untracked') {
-                        imports.Items.push({
-                            FilePath: document.local.localFilePath
-                        });
-                    }
-                    else if (document.local.workspaceState == 'modified') {
-                        imports.Items.push({
-                            FilePath: document.local.localFilePath
-                        });
-                    }
-                }
-                await services.importFilesToWorkspace(imports);
-            }
-            catch (e) {
-
-            }
-            if (showLoading) {
-                updateLoading(false);
-            }
-        },
         refreshUserInfo: async () => {
             let userInfo = await services.getUserInfo();
             updateUserInfo(userInfo);
@@ -121,29 +69,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             if (showLoading) updateLoading(true);
             try {
                 await self.current?.refreshLayoutTabs();
-                let task1 = self.current?.refreshUserInfo();
-                let task2 = self.current?.refreshDocuments(false);
-                await tryAll([task1, task2]);
-            }
-            catch (e) {
-                console.log(e);
-            }
-            if (showLoading) {
-                updateLoading(false);
-            }
-        },
-        checkIn: async (records: IDocumentRecord[], showLoading: boolean) => {
-            if (showLoading) updateLoading(true);
-            try {
-                let checkInInput = {
-                    Items: []
-                } as ICheckInInput;
-                for (let record of records) {
-                    checkInInput.Items.push({
-                        FilePath: record.local.localFilePath
-                    });
-                }
-                await services.checkinDocuments(checkInInput);
+                await self.current?.refreshUserInfo();
             }
             catch (e) {
                 console.log(e);
@@ -157,7 +83,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             updateLayoutTabs(layout.tabs ?? []);
         }
     });
-    const contentsCache = useRef<JSX.Element[]>([]);
     useImperativeHandle(ref, () => self.current);
     useEffect(() => {
         self.current?.refresh(true);
@@ -165,7 +90,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     useLocalStorageListener("login", data => {
         if (loadingRef.current) return;
         updateUserInfo(JSON.parse(data));
-        self.current?.refreshDocuments(true);
     });
     const createDetails = (record: IDocumentRecord) => {
         let result = [] as IMarkdownLine[];
@@ -250,41 +174,10 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             backgroundColor: tab.key == currentTab ? '#e6f7ff' : undefined
         }} type='text' icon={renderIcon(tab.icon)} onClick={() => {
             updateCurrentTab(tab.key);
-            updateDetailsMarkdownLines([]);
         }}>{tab.title}</Button>
     };
     const renderContentByUrl = (tab: ILayoutTab) => {
-        if (tab.url == "native://documents") return <DocumentsApp key={tab.url} style={{
-            flex: 1,
-            height: 0,
-            display: currentTab == tab.key ? undefined : 'none'
-        }} onDetail={record => {
-            updateDetailsMarkdownLines(createDetails(record));
-            updateShowDetails(true);
-        }} data={documents} onRefresh={() => self.current.refreshDocuments(true)} onArchive={async () => {
-            updateLoading(true);
-            try {
-                await self.current.archive(false);
-                await self.current.refreshDocuments(false);
-            }
-            catch {
-
-            }
-            updateLoading(false);
-        }} onImported={async () => {
-            await self.current.refreshDocuments(false);
-        }} onCheckIn={async records => {
-            updateLoading(true);
-            try {
-                await self.current.checkIn(records, false);
-                await self.current.refreshDocuments(false);
-            }
-            catch {
-
-            }
-            updateLoading(false);
-        }}></DocumentsApp>
-        else if (tab.url.startsWith('/')) {
+        if (tab.url.startsWith('/')) {
             return <iframe key={tab.url} src={tab.url} style={{
                 flex: 1,
                 height: 0,
@@ -371,30 +264,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             }} direction='column'>
                 {layoutTabs.map(item => renderContentByUrl(item))}
             </Flex>
-            <ResizeButton style={{
-                display: showDetails ? 'flex' : 'none'
-            }} onDeltaChange={updateDetailsDelta}></ResizeButton>
-            <Flex direction='column' style={{
-                backgroundColor: '#fff',
-                display: showDetails ? 'flex' : 'none',
-                margin: '0px 0px 0px 0px',
-                width: `calc(35% - ${detailsDelta}px)`
-            }}>
-                <Flex direction='row'>
-                    <Flex style={{ flex: 1 }}></Flex>
-                    <Flex>
-                        <Button type='text' icon={<MinusOutlined />} onClick={() => {
-                            updateShowDetails(false);
-                        }}></Button>
-                    </Flex>
-                </Flex>
-                <MarkdownApp style={{
-                    flex: 1,
-                    height: 0,
-                    overflowY: 'auto',
-                    padding: '0px 10px'
-                }} markdownLines={detailsMarkdownLines}></MarkdownApp>
-            </Flex>
+
         </Flex>
     </Flex>
 });
