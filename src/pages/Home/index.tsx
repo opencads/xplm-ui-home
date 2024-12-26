@@ -257,7 +257,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         if (tab.url == "native://documents") return <DocumentsApp key={tab.url} style={{
             flex: 1,
             height: 0,
-            display: currentTab == tab.key ? 'flex' : 'none'
+            display: currentTab == tab.key ? undefined : 'none'
         }} onDetail={record => {
             updateDetailsMarkdownLines(createDetails(record));
             updateShowDetails(true);
@@ -289,7 +289,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 flex: 1,
                 height: 0,
                 border: 'none',
-                display: currentTab == tab.key ? 'block' : 'none'
+                display: currentTab == tab.key ? undefined : 'none'
             }}></iframe>
         }
     };
