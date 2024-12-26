@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DocumentInterface, ICheckInInput, ICheckInOutput, IImportInput, IProgress, IUserInfomation, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
+import { DocumentInterface, ICheckInInput, ICheckInOutput, IImportInput, ILocation, IProgress, IUserInfomation, ImportInterface, LocalSubscriber, PluginInterface, PluginSubscriber } from "./interfaces";
 import SparkMD5 from 'spark-md5';
 import { IDocumentRecord } from "./apps/DocumentsApp";
 import pako from 'pako';
@@ -53,11 +53,19 @@ export class services {
         return `http://localhost:12332${url}`;
     }
 
-    public static async openUrl(url: string, ratio?: number) {
+    public static async openUrl(url: string, location?: ILocation) {
         ///api/v1/app/open/
+        if (location == undefined) {
+            location = {
+                x: 'center',
+                y: 'center',
+                width: '60%',
+                height: '60%'
+            };
+        }
         let response = await axios.post(services.FormatUIUrl("/api/v1/app/open"), {
             url: window.location.origin + url,
-            ratio
+            location
         });
         if (response.status === 200) {
             return true;

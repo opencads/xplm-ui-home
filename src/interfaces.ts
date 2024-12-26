@@ -100,3 +100,10 @@ export interface IProgress {
     "Progress": number,
     "Message": string
 }
+
+export interface ILocation {
+    x: number | "left" | "right" | "center" | string,
+    y: number | "top" | "bottom" | "center" | string,
+    width: number | string,
+    height: number | string,
+}
