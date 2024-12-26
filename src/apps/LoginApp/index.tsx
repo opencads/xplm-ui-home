@@ -18,10 +18,9 @@ export interface ILoginAppProps {
 }
 
 export const LoginApp = forwardRef<ILoginAppRef, ILoginAppProps>((props, ref) => {
-    return <Flex direction='column' spacing={'4px'}>
-        <Flex style={{
+    return <Flex direction='column' spacing={'4px'} style={props.style}>
+        <Flex verticalCenter style={{
             padding: '8px 16px',
-            ...props.style
         }}>
             <div style={{ width: '8em' }}>{"Username:"}</div>
             <Input style={{ flex: 1 }} value={props.username} onChange={e => {
