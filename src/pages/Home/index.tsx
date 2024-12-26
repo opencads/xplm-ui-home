@@ -236,7 +236,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }}>{tab.title}</Button>
     };
     const _renderContentByUrl = (url: string) => {
-
         if (url == "native://documents") return <DocumentsApp style={{
             flex: 1,
             height: 0
