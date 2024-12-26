@@ -37,7 +37,8 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
             render: (value, record) => {
                 return <Flex verticalCenter>
                     <Icon style={{
-                        color: record.active ? 'red' : 'transparent'
+                        color: record.active ? 'red' : 'transparent',
+                        border: '1px solid red',
                     }} component={ActiveSvg} />
                     <span>{record.name}</span>
                 </Flex>;
@@ -50,9 +51,10 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
             fixed: 'right',
             render: (value, record) => {
                 return <Flex>
-                    <Button icon={<Icon component={ActiveSvg} style={{
-                        color: 'red'
-                    }}></Icon>}>{"Active"}</Button>
+                    {record.active ? <Button icon={<Icon component={ActiveSvg} style={{
+                        color: 'red',
+                        border: '1px solid red',
+                    }}></Icon>}>{"Active"}</Button> : undefined}
                 </Flex>;
             }
         }
