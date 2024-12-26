@@ -22,8 +22,14 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
             if (showLoading) {
                 updateLoading(true);
             }
-            let workspaces = await services.getRemoteWorkspaces();
-            updateWorkspaces(workspaces);
+            try {
+                let workspaces = await services.getRemoteWorkspaces();
+                updateWorkspaces(workspaces);
+            }
+            catch (e) {
+                console.log(e);
+            }
+
             if (showLoading) {
                 updateLoading(false);
             }
@@ -33,11 +39,17 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
             if (showLoading) {
                 updateLoading(true);
             }
-            await services.activeRemoteWorkspaces(workspaceRecord);
-            workspaces.forEach(workspace => {
-                workspace.active = workspaceRecord.key === workspace.key;
-            });
-            updateWorkspaces([...workspaces]);
+            try {
+                await services.activeRemoteWorkspaces(workspaceRecord);
+                workspaces.forEach(workspace => {
+                    workspace.active = workspaceRecord.key === workspace.key;
+                });
+                updateWorkspaces([...workspaces]);
+            }
+            catch (e) {
+                console.log(e);
+            }
+
             if (showLoading) {
                 updateLoading(false);
             }
