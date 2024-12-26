@@ -246,7 +246,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         else return <></>;
     };
     const renderTab = (tab: ILayoutTab) => {
-        return <Button type='text' icon={renderIcon(tab.icon)} onClick={() => {
+        return <Button style={{
+            backgroundColor: tab.key == currentTab ? '#e6f7ff' : undefined
+        }} type='text' icon={renderIcon(tab.icon)} onClick={() => {
             updateCurrentTab(tab.key);
             updateDetailsMarkdownLines([]);
         }}>{tab.title}</Button>
