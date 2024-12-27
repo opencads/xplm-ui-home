@@ -1,8 +1,10 @@
 import { forwardRef, useEffect, useRef } from "react";
 import { Flex, useUpdate } from "../../natived";
-import { Spin } from "antd";
+import { Button, Spin } from "antd";
 import { CreateWorkspaceApp } from "../../apps/CreateWorkspaceApp";
 import { services } from "../../services";
+import { dragClass } from "../Home";
+import { CloseOutlined } from "@ant-design/icons";
 
 export interface ICreateWorkspaceRef {
 
@@ -89,10 +91,32 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
         <Spin size={'large'} tip={<div style={{
             marginTop: '32px'
         }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
+        <Flex>
+            <Flex className={dragClass} onMouseDown={e => {
+                services.mouseDownDrag();
+                e.preventDefault();
+                e.stopPropagation();
+            }} style={{
+                flex: 1,
+                userSelect: 'none'
+            }}>
+
+            </Flex>
+            <Button type='text'
+                icon={<CloseOutlined></CloseOutlined>} onClick={() => {
+                    services.close();
+                }}>
+                {"Close"}
+            </Button>
+            <Flex>
+
+            </Flex>
+        </Flex>
         <CreateWorkspaceApp workspaceName={workspaceName} selectedContainer={selectedContainer} selectedWorkspacePath={selectedWorkspacePath}
             allContainers={allContainers} allWorkspacePaths={allWorkspacePaths}
             style={{
-                flex: 1
+                flex: 1,
+                padding: '6em'
             }} />
     </Flex>
 });
