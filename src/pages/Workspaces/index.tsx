@@ -58,6 +58,8 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
         createWorkspace: async () => {
             try {
                 let currentUrl = window.location.pathname;
+                let lastSplitChar = currentUrl.lastIndexOf('/');
+                currentUrl = currentUrl.substring(0, lastSplitChar);
                 services.openUrl(currentUrl + '/create-workspace', {
                     x: 'center',
                     y: "center",
