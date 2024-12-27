@@ -119,6 +119,8 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
             allContainers={allContainers} allWorkspacePaths={allWorkspacePaths}
             style={{
                 flex: 1,
+                height: 0,
+                overflowY: 'hidden',
                 padding: '6em'
             }} />
     </Flex>
