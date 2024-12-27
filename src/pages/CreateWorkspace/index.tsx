@@ -89,7 +89,7 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
                 updateLoading(true);
             }
             try {
-                let container = cacheContains.current.find(item => item.key === selectedContainer);
+                let container = cacheContains.current.find(item => item.key === selectedContainerRef.current);
                 console.log(`selectedContainer=${selectedContainer}`, cacheContains.current);
                 if (!container) {
                     throw new Error(`container not found ${selectedContainer}`);
