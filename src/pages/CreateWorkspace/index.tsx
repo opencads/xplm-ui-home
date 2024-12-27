@@ -84,6 +84,9 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
             self.current.refreshFolders(false, cacheContains.current.find(item => item.key === selectedContainerRef.current)!);
         }
     }, [selectedContainer]);
+    useEffect(() => {
+        self.current.refresh(true);
+    }, []);
     return <Flex direction='column' style={{
         width: '100vw',
         height: '100vh',
