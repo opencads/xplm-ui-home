@@ -48,17 +48,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     });
     const [layoutTabs, updateLayoutTabs] = useUpdate<ILayoutTab[]>([]);
     const [currentTab, updateCurrentTab] = useUpdate<string>(localStorage.getItem('currentTab') ?? "documents");
-    let navigate = useNavigate();
-    const tryAll = async (tasks: Promise<any>[]) => {
-        for (let task of tasks) {
-            try {
-                await task;
-            }
-            catch (e) {
-                console.log(e);
-            }
-        }
-    }
     const self = useRef<IHomeRef>({
         refreshUserInfo: async () => {
             let userInfo = await services.getUserInfo();
@@ -95,79 +84,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         if (loadingRef.current) return;
         updateUserInfo(JSON.parse(data));
     });
-    const createDetails = (record: IDocumentRecord) => {
-        let result = [] as IMarkdownLine[];
-        result.push(`## ${record.name}`);
-        if (record.remote.remoteAttributes.length > 0) {
-            result.push(`### Remote Attributes`);
-            result.push({
-                type: 'card',
-                children: [{
-                    type: 'table',
-                    valueKey: 'remoteAttributes',
-                    tableOptions: {
-                        add: false,
-                        remove: false,
-                        keys: ["key", "value"],
-                        defaultType: 'text'
-                    },
-                    defaultValue: record.remote.remoteAttributes
-                }]
-            });
-        }
-        if (record.local?.localAttributes.length > 0) {
-            result.push(`### Local Attributes`);
-            result.push({
-                type: 'card',
-                children: [{
-                    type: 'table',
-                    valueKey: 'localAttributes',
-                    tableOptions: {
-                        add: false,
-                        remove: false,
-                        keys: ["key", "value"],
-                        defaultType: 'text'
-                    },
-                    defaultValue: record.local.localAttributes
-                }]
-            });
-        }
-        if (record.remote.remoteChildren.length > 0) {
-            result.push(`### Remote Children`);
-            result.push({
-                type: 'card',
-                children: [{
-                    type: 'table',
-                    valueKey: 'localChildren',
-                    tableOptions: {
-                        add: false,
-                        remove: false,
-                        keys: ["fileName", "name", "number", "partNumber"],
-                        defaultType: 'text'
-                    },
-                    defaultValue: record.remote.remoteChildren
-                }]
-            });
-        }
-        if (record.local?.localChildren.length > 0) {
-            result.push(`### Local Children`);
-            result.push({
-                type: 'card',
-                children: [{
-                    type: 'table',
-                    valueKey: 'localChildren',
-                    tableOptions: {
-                        add: false,
-                        remove: false,
-                        keys: ["fileName", "name", "number", "partNumber"],
-                        defaultType: 'text'
-                    },
-                    defaultValue: record.local?.localChildren
-                }]
-            });
-        }
-        return result;
-    };
     const renderIcon = (icon?: string) => {
         if (icon == "documents") return <DocumentsSvg></DocumentsSvg>;
         else if (icon == "workspaces") return <WorkspacesSvg></WorkspacesSvg>

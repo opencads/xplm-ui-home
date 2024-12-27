@@ -54,6 +54,23 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
             if (showLoading) {
                 updateLoading(false);
             }
+        },
+        createWorkspace: async () => {
+            try {
+                let currentUrl = window.location.pathname;
+                services.openUrl(currentUrl + '/create-workspace', {
+                    x: 'center',
+                    y: "center",
+                    width: '40%',
+                    height: '60%'
+                });
+            }
+            catch (e) {
+                console.log(e);
+            }
+        },
+        deleteWorkspace: async (showLoading: boolean, workspaceRecord: IWorkspaceRecord) => {
+
         }
     });
     useEffect(() => {
@@ -63,12 +80,18 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
         width: '100vw',
         height: '100vh',
     }}>
-        <Spin spinning={loading} tip={loadingTip} percent={loadingPercent} fullscreen size='large'></Spin>
+        <Spin size={'large'} tip={<div style={{
+            marginTop: '32px'
+        }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         <WorkspacesApp style={{
             flex: 1,
             height: 0
         }} workspaces={workspaces} onActive={record => {
             self.current.activeWorkspace(true, record);
+        }} onRefresh={() => {
+            self.current.refreshWorkspaces(true);
+        }} onNew={() => {
+            self.current.createWorkspace();
         }} />
     </Flex>
 });

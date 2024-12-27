@@ -4,6 +4,7 @@ import { TableApp } from "../TableApp";
 import { Button, TableColumnsType } from "antd";
 import ActiveSvg from "../../svgs/Active.svg?react";
 import Icon from "@ant-design/icons/lib/components/Icon";
+import { DeleteOutlined, PlusOutlined, ReloadOutlined } from "@ant-design/icons";
 
 export interface IWorkspaceAppRef {
 
@@ -12,11 +13,14 @@ export interface IWorkspaceAppRef {
 export interface IWorkspaceAppProps {
     style?: React.CSSProperties,
     workspaces?: IWorkspaceRecord[],
-    onActive?: (workspace: IWorkspaceRecord) => void
+    onActive?: (workspace: IWorkspaceRecord) => void,
+    onRefresh?: () => void,
+    onNew?: () => void,
+    onDelete?: (workspace: IWorkspaceRecord) => void,
 }
 
 export interface IWorkspaceRecord {
-    key:string,
+    key: string,
     name: string,
     active?: boolean
 }
@@ -51,12 +55,15 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
             width: '12em',
             fixed: 'right',
             render: (value, record) => {
-                return <Flex>
-                    {record.active == false ? <Button icon={<Icon component={ActiveSvg} style={{
+                return <Flex spacing={'4px'}>
+                    {record.active == false ? <Button type='text' icon={<Icon component={ActiveSvg} style={{
                         color: 'red'
                     }}></Icon>} onClick={() => {
                         props.onActive?.(record);
                     }}>{"Active"}</Button> : undefined}
+                    <Button type='text' icon={<DeleteOutlined />} onClick={() => {
+                        props.onDelete?.(record);
+                    }}>{"Delete"}</Button>
                 </Flex>;
             }
         }
@@ -65,7 +72,12 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
         ...props.style
     }}>
         <Flex>
-
+            <Flex style={{ flex: 1 }} spacing={'8px'}>
+                <Button type='text' icon={<PlusOutlined />} onClick={props.onNew}>{"New Workspace"}</Button>
+            </Flex>
+            <Flex>
+                <Button type='text' icon={<ReloadOutlined />} onClick={props.onRefresh}>{"Refresh"}</Button>
+            </Flex>
         </Flex>
         <TableApp columns={columns} dataSource={props.workspaces ?? []} style={{ flex: 1, height: 0 }}>
 

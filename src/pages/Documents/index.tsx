@@ -178,7 +178,9 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
         width: '100vw',
         height: '100vh'
     }}>
-        <Spin spinning={loading} tip={loadingTip} percent={loadingPercent} fullscreen size='large'></Spin>
+        <Spin size={'large'} tip={<div style={{
+            marginTop: '32px'
+        }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         <Flex style={{
             flex: 1,
             height: 0

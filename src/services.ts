@@ -5,6 +5,7 @@ import { IDocumentRecord } from "./apps/DocumentsApp";
 import pako from 'pako';
 import { ILayoutTab } from "./pages/Home";
 import { IWorkspaceRecord } from "./apps/WorkspacesApp";
+import { IContainerRecord, IFolderRecord } from "./pages/CreateWorkspace";
 export type Guid = string;
 const Util = {
     calculateFileMD5: (file: File): Promise<string> => {
@@ -479,5 +480,13 @@ export class services {
         return await services.runPlugin("remote-workspaces-active", record) as {
             isActive: boolean
         };
+    }
+
+    public static async getContainers() {
+        return await services.runPlugin("containers-get", {}) as IContainerRecord[];
+    }
+
+    public static async getContainerFolders(container: IContainerRecord) {
+        return await services.runPlugin("container-folders-get", container) as IFolderRecord[];
     }
 }

@@ -85,8 +85,8 @@ export const Login = forwardRef<ILoginRef, ILoginProps>((props, ref) => {
                 updateUsername={updateUsername} updatePassword={updatePassword} updateRemember={updateRemember} style={{
                     width: '400px',
                 }} onLogin={(username, password, remember) => {
-                    self.current?.login(username, password);
                     services.setLoginInfo(username, password, remember);
+                    self.current?.login(username, password);
                 }} />
         </Flex>
     </Flex>
