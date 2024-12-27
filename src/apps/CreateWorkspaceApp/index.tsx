@@ -24,6 +24,8 @@ export interface ICreateWorkspaceAppProps {
     onWorkspaceNameChange?: (value: string) => void,
     onWorkspacePathChange?: (value: string) => void,
     onSelectedContainerChange?: (value: string) => void,
+    onSure?: () => void,
+    onCancel?: () => void,
 }
 
 export const CreateWorkspaceApp = forwardRef<ICreateWorkspaceAppRef, ICreateWorkspaceAppProps>((props, ref) => {
@@ -59,8 +61,8 @@ export const CreateWorkspaceApp = forwardRef<ICreateWorkspaceAppRef, ICreateWork
         <Flex>
             <div style={{ flex: 1 }}></div>
             <Flex spacing={'2em'}>
-                <Button>{"Cancel"}</Button>
-                <Button type='primary'>{"Sure"}</Button>
+                <Button onClick={props.onCancel}>{"Cancel"}</Button>
+                <Button onClick={props.onSure} type='primary'>{"Sure"}</Button>
             </Flex>
         </Flex>
         <Flex style={{ flex: 1 }}></Flex>

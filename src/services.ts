@@ -489,4 +489,11 @@ export class services {
     public static async getContainerFolders(container: IContainerRecord) {
         return await services.runPlugin("container-folders-get", container) as IFolderRecord[];
     }
+    public static async createWorkspace(container: IContainerRecord, name: string, path: string) {
+        return await services.runPlugin("remote-workspaces-create", {
+            container,
+            name,
+            path
+        });
+    }
 }

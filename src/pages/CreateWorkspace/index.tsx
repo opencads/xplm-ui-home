@@ -83,6 +83,24 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
             if (showLoading) {
                 updateLoading(false);
             }
+        },
+        createWorkspace: async (showLoading: boolean) => {
+            if (showLoading) {
+                updateLoading(true);
+            }
+            try {
+                let container = cacheContains.current.find(item => item.key === selectedContainer);
+                if (!container) {
+                    throw new Error(`container not found ${selectedContainer}`);
+                }
+                await services.createWorkspace(container, workspaceName, selectedWorkspacePath);
+            }
+            catch (e) {
+                console.log(e);
+            }
+            if (showLoading) {
+                updateLoading(false);
+            }
         }
     });
     useEffect(() => {
@@ -132,6 +150,12 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
             onSelectedContainerChange={updateSelectedContainer}
             onWorkspaceNameChange={updateWorkspacesName}
             onWorkspacePathChange={updateSelectedWorkspacePath}
+            onSure={() => {
+                self.current.createWorkspace(true);
+            }}
+            onCancel={() => {
+                services.close();
+            }}
             style={{
                 flex: 1,
                 height: 0,
