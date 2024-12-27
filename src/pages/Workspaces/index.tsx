@@ -64,7 +64,7 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
                     x: 'center',
                     y: "center",
                     width: '40%',
-                    height: '60%'
+                    height: '80%'
                 });
             }
             catch (e) {

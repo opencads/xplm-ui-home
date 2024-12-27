@@ -63,5 +63,6 @@ export const CreateWorkspaceApp = forwardRef<ICreateWorkspaceAppRef, ICreateWork
                 <Button type='primary'>{"Sure"}</Button>
             </Flex>
         </Flex>
+        <Flex style={{ flex: 1 }}></Flex>
     </Flex>
 });
