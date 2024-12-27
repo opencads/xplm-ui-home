@@ -80,8 +80,14 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
         }
     });
     useEffect(() => {
-        if (selectedContainerRef.current.length > 0) {
-            self.current.refreshFolders(false, cacheContains.current.find(item => item.key === selectedContainerRef.current)!);
+        if (selectedContainer.length > 0) {
+            let container = cacheContains.current.find(item => item.key === selectedContainer);
+            if (container) {
+                self.current.refreshFolders(false, container);
+            }
+            else {
+                console.log(`container not found ${selectedContainer}, `, cacheContains.current);
+            }
         }
     }, [selectedContainer]);
     useEffect(() => {
@@ -117,6 +123,9 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
         </Flex>
         <CreateWorkspaceApp workspaceName={workspaceName} selectedContainer={selectedContainer} selectedWorkspacePath={selectedWorkspacePath}
             allContainers={allContainers} allWorkspacePaths={allWorkspacePaths}
+            onSelectedContainerChange={updateSelectedContainer}
+            onWorkspaceNameChange={updateWorkspacesName}
+            onWorkspacePathChange={updateSelectedWorkspacePath}
             style={{
                 flex: 1,
                 height: 0,
