@@ -69,6 +69,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             if (showLoading) updateLoading(true);
             try {
                 await self.current?.refreshLayoutTabs();
+                updateCurrentTab(localStorage.getItem('currentTab') ?? "documents");
                 await self.current?.refreshUserInfo();
             }
             catch (e) {
@@ -87,6 +88,9 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     useEffect(() => {
         self.current?.refresh(true);
     }, []);
+    useEffect(() => {
+        localStorage.setItem('currentTab', currentTab);
+    }, [currentTab]);
     useLocalStorageListener("login", data => {
         if (loadingRef.current) return;
         updateUserInfo(JSON.parse(data));
