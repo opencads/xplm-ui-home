@@ -70,6 +70,12 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
                         value: item.key
                     }
                 }));
+                if (cacheFolders.current.length > 0) {
+                    updateSelectedWorkspacePath(cacheFolders.current[0].key);
+                }
+                else {
+                    updateSelectedWorkspacePath('');
+                }
             }
             catch (e) {
                 console.log(e);
