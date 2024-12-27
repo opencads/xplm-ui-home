@@ -70,6 +70,7 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
                         value: item.key
                     }
                 }));
+                console.log(`cacheFolders`,cacheFolders.current)
                 if (cacheFolders.current.length > 0) {
                     updateSelectedWorkspacePath(cacheFolders.current[0].key);
                 }
@@ -89,7 +90,7 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
         if (selectedContainer.length > 0) {
             let container = cacheContains.current.find(item => item.key === selectedContainer);
             if (container) {
-                self.current.refreshFolders(false, container);
+                self.current.refreshFolders(true, container);
             }
             else {
                 console.log(`container not found ${selectedContainer}, `, cacheContains.current);
