@@ -47,7 +47,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         isLogin: false
     });
     const [layoutTabs, updateLayoutTabs] = useUpdate<ILayoutTab[]>([]);
-    const [currentTab, updateCurrentTab] = useUpdate<string>("documents");
+    const [currentTab, updateCurrentTab] = useUpdate<string>(localStorage.getItem('currentTab') ?? "documents");
     let navigate = useNavigate();
     const tryAll = async (tasks: Promise<any>[]) => {
         for (let task of tasks) {
