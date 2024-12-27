@@ -30,8 +30,7 @@ export const CreateWorkspaceApp = forwardRef<ICreateWorkspaceAppRef, ICreateWork
     return <Flex direction='column' style={props.style} spacing={'8px'}>
         <Flex verticalCenter>
             <Icon component={RequiredSvg} style={{
-                width: '0.5em',
-                height: '0.5em'
+                color: '#FF3838'
             }} />
             <Flex style={{ alignItems: 'start' }}>{"Workspace Name:"}</Flex>
         </Flex>
@@ -39,8 +38,7 @@ export const CreateWorkspaceApp = forwardRef<ICreateWorkspaceAppRef, ICreateWork
         <div style={{ height: '8px' }}></div>
         <Flex verticalCenter>
             <Icon component={RequiredSvg} style={{
-                width: '0.5em',
-                height: '0.5em'
+                color: '#FF3838'
             }} />
             <Flex style={{ alignItems: 'start' }}>{"Select Container:"}</Flex>
         </Flex>
@@ -50,8 +48,7 @@ export const CreateWorkspaceApp = forwardRef<ICreateWorkspaceAppRef, ICreateWork
         <div style={{ height: '8px' }}></div>
         <Flex verticalCenter>
             <Icon component={RequiredSvg} style={{
-                width: '0.5em',
-                height: '0.5em'
+                color: '#FF3838'
             }} />
             <Flex style={{ alignItems: 'start' }}>{"Select Default Path:"}</Flex>
         </Flex>
@@ -61,7 +58,7 @@ export const CreateWorkspaceApp = forwardRef<ICreateWorkspaceAppRef, ICreateWork
         <div style={{ height: '8px' }}></div>
         <Flex>
             <div style={{ flex: 1 }}></div>
-            <Flex>
+            <Flex spacing={'2em'}>
                 <Button>{"Cancel"}</Button>
                 <Button type='primary'>{"Sure"}</Button>
             </Flex>
