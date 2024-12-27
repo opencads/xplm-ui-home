@@ -42,7 +42,7 @@ export const CreateWorkspaceApp = forwardRef<ICreateWorkspaceAppRef, ICreateWork
             }} />
             <Flex style={{ alignItems: 'start' }}>{"Select Container:"}</Flex>
         </Flex>
-        <Select options={props.allContainers} onChange={(value: string) => {
+        <Select options={props.allContainers} value={props.selectedContainer} onChange={(value: string) => {
             props.onSelectedContainerChange?.(value)
         }}></Select>
         <div style={{ height: '8px' }}></div>
@@ -52,7 +52,7 @@ export const CreateWorkspaceApp = forwardRef<ICreateWorkspaceAppRef, ICreateWork
             }} />
             <Flex style={{ alignItems: 'start' }}>{"Select Default Path:"}</Flex>
         </Flex>
-        <Select options={props.allWorkspacePaths} onChange={(value: string) => {
+        <Select options={props.allWorkspacePaths} value={props.selectedWorkspacePath} onChange={(value: string) => {
             props.onWorkspacePathChange?.(value)
         }}></Select>
         <div style={{ height: '8px' }}></div>

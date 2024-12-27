@@ -70,7 +70,6 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
                         value: item.key
                     }
                 }));
-                console.log(`cacheFolders`,cacheFolders.current)
                 if (cacheFolders.current.length > 0) {
                     updateSelectedWorkspacePath(cacheFolders.current[0].key);
                 }
