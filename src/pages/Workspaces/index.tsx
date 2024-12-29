@@ -3,6 +3,7 @@ import { IWorkspaceRecord, WorkspacesApp } from "../../apps/WorkspacesApp";
 import { Flex, useUpdate } from "../../natived";
 import { services } from "../../services";
 import { Spin } from "antd";
+import { useLocalStorageListener } from "../../utils";
 
 export interface IWorkspaceProps {
 
@@ -10,6 +11,10 @@ export interface IWorkspaceProps {
 
 export interface IWorkspaceRef {
 
+}
+
+export const globalRefreshWorkspaces = () => {
+    localStorage.setItem('refreshWorkspaces', (new Date()).getTime().toString());
 }
 
 export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWorkspaceProps, ref) => {
@@ -78,6 +83,9 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
     useEffect(() => {
         self.current.refreshWorkspaces(true);
     }, []);
+    useLocalStorageListener('workspaces.refresh', data => {
+        self.current.refreshWorkspaces(true);
+    });
     return <Flex direction='column' style={{
         width: '100vw',
         height: '100vh',

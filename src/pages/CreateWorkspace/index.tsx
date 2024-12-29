@@ -5,6 +5,8 @@ import { CreateWorkspaceApp } from "../../apps/CreateWorkspaceApp";
 import { services } from "../../services";
 import { dragClass } from "../Home";
 import { CloseOutlined } from "@ant-design/icons";
+import useMessage from "antd/es/message/useMessage";
+import { globalRefreshWorkspaces } from "../Workspaces";
 
 export interface ICreateWorkspaceRef {
 
@@ -35,6 +37,7 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
     const [loading, updateLoading, loadingRef] = useUpdate(false);
     const [loadingPercent, updateLoadingPercent, loadingPercentRef] = useUpdate<number | undefined>(undefined);
     const [loadingTip, updateLoadingTip, loadingTipRef] = useUpdate('');
+    const [messageApi, contextHolder] = useMessage();
     const cacheContains = useRef<IContainerRecord[]>([]);
     const cacheFolders = useRef<IFolderRecord[]>([]);
     const self = useRef({
@@ -95,9 +98,12 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
                     throw new Error(`container not found ${selectedContainer}`);
                 }
                 await services.createWorkspace(container, workspaceNameRef.current, selectedWorkspacePathRef.current);
+                globalRefreshWorkspaces();
+                await services.close();
             }
-            catch (e) {
+            catch (e: any) {
                 console.log(e);
+                messageApi.error(e.message);
             }
             if (showLoading) {
                 updateLoading(false);
@@ -122,6 +128,7 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
         width: '100vw',
         height: '100vh',
     }}>
+        {contextHolder}
         <Spin size={'large'} tip={<div style={{
             marginTop: '32px'
         }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
