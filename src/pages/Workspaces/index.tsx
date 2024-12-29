@@ -51,6 +51,7 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
                     workspace.active = workspaceRecord.key === workspace.key;
                 });
                 updateWorkspaces(temp);
+                globalRefreshWorkspaces();
             }
             catch (e) {
                 console.log(e);
