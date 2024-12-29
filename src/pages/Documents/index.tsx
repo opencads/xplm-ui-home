@@ -17,6 +17,10 @@ export interface IDocumentProps {
 
 }
 
+export const globalRefreshDocuments = () => {
+    localStorage.setItem('documents.refresh', new Date().getTime().toString());
+}
+
 export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) => {
     const [detailsDelta, updateDetailsDelta, detailsDeltaRef] = useUpdate(0);
     const [showDetails, updateShowDetails] = useUpdate(false);
@@ -98,6 +102,10 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
         self.current.refreshDocuments(true);
     }, []);
     useLocalStorageListener("login", data => {
+        if (loadingRef.current) return;
+        self.current.refreshDocuments(true);
+    });
+    useLocalStorageListener("documents.refresh", data => {
         if (loadingRef.current) return;
         self.current.refreshDocuments(true);
     });
