@@ -141,7 +141,7 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
                 flex: 1,
                 userSelect: 'none'
             }}>
-
+                {"Create Workspace"}
             </Flex>
             <Button type='text'
                 icon={<CloseOutlined></CloseOutlined>} onClick={() => {
