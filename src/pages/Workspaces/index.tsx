@@ -14,7 +14,7 @@ export interface IWorkspaceRef {
 }
 
 export const globalRefreshWorkspaces = () => {
-    localStorage.setItem('refreshWorkspaces', (new Date()).getTime().toString());
+    localStorage.setItem('workspaces.refresh', (new Date()).getTime().toString());
 }
 
 export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWorkspaceProps, ref) => {
