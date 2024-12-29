@@ -133,7 +133,7 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
             marginTop: '32px'
         }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         <Flex>
-            <Flex className={dragClass} onMouseDown={e => {
+            <Flex horizontalCenter className={dragClass} onMouseDown={e => {
                 services.mouseDownDrag();
                 e.preventDefault();
                 e.stopPropagation();
