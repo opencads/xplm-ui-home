@@ -86,7 +86,7 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
                 let temp = [...workspacesRef.current];
                 temp.splice(temp.findIndex(w => w.key === workspaceRecord.key), 1);
                 updateWorkspaces(temp);
-                globalRefreshWorkspaces();
+                self.current.refreshWorkspaces(false);
             }
             catch (e) {
                 console.log(e);
