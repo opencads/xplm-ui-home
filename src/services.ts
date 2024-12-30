@@ -496,4 +496,7 @@ export class services {
             path
         });
     }
+    public static async deleteRemoteWorkspace(workspace: IWorkspaceRecord) {
+        return await services.runPlugin("remote-workspaces-delete", workspace);
+    }
 }

@@ -78,7 +78,23 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
             }
         },
         deleteWorkspace: async (showLoading: boolean, workspaceRecord: IWorkspaceRecord) => {
+            if (showLoading) {
+                updateLoading(true);
+            }
+            try {
+                await services.deleteRemoteWorkspace(workspaceRecord);
+                let temp = [...workspacesRef.current];
+                temp.splice(temp.findIndex(w => w.key === workspaceRecord.key), 1);
+                updateWorkspaces(temp);
+                globalRefreshWorkspaces();
+            }
+            catch (e) {
+                console.log(e);
+            }
 
+            if (showLoading) {
+                updateLoading(false);
+            }
         }
     });
     useEffect(() => {
@@ -103,6 +119,8 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
             self.current.refreshWorkspaces(true);
         }} onNew={() => {
             self.current.createWorkspace();
+        }} onDelete={record => {
+            self.current.deleteWorkspace(true, record);
         }} />
     </Flex>
 });
