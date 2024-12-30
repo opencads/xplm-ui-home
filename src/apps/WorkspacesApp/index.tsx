@@ -61,9 +61,9 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
                     }}></Icon>} onClick={() => {
                         props.onActive?.(record);
                     }}>{"Active"}</Button> : undefined}
-                    <Button type='text' icon={<DeleteOutlined />} onClick={() => {
+                    {record.active == false ? <Button type='text' icon={<DeleteOutlined />} onClick={() => {
                         props.onDelete?.(record);
-                    }}>{"Delete"}</Button>
+                    }}>{"Delete"}</Button> : undefined}
                 </Flex>;
             }
         }
