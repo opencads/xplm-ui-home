@@ -4,6 +4,7 @@ import { Flex, useUpdate } from "../../natived";
 import { services } from "../../services";
 import { Spin } from "antd";
 import { useLocalStorageListener } from "../../utils";
+import { globalRefreshDocuments } from "../Documents";
 
 export interface IWorkspaceProps {
 
@@ -46,12 +47,18 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
             }
             try {
                 await services.activeRemoteWorkspaces(workspaceRecord);
+                let lastActiveWorkspace = workspacesRef.current.find(w => w.active);
                 let temp = [...workspacesRef.current];
                 temp.forEach(workspace => {
                     workspace.active = workspaceRecord.key === workspace.key;
                 });
                 updateWorkspaces(temp);
-                globalRefreshWorkspaces();
+                if (lastActiveWorkspace) {
+                    if (lastActiveWorkspace.key != workspaceRecord.key) {
+                        globalRefreshDocuments();
+                    }
+                }
+
             }
             catch (e) {
                 console.log(e);
@@ -83,10 +90,15 @@ export const Workspace = forwardRef<IWorkspaceRef, IWorkspaceProps>((props: IWor
             }
             try {
                 await services.deleteRemoteWorkspace(workspaceRecord);
+                let lastActiveWorkspace = workspacesRef.current.find(w => w.active);
                 let temp = [...workspacesRef.current];
                 temp.splice(temp.findIndex(w => w.key === workspaceRecord.key), 1);
                 updateWorkspaces(temp);
-                self.current.refreshWorkspaces(false);
+                if (lastActiveWorkspace) {
+                    if (lastActiveWorkspace.key != workspaceRecord.key) {
+                        globalRefreshDocuments();
+                    }
+                }
             }
             catch (e) {
                 console.log(e);
