@@ -38,6 +38,10 @@ export interface DocumentInterface {
     createTime: DateTime,
 }
 
+export interface IImportOutput extends DocumentInterface {
+    rawJson: any
+}
+
 export interface DirectoryInterface {
     id: Guid,
     path: string,
@@ -87,7 +91,7 @@ export interface IUserInfomation {
 export interface ICheckInInput {
     Items: {
         FilePath: string,
-        Document:IDocumentRecord
+        Document: IDocumentRecord
     }[]
 }
 
