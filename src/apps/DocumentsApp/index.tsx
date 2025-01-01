@@ -9,6 +9,7 @@ import { TableApp } from "../TableApp";
 import CheckInSvg from "../../svgs/CheckIn.svg?react";
 import CheckOutSvg from "../../svgs/CheckOut.svg?react";
 import DetailSvg from "../../svgs/Detail.svg?react";
+import SelectSvg from "../../svgs/Select.svg?react";
 
 export interface IDocumentsAppRef {
 
@@ -99,6 +100,8 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             }
         };
         const [messageApi, contextHolder] = useMessage();
+        const [canSelect, updateCanSelect] = useUpdate(false);
+        const [selectKeys, updateSelectKeys] = useUpdate<React.Key[]>([]);
         const columns: TableColumnsType<IDocumentRecord> = [
             {
                 key: 'No.',
@@ -166,12 +169,20 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 <Flex style={{ flex: 1 }} spacing={'8px'}>
                     <ImportFileApp onImported={props.onImported} showLoading={props.showLoading} messageApi={messageApi} />
                     <Button type='text' icon={<ArchiveSvg />} onClick={props.onArchive}>{"Archive"}</Button>
+                    <Button type="text" icon={<SelectSvg />} onClick={() => {
+                        updateCanSelect(!canSelect);
+                    }}></Button>
                 </Flex>
                 <Flex>
                     <Button type='text' icon={<ReloadOutlined />} onClick={props.onRefresh}>{"Refresh"}</Button>
                 </Flex>
             </Flex>
-            <TableApp style={{
+            <TableApp rowSelection={{
+                selectedRowKeys: canSelect ? selectKeys : undefined,
+                onChange: (keys) => {
+                    updateSelectKeys(keys);
+                }
+            }} style={{
                 flex: 1,
                 height: 0
             }} scroll={{
