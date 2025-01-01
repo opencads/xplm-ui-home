@@ -20,7 +20,7 @@ export interface IDocumentsAppProps {
     style?: React.CSSProperties;
     data: IDocumentRecord[];
     onRefresh?: () => void;
-    onArchive?: () => void;
+    onArchive?: (records: IDocumentRecord[]) => void;
     onDetail?: (record: IDocumentRecord) => void;
     showLoading?: (loading: boolean) => Promise<void>;
     onImported?: () => Promise<void>;
@@ -28,6 +28,7 @@ export interface IDocumentsAppProps {
 }
 
 export interface IDocumentRecord {
+    key:string,
     name: string;
     fileName: string;
     number: string;
@@ -169,7 +170,11 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             <Flex>
                 <Flex style={{ flex: 1 }} spacing={'8px'}>
                     <ImportFileApp onImported={props.onImported} showLoading={props.showLoading} messageApi={messageApi} />
-                    <Button type='text' icon={<ArchiveSvg />} onClick={props.onArchive}>{"Archive"}</Button>
+                    <Button type='text' icon={<ArchiveSvg />} onClick={()=>{
+                        if(canSelect){
+                            props.onArchive?.(props.data.filter((record) => selectKeys.includes(record.fileName)));
+                        }
+                    }}>{"Archive"}</Button>
                     <Button type="text" icon={canSelect ? <CancelSvg /> : <SelectSvg />} onClick={() => {
                         updateCanSelect(!canSelect);
                     }}>{canSelect ? "Cancel" : "Select"}</Button>
