@@ -171,7 +171,8 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                     <Button type='text' icon={<ArchiveSvg />} onClick={props.onArchive}>{"Archive"}</Button>
                     <Button type="text" icon={<SelectSvg />} onClick={() => {
                         updateCanSelect(!canSelect);
-                    }}></Button>
+                    }}>{"Select"}</Button>
+                    <Button type="text" disabled={!canSelect} icon={<CheckInSvg></CheckInSvg>}>{"CheckIn"}</Button>
                 </Flex>
                 <Flex>
                     <Button type='text' icon={<ReloadOutlined />} onClick={props.onRefresh}>{"Refresh"}</Button>
