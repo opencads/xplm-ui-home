@@ -28,7 +28,7 @@ export interface IDocumentsAppProps {
 }
 
 export interface IDocumentRecord {
-    key:string,
+    key: string,
     name: string;
     fileName: string;
     number: string;
@@ -170,15 +170,20 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             <Flex>
                 <Flex style={{ flex: 1 }} spacing={'8px'}>
                     <ImportFileApp onImported={props.onImported} showLoading={props.showLoading} messageApi={messageApi} />
-                    <Button type='text' icon={<ArchiveSvg />} onClick={()=>{
-                        if(canSelect){
-                            props.onArchive?.(props.data.filter((record) => selectKeys.includes(record.fileName)));
+                    <Button type='text' icon={<ArchiveSvg />} onClick={() => {
+                        if (canSelect) {
+                            props.onArchive?.(props.data.filter((record) => selectKeys.includes(record.key)).filter(record => record.local.success));
+                        }
+                        else {
+                            props.onArchive?.(props.data.filter(record => record.local.success));
                         }
                     }}>{"Archive"}</Button>
                     <Button type="text" icon={canSelect ? <CancelSvg /> : <SelectSvg />} onClick={() => {
                         updateCanSelect(!canSelect);
                     }}>{canSelect ? "Cancel" : "Select"}</Button>
-                    <Button type="text" disabled={!canSelect} icon={<CheckInSvg></CheckInSvg>}>{"CheckIn"}</Button>
+                    <Button type="text" disabled={!canSelect} icon={<CheckInSvg></CheckInSvg>} onClick={() => {
+                        props.onCheckIn?.(props.data.filter((record) => selectKeys.includes(record.key)).filter(record => record.local.success));
+                    }}>{"CheckIn"}</Button>
                 </Flex>
                 <Flex>
                     <Button type='text' icon={<ReloadOutlined />} onClick={props.onRefresh}>{"Refresh"}</Button>
