@@ -178,12 +178,12 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                     <Button type='text' icon={<ReloadOutlined />} onClick={props.onRefresh}>{"Refresh"}</Button>
                 </Flex>
             </Flex>
-            <TableApp rowSelection={{
-                selectedRowKeys: canSelect ? selectKeys : undefined,
+            <TableApp rowSelection={canSelect ? {
+                selectedRowKeys: selectKeys,
                 onChange: (keys) => {
                     updateSelectKeys(keys);
                 }
-            }} style={{
+            } : undefined} style={{
                 flex: 1,
                 height: 0
             }} scroll={{
