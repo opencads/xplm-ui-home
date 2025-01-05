@@ -117,7 +117,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px', padding: '0px 0px 0px 4px' }}>
-            <Dropdown dropdownRender={() => {
+            <Dropdown placement="bottomRight" dropdownRender={() => {
                 return <Card style={{
                     backgroundColor: '#e8e8e8'
                 }}>
