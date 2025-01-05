@@ -1,6 +1,6 @@
 import React, { ReactNode, forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Flex, InjectClass, useUpdate } from "../../natived";
-import { Avatar, Button, Spin } from "antd";
+import { Avatar, Button, Card, Dropdown, Spin } from "antd";
 import { CloseOutlined, MinusOutlined, SettingOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { DocumentsApp, IDocumentRecord } from "../../apps/DocumentsApp";
@@ -117,24 +117,35 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px', padding: '0px 0px 0px 4px' }}>
-            <Flex verticalCenter style={{
-                padding: '0px 0px 0px 4px',
-                // 斜体
-                fontStyle: 'italic',
-                // 加粗
-                fontWeight: 'bold',
-                // 字体大小
-                fontSize: '24px',
-                // 字体颜色
-                color: '#1890ff',
-                // 字体间距
-                letterSpacing: '2px',
-                // 字体阴影
-                textShadow: '0px 0px 2px #1890ff',
-                // 字体倾斜
+            <Dropdown dropdownRender={() => {
+                return <Card style={{
+                    backgroundColor: '#e8e8e8'
+                }}>
+                    <Flex style={{
+                        fontStyle: 'italic',
+                        fontWeight: 'bold',
+                        fontSize: '24px',
+                        color: '#1890ff',
+                        letterSpacing: '2px',
+                        textShadow: '0px 0px 2px #1890ff',
+                    }}>
+                        {"Make PLM more user-friendly"}
+                    </Flex>
+                </Card>
             }}>
-                {"EasyPLM"}
-            </Flex>
+                <Flex verticalCenter style={{
+                    padding: '0px 0px 0px 4px',
+                    fontStyle: 'italic',
+                    fontWeight: 'bold',
+                    fontSize: '24px',
+                    color: '#1890ff',
+                    letterSpacing: '2px',
+                    textShadow: '0px 0px 2px #1890ff',
+                }}>
+                    {"EasyPLM"}
+                </Flex>
+            </Dropdown>
+
             <Flex className={dragClass} onMouseDown={e => {
                 services.mouseDownDrag();
                 e.preventDefault();
