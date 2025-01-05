@@ -89,12 +89,12 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         else if (icon == "workspaces") return <WorkspacesSvg></WorkspacesSvg>
         else return <></>;
     };
-    const renderTab = (tab: ILayoutTab, showTitle: boolean) => {
+    const renderTab = (tab: ILayoutTab) => {
         return <Button style={{
             backgroundColor: tab.key == currentTab ? '#e6f7ff' : undefined
         }} type='text' icon={renderIcon(tab.icon)} onClick={() => {
             updateCurrentTab(tab.key);
-        }}>{showTitle ? tab.title : undefined}</Button>
+        }}>{sidebarVisible ? tab.title : undefined}</Button>
     };
     const renderContentByUrl = (tab: ILayoutTab) => {
         if (tab.url.startsWith('/')) {
@@ -116,7 +116,22 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }}>{loadingTip}</div>} percent={loadingPercent} spinning={loading} fullscreen></Spin>
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px', padding: '0px 0px 0px 4px' }}>
-            <Flex verticalCenter>
+            <Flex verticalCenter style={{
+                padding: '0px 0px 0px 4px',
+                // 斜体
+                fontStyle: 'italic',
+                // 加粗
+                fontWeight: 'bold',
+                // 字体大小
+                fontSize: '24px',
+                // 字体颜色
+                color: '#1890ff',
+                // 字体间距
+                letterSpacing: '2px',
+                // 字体阴影
+                textShadow: '0px 0px 2px #1890ff',
+                // 字体倾斜
+            }}>
                 {"EasyPLM"}
             </Flex>
             <Flex className={dragClass} onMouseDown={e => {
@@ -129,7 +144,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             }}>
 
             </Flex>
-            <Flex spacing={'4px'}>
+            <Flex spacing={'4px'} verticalCenter>
                 <UserAvatarApp onLogout={async () => {
                     updateLoading(true);
                     try {
@@ -162,38 +177,18 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             flex: 1,
             height: 0
         }} direction='row'>
-            {/* 宽侧边 */}
+            {/* 侧边 */}
             <Flex style={{
-                width: '120px',
+                width: sidebarVisible ? '120px' : '30px',
                 backgroundColor: '#fff',
                 margin: '0px 2px 0px 0px',
-                display: sidebarVisible ? undefined : 'none',
                 padding: '0px 4px',
                 alignItems: 'start',
             }} direction='column' spacing={'8px'} spacingStart={'4px'}>
                 <Flex direction='column' style={{
                     flex: 1
                 }}>
-                    {layoutTabs.map(tab => renderTab(tab, true))}
-                </Flex>
-                <Flex horizontalCenter>
-                    <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
-                        updateSidebarVisible(!sidebarVisible);
-                    }}></Button>
-                </Flex>
-            </Flex>
-            <Flex style={{
-                width: '30px',
-                backgroundColor: '#fff',
-                margin: '0px 2px 0px 0px',
-                display: sidebarVisible ? 'none' : undefined,
-                padding: '0px 4px',
-                alignItems: 'start',
-            }} direction='column' spacing={'8px'} spacingStart={'4px'}>
-                <Flex direction='column' style={{
-                    flex: 1
-                }}>
-                    {layoutTabs.map(tab => renderTab(tab, false))}
+                    {layoutTabs.map(tab => renderTab(tab))}
                 </Flex>
                 <Flex horizontalCenter>
                     <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
