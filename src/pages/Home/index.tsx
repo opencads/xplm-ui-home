@@ -75,6 +75,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     });
     useImperativeHandle(ref, () => self.current);
     useEffect(() => {
+        (window as any).status = 'Easy PLM';
         self.current?.refresh(true);
     }, []);
     useEffect(() => {
