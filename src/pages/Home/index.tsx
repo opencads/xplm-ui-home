@@ -94,7 +94,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             backgroundColor: tab.key == currentTab ? '#e6f7ff' : undefined
         }} type='text' icon={renderIcon(tab.icon)} onClick={() => {
             updateCurrentTab(tab.key);
-        }}>{tab.title}</Button>
+        }}>{sidebarVisible ? tab.title : undefined}</Button>
     };
     const renderContentByUrl = (tab: ILayoutTab) => {
         if (tab.url.startsWith('/')) {
@@ -117,9 +117,19 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         {/* 顶部 */}
         <Flex direction='row' style={{ backgroundColor: '#fff', margin: '0px 0px 2px 0px', padding: '0px 0px 0px 4px' }}>
             <Flex verticalCenter>
-                <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
-                    updateSidebarVisible(!sidebarVisible);
-                }}></Button>
+                {"EasyPLM"}
+            </Flex>
+            <Flex className={dragClass} onMouseDown={e => {
+                services.mouseDownDrag();
+                e.preventDefault();
+                e.stopPropagation();
+            }} style={{
+                flex: 1,
+                userSelect: 'none'
+            }}>
+
+            </Flex>
+            <Flex spacing={'4px'}>
                 <UserAvatarApp onLogout={async () => {
                     updateLoading(true);
                     try {
@@ -133,18 +143,6 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                     }
                     updateLoading(false);
                 }} style={{ padding: '0px 4px' }} info={userInfo}></UserAvatarApp>
-            </Flex>
-            <Flex className={dragClass} onMouseDown={e => {
-                services.mouseDownDrag();
-                e.preventDefault();
-                e.stopPropagation();
-            }} style={{
-                flex: 1,
-                userSelect: 'none'
-            }}>
-
-            </Flex>
-            <Flex spacing={'4px'}>
                 <Button type='text' icon={<SettingOutlined />} onClick={() => {
                     let currentUrl = window.location.pathname;
                     services.openUrl(currentUrl + '/settings', {
@@ -166,14 +164,24 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         }} direction='row'>
             {/* 侧边 */}
             <Flex style={{
-                width: '120px',
+                // width: '120px',
+                width: sidebarVisible ? '120px' : '30px',
                 backgroundColor: '#fff',
                 margin: '0px 2px 0px 0px',
-                display: sidebarVisible ? 'flex' : 'none',
+                // display: sidebarVisible ? 'flex' : 'none',
                 padding: '0px 4px',
-                alignItems: 'start'
+                alignItems: 'start',
             }} direction='column' spacing={'8px'} spacingStart={'4px'}>
-                {layoutTabs.map(tab => renderTab(tab))}
+                <Flex direction='column' style={{
+                    flex: 1
+                }}>
+                    {layoutTabs.map(tab => renderTab(tab))}
+                </Flex>
+                <Flex horizontalCenter>
+                    <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
+                        updateSidebarVisible(!sidebarVisible);
+                    }}></Button>
+                </Flex>
             </Flex>
             {/* 内容 */}
             <Flex style={{
