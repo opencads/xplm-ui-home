@@ -4,6 +4,8 @@ import { IUserInfomation } from "../../interfaces";
 import { Flex } from "../../natived";
 import { services } from "../../services";
 import { UserOutlined } from "@ant-design/icons";
+import AvaterSvg from "../../svgs/Avater.svg?react";
+import Icon from "@ant-design/icons/lib/components/Icon";
 
 export interface IUserAvatarAppRef {
 
@@ -48,27 +50,39 @@ export const UserAvatarApp = forwardRef<IUserAvatarAppRef, IUserAvatarAppProps>(
                 </Flex>
             </Card>
         }}>
-            <Avatar icon={<UserOutlined />} size={'small'} style={{
+            {/* <Avatar icon={<UserOutlined />} size={'small'} style={{
                 cursor: 'pointer',
                 ...props.style
             }} shape={'circle'} src={props.info.avatar_url}>
-            </Avatar>
+            </Avatar> */}
+            <Button icon={<Icon component={AvaterSvg}></Icon>}>{props.info.isLogin ? props.info.name : "Login"}</Button>
         </Dropdown>
     }
     else {
-        return <Avatar icon={<UserOutlined />} size={'small'} style={{
-            cursor: 'pointer',
-            ...props.style
-        }} shape={'circle'} onClick={() => {
-            let currentUrl = window.location.pathname;
-            services.openUrl(currentUrl + '/login', {
-                x: 'center',
-                y: "center",
-                width: 450,
-                height: 600
-            });
-        }}>
-        </Avatar>
+        return (
+            // <Avatar icon={<UserOutlined />} size={'small'} style={{
+            //     cursor: 'pointer',
+            //     ...props.style
+            // }} shape={'circle'} onClick={() => {
+            //     let currentUrl = window.location.pathname;
+            //     services.openUrl(currentUrl + '/login', {
+            //         x: 'center',
+            //         y: "center",
+            //         width: 450,
+            //         height: 600
+            //     });
+            // }}>
+            // </Avatar>
+            <Button onClick={() => {
+                let currentUrl = window.location.pathname;
+                services.openUrl(currentUrl + '/login', {
+                    x: 'center',
+                    y: "center",
+                    width: 450,
+                    height: 600
+                });
+            }} icon={<Icon component={AvaterSvg}></Icon>}>{props.info.isLogin ? props.info.name : "Login"}</Button>
+        )
     }
 
 })
