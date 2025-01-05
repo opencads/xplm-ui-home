@@ -184,14 +184,14 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                 backgroundColor: '#fff',
                 margin: '0px 2px 0px 0px',
                 padding: '0px 4px',
-                alignItems: 'start',
             }} direction='column' spacing={'8px'} spacingStart={'4px'}>
                 <Flex direction='column' style={{
-                    flex: 1
+                    flex: 1,
+                    alignItems: 'start',
                 }}>
                     {layoutTabs.map(tab => renderTab(tab))}
                 </Flex>
-                <Flex horizontalCenter>
+                <Flex>
                     <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
                         updateSidebarVisible(!sidebarVisible);
                     }}></Button>
