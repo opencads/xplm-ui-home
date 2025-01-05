@@ -89,12 +89,12 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         else if (icon == "workspaces") return <WorkspacesSvg></WorkspacesSvg>
         else return <></>;
     };
-    const renderTab = (tab: ILayoutTab) => {
+    const renderTab = (tab: ILayoutTab, showTitle: boolean) => {
         return <Button style={{
             backgroundColor: tab.key == currentTab ? '#e6f7ff' : undefined
         }} type='text' icon={renderIcon(tab.icon)} onClick={() => {
             updateCurrentTab(tab.key);
-        }}>{sidebarVisible ? tab.title : undefined}</Button>
+        }}>{showTitle ? tab.title : undefined}</Button>
     };
     const renderContentByUrl = (tab: ILayoutTab) => {
         if (tab.url.startsWith('/')) {
@@ -162,20 +162,38 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
             flex: 1,
             height: 0
         }} direction='row'>
-            {/* 侧边 */}
+            {/* 宽侧边 */}
             <Flex style={{
-                // width: '120px',
-                width: sidebarVisible ? '120px' : '30px',
+                width: '120px',
                 backgroundColor: '#fff',
                 margin: '0px 2px 0px 0px',
-                // display: sidebarVisible ? 'flex' : 'none',
+                display: sidebarVisible ? undefined : 'none',
                 padding: '0px 4px',
                 alignItems: 'start',
             }} direction='column' spacing={'8px'} spacingStart={'4px'}>
                 <Flex direction='column' style={{
                     flex: 1
                 }}>
-                    {layoutTabs.map(tab => renderTab(tab))}
+                    {layoutTabs.map(tab => renderTab(tab, true))}
+                </Flex>
+                <Flex horizontalCenter>
+                    <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
+                        updateSidebarVisible(!sidebarVisible);
+                    }}></Button>
+                </Flex>
+            </Flex>
+            <Flex style={{
+                width: '30px',
+                backgroundColor: '#fff',
+                margin: '0px 2px 0px 0px',
+                display: sidebarVisible ? 'none' : undefined,
+                padding: '0px 4px',
+                alignItems: 'start',
+            }} direction='column' spacing={'8px'} spacingStart={'4px'}>
+                <Flex direction='column' style={{
+                    flex: 1
+                }}>
+                    {layoutTabs.map(tab => renderTab(tab, false))}
                 </Flex>
                 <Flex horizontalCenter>
                     <Button type='text' icon={<SidebarSvg></SidebarSvg>} onClick={() => {
