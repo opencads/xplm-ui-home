@@ -141,6 +141,8 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                     color: '#1890ff',
                     letterSpacing: '2px',
                     textShadow: '0px 0px 2px #1890ff',
+                    cursor: 'pointer',
+                    userSelect: 'none'
                 }}>
                     {"EasyPLM"}
                 </Flex>
