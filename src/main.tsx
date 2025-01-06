@@ -10,6 +10,7 @@ import { Login } from './pages/Login';
 import { Workspace } from './pages/Workspaces';
 import { Documents } from './pages/Documents';
 import { CreateWorkspace } from './pages/CreateWorkspace';
+import { SaveToWorkspace } from './pages/SaveToWorkspace';
 const VITE_PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL;
 console.log(`build time:${import.meta.env.VITE_APP_BUILD_TIME}`);
 InjectStyle(`
@@ -34,6 +35,7 @@ root.render(
         <Route path="/workspaces" element={<Workspace />} />
         <Route path="/documents" element={<Documents />} />
         <Route path="/create-workspace" element={<CreateWorkspace />} />
+        <Route path="/save-to-workspace" element={<SaveToWorkspace />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
