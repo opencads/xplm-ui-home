@@ -5,22 +5,18 @@ import { dragClass } from "../Home";
 import { Button } from "antd";
 import { CloseOutlined, MinusOutlined } from "@ant-design/icons";
 
-export interface ISaveToWorkspaceProps {
+export interface ICheckInProps {
 
 }
 
-export interface ISaveToWorkspaceRef {
+export interface ICheckInRef {
 
 }
 
-export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceProps>((props, ref) => {
+export const CheckIn = forwardRef<ICheckInRef, ICheckInProps>((props, ref) => {
     useEffect(() => {
         let func = async () => {
             const urlParams = new URLSearchParams(window.location.search);
-            // 打印所有参数
-            for (const [key, value] of urlParams.entries()) {
-                console.log(`${key}: ${value}`);
-            }
             if (urlParams.has("dataID")) {
                 let dataID = urlParams.get("dataID");
                 if (dataID) {
@@ -43,7 +39,7 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                 flex: 1,
                 userSelect: 'none'
             }}>
-                {"Save To Workspace"}
+                {"Check In"}
             </Flex>
             <Button type='text'
                 icon={<MinusOutlined />} onClick={() => {
@@ -51,7 +47,7 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                 }}>
             </Button>
             <Flex direction='column'>
-                
+
             </Flex>
         </Flex>
     </Flex>
