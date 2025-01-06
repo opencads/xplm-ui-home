@@ -15,11 +15,20 @@ export interface ISaveToWorkspaceRef {
 
 export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceProps>((props, ref) => {
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        // 打印所有参数
-        for (const [key, value] of urlParams.entries()) {
-            console.log(`${key}: ${value}`);
-        }
+        let func = async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            // 打印所有参数
+            for (const [key, value] of urlParams.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+            if (urlParams.has("dataID")) {
+                let dataID = urlParams.get("dataID");
+                if (dataID) {
+                    console.log(await services.getDataByID(dataID));
+                }
+            }
+        };
+        func();
     }, []);
     return <Flex direction='column' style={{
         width: '100vw',

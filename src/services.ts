@@ -102,6 +102,25 @@ export class services {
         }
     }
 
+    public static async getDataByID(id: string) {
+        let webapplication = (window as any).webapplication;
+        if (webapplication) {
+            let response = await axios.post(services.FormatUIUrl("/api/v1/app/getdatabyid"), {
+                id
+            });
+            if (response.status === 200) {
+                if (response.data.success) {
+                    return response.data.data;
+                } else {
+                    throw new Error(response.data.message);
+                }
+            }
+        }
+        else {
+            return undefined;
+        }
+    }
+
     public static async import(data: ImportInterface[]) {
         let url = services.FormatUrl("/api/v1/xplm/import");
         let response = await axios.post(url, {
