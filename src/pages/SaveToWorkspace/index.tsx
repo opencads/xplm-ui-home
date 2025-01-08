@@ -133,16 +133,15 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
         }} disablePagination>
         </TableApp>
         <Flex style={{
-            padding: '10px 0'
+            padding: '10px 10px'
         }}>
             <Progress style={{
                 flex: 1
             }} percent={progressValue} showInfo={false}></Progress>
             {progressValue >= 100 ? <CheckOutlined /> : <LoadingOutlined spin />}
         </Flex>
-        <Button disabled={progressValue < 100}>{"Close"}</Button>
-        <div style={{
-            height: '10px'
-        }}></div>
+        <Button style={{
+            margin:'10px'
+        }} disabled={progressValue < 100}>{"Close"}</Button>
     </Flex>
 });
