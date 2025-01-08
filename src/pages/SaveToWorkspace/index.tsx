@@ -1,9 +1,9 @@
-import { forwardRef, useEffect } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { Flex, useUpdate } from "../../natived";
 import { services } from "../../services";
 import { dragClass } from "../Home";
-import { Button } from "antd";
-import { CloseOutlined, MinusOutlined } from "@ant-design/icons";
+import { Button, Progress, Spin } from "antd";
+import { CloseOutlined, LoadingOutlined, MinusOutlined } from "@ant-design/icons";
 import { IAgent, RawJson, RawJsonDocument } from "../../IRawJson";
 import { TableApp } from "../../apps/TableApp";
 import { ColumnsType } from "antd/es/table";
@@ -46,61 +46,61 @@ export const ReportColumns: ColumnsType<IReportRecord> = [
 
 export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceProps>((props, ref) => {
     const [reports, updateReports, reportsRef] = useUpdate<IReportRecord[]>([]);
-    useEffect(() => {
-        let func = async () => {
+    const [progressValue, updateProgressValue, progressValueRef] = useUpdate(0);
+    const self = useRef({
+        saveToWorkspace: async () => {
             const urlParams = new URLSearchParams(window.location.search);
-            // 打印所有参数
-            for (const [key, value] of urlParams.entries()) {
-                console.log(`${key}: ${value}`);
+            if (urlParams.has("dataID") == false) {
+                return;
             }
-            if (urlParams.has("dataID")) {
-                let dataID = urlParams.get("dataID");
-                if (dataID) {
-                    let data = await services.getDataByID(dataID) as {
-                        Agent: IAgent,
-                        RawJson: RawJson
-                    };
-                    let toImportData = {
-                        Items: []
-                    } as IImportInput;
-                    let mapFilePathToDocuments = {} as {
-                        [key: string]: RawJsonDocument[]
-                    };
-                    for (let document of data.RawJson.Documents) {
-                        let filePath = document.FilePath;
-                        if (!mapFilePathToDocuments[filePath]) {
-                            mapFilePathToDocuments[filePath] = [];
-                        }
-                        mapFilePathToDocuments[filePath].push(document);
-                    }
-                    for (let filePath in mapFilePathToDocuments) {
-                        toImportData.Items.push({
-                            FilePath: filePath,
-                            RawJson: {
-                                Documents: mapFilePathToDocuments[filePath]
-                            } as any
-                        });
-                    }
-                    await services.importFilesToWorkspaceAsync(toImportData, progress => {
-                        let status = undefined;
-                        if (progress.Data?.Success == true) {
-                            status = 'succeeded';
-                        }
-                        else if (progress.Data?.Success == false) {
-                            status = 'failed';
-                        }
-                        let report = {
-                            key: `${progress.Scope}.${progress.Progress}`,
-                            title: `${progress.Message}`,
-                            status: status
-                        } as IReportRecord;
-                        updateReports([...reports, report]);
-                    });
+            let dataID = urlParams.get("dataID");
+            if (dataID == null) return;
+            let data = await services.getDataByID(dataID) as {
+                Agent: IAgent,
+                RawJson: RawJson
+            };
+            let toImportData = {
+                Items: []
+            } as IImportInput;
+            let mapFilePathToDocuments = {} as {
+                [key: string]: RawJsonDocument[]
+            };
+            for (let document of data.RawJson.Documents) {
+                let filePath = document.FilePath;
+                if (!mapFilePathToDocuments[filePath]) {
+                    mapFilePathToDocuments[filePath] = [];
                 }
-
+                mapFilePathToDocuments[filePath].push(document);
             }
-        };
-        func();
+            for (let filePath in mapFilePathToDocuments) {
+                toImportData.Items.push({
+                    FilePath: filePath,
+                    RawJson: {
+                        Documents: mapFilePathToDocuments[filePath]
+                    } as any
+                });
+            }
+            await services.importFilesToWorkspaceAsync(toImportData, progress => {
+                let status = undefined;
+                if (progress.Data?.Success == true) {
+                    status = 'succeeded';
+                }
+                else if (progress.Data?.Success == false) {
+                    status = 'failed';
+                }
+                let report = {
+                    key: `${progress.Scope}.${progress.Progress}`,
+                    title: `${progress.Message}`,
+                    status: status
+                } as IReportRecord;
+                updateProgressValue(progress.Progress * 100);
+                updateReports([...reports, report]);
+            });
+            updateProgressValue(100);
+        }
+    });
+    useEffect(() => {
+        self.current.saveToWorkspace();
     }, []);
     return <Flex direction='column' style={{
         width: '100vw',
@@ -124,15 +124,17 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
             </Button>
 
         </Flex>
-        <Flex direction='column' style={{
-            flex: 1
-        }}>
-            <TableApp columns={ReportColumns} dataSource={reports} style={{
-                flex: 1,
-                height: 0
-            }}>
+        <TableApp columns={ReportColumns} dataSource={reports} style={{
+            flex: 1,
+            height: 0
+        }} disablePagination>
 
-            </TableApp>
+        </TableApp>
+        <Flex>
+            <Progress style={{
+                flex: 1
+            }} percent={progressValue} showInfo={false}></Progress>
+            <Spin indicator={<LoadingOutlined spin />} percent={progressValue == 100 ? progressValue : undefined} />
         </Flex>
     </Flex>
 });
