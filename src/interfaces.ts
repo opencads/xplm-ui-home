@@ -1,3 +1,4 @@
+import { RawJson } from "./IRawJson";
 import { IDocumentRecord } from "./apps/DocumentsApp";
 
 export type Guid = string;
@@ -53,7 +54,8 @@ export interface DirectoryInterface {
 
 export interface IImportInput {
     Items: {
-        FilePath: string
+        FilePath: string,
+        RawJson?: RawJson
     }[]
 }
 
@@ -103,10 +105,11 @@ export interface ICheckInOutput {
 }
 
 export interface IProgress {
-    "DateTime": string,
-    "Scope": string,
-    "Progress": number,
-    "Message": string
+    DateTime: string,
+    Scope: string,
+    Progress: number,
+    Message: string,
+    Data?: any
 }
 
 export interface ILocation {

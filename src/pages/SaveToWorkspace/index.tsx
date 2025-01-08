@@ -4,9 +4,10 @@ import { services } from "../../services";
 import { dragClass } from "../Home";
 import { Button } from "antd";
 import { CloseOutlined, MinusOutlined } from "@ant-design/icons";
-import { IAgent, RawJson } from "../../IRawJson";
+import { IAgent, RawJson, RawJsonDocument } from "../../IRawJson";
 import { TableApp } from "../../apps/TableApp";
 import { ColumnsType } from "antd/es/table";
+import { IImportInput } from "../../interfaces";
 
 export interface ISaveToWorkspaceProps {
 
@@ -19,7 +20,7 @@ export interface ISaveToWorkspaceRef {
 export interface IReportRecord {
     key: string,
     title: string,
-    status: 'todo' | 'doing' | 'succeeded' | 'failed'
+    status?: 'todo' | 'doing' | 'succeeded' | 'failed'
 }
 
 export const ReportColumns: ColumnsType<IReportRecord> = [
@@ -59,6 +60,42 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                         Agent: IAgent,
                         RawJson: RawJson
                     };
+                    let toImportData = {
+                        Items: []
+                    } as IImportInput;
+                    let mapFilePathToDocuments = {} as {
+                        [key: string]: RawJsonDocument[]
+                    };
+                    for (let document of data.RawJson.Documents) {
+                        let filePath = document.FilePath;
+                        if (!mapFilePathToDocuments[filePath]) {
+                            mapFilePathToDocuments[filePath] = [];
+                        }
+                        mapFilePathToDocuments[filePath].push(document);
+                    }
+                    for (let filePath in mapFilePathToDocuments) {
+                        toImportData.Items.push({
+                            FilePath: filePath,
+                            RawJson: {
+                                Documents: mapFilePathToDocuments[filePath]
+                            } as any
+                        });
+                    }
+                    await services.importFilesToWorkspaceAsync(toImportData, progress => {
+                        let status = undefined;
+                        if (progress.Data?.Success == true) {
+                            status = 'succeeded';
+                        }
+                        else if (progress.Data?.Success == false) {
+                            status = 'failed';
+                        }
+                        let report = {
+                            key: `${progress.Scope}.${progress.Progress}`,
+                            title: `${progress.Message}`,
+                            status: status
+                        } as IReportRecord;
+                        updateReports([...reports, report]);
+                    });
                 }
 
             }
