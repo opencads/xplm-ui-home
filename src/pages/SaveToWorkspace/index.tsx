@@ -89,13 +89,7 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                 });
             }
             await services.importFilesToWorkspaceAsync(toImportData, progress => {
-                let status = undefined;
-                if (progress.Data?.Success == true) {
-                    status = 'succeeded';
-                }
-                else if (progress.Data?.Success == false) {
-                    status = 'failed';
-                }
+                let status = progress.Data?.Status;
                 let report = {
                     key: `${progress.Scope}.${progress.Progress}`,
                     title: `${progress.Message}`,
