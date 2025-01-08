@@ -1,4 +1,4 @@
-import { RawJson } from "./IRawJson";
+import { IAgent, RawJson } from "./IRawJson";
 import { IDocumentRecord } from "./apps/DocumentsApp";
 
 export type Guid = string;
@@ -55,7 +55,8 @@ export interface DirectoryInterface {
 export interface IImportInput {
     Items: {
         FilePath: string,
-        RawJson?: RawJson
+        RawJson?: RawJson,
+        Agent?: IAgent
     }[]
 }
 

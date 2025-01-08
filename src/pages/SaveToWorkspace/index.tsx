@@ -85,7 +85,8 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                     FilePath: filePath,
                     RawJson: {
                         Documents: mapFilePathToDocuments[filePath]
-                    } as any
+                    } as any,
+                    Agent: data.Agent
                 });
             }
             await services.importFilesToWorkspaceAsync(toImportData, progress => {
