@@ -1,9 +1,12 @@
 import { forwardRef, useEffect } from "react";
-import { Flex } from "../../natived";
+import { Flex, useUpdate } from "../../natived";
 import { services } from "../../services";
 import { dragClass } from "../Home";
 import { Button } from "antd";
 import { CloseOutlined, MinusOutlined } from "@ant-design/icons";
+import { IAgent, RawJson } from "../../IRawJson";
+import { TableApp } from "../../apps/TableApp";
+import { ColumnsType } from "antd/es/table";
 
 export interface ISaveToWorkspaceProps {
 
@@ -13,7 +16,35 @@ export interface ISaveToWorkspaceRef {
 
 }
 
+export interface IReportRecord {
+    key: string,
+    title: string,
+    status: 'todo' | 'doing' | 'succeeded' | 'failed'
+}
+
+export const ReportColumns: ColumnsType<IReportRecord> = [
+    {
+        key: 'No.',
+        title: 'No.',
+        width: 50,
+        render: (text, record, index) => index + 1
+    },
+    {
+        key: 'title',
+        title: 'title',
+        width: 200,
+        render: (text, record, index) => record.title
+    },
+    {
+        key: 'status',
+        title: 'status',
+        width: 200,
+        render: (text, record, index) => record.status
+    }
+];
+
 export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceProps>((props, ref) => {
+    const [reports, updateReports, reportsRef] = useUpdate<IReportRecord[]>([]);
     useEffect(() => {
         let func = async () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -24,8 +55,12 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
             if (urlParams.has("dataID")) {
                 let dataID = urlParams.get("dataID");
                 if (dataID) {
-                    console.log(await services.getDataByID(dataID));
+                    let data = await services.getDataByID(dataID) as {
+                        Agent: IAgent,
+                        RawJson: RawJson
+                    };
                 }
+
             }
         };
         func();
@@ -50,8 +85,15 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                     services.minimize();
                 }}>
             </Button>
-            <Flex direction='column'>
-                
+            <Flex direction='column' style={{
+                flex: 1
+            }}>
+                <TableApp columns={ReportColumns} dataSource={reports} style={{
+                    flex: 1,
+                    height: 0
+                }}>
+
+                </TableApp>
             </Flex>
         </Flex>
     </Flex>

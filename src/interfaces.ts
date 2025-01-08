@@ -6,7 +6,7 @@ export type DateTime = string;
 export interface ImportInterface {
     filePath?: string,
     directory?: string,
-    rawJson?: any,
+    rawJsonDocument?: any,
     documentNumber0?: string,
     documentNumber1?: string,
     documentNumber2?: string,
@@ -25,7 +25,7 @@ export interface DocumentInterface {
     formatFileName: string,
     lowerFormatFileName: string,
     contentMD5: string,
-    rawJsonMD5: string,
+    rawJsonDocumentMD5: string,
     documentNumber0: string,
     documentNumber1: string,
     documentNumber2: string,
@@ -36,6 +36,9 @@ export interface DocumentInterface {
     partRemoteID: string,
     displayName: string,
     createTime: DateTime,
+    updateTime: DateTime,
+    fileLastWriteTime: DateTime,
+    fileLength: number
 }
 
 export interface IImportOutput extends DocumentInterface {
@@ -112,3 +115,6 @@ export interface ILocation {
     width: number | string,
     height: number | string,
 }
+
+
+
