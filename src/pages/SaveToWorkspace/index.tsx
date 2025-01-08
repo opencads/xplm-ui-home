@@ -106,7 +106,7 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
         width: '100vw',
         height: '100vh',
     }}>
-        <Flex>
+        <Flex >
             <Flex horizontalCenter className={dragClass} onMouseDown={e => {
                 services.mouseDownDrag();
                 e.preventDefault();
@@ -122,16 +122,17 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                     services.minimize();
                 }}>
             </Button>
-            <Flex direction='column' style={{
-                flex: 1
-            }}>
-                <TableApp columns={ReportColumns} dataSource={reports} style={{
-                    flex: 1,
-                    height: 0
-                }}>
 
-                </TableApp>
-            </Flex>
+        </Flex>
+        <Flex direction='column' style={{
+            flex: 1
+        }}>
+            <TableApp columns={ReportColumns} dataSource={reports} style={{
+                flex: 1,
+                height: 0
+            }}>
+
+            </TableApp>
         </Flex>
     </Flex>
 });
