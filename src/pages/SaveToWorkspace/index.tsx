@@ -126,21 +126,17 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
             </Button>
 
         </Flex>
-        <Flex style={{
-            flex: 1,
-            height: 0
-        }}>
-            <TableApp columns={ReportColumns} dataSource={reports} style={{
-                flex: 1,
-                height: 0
-            }}>
-            </TableApp>
-        </Flex>
         <Flex>
             <Progress style={{
                 flex: 1
             }} percent={progressValue} showInfo={false}></Progress>
             <Spin indicator={<LoadingOutlined spin />} percent={progressValue == 100 ? progressValue : undefined} />
         </Flex>
+        <TableApp columns={ReportColumns} dataSource={reports} style={{
+            flex: 1,
+            height: 0
+        }}>
+        </TableApp>
+
     </Flex>
 });
