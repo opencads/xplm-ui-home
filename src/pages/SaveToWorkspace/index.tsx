@@ -3,7 +3,7 @@ import { Flex, useUpdate } from "../../natived";
 import { services } from "../../services";
 import { dragClass } from "../Home";
 import { Button, Progress, Spin } from "antd";
-import { CloseOutlined, LoadingOutlined, MinusOutlined, WarningOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, LoadingOutlined, MinusOutlined, WarningOutlined } from "@ant-design/icons";
 import { IAgent, RawJson, RawJsonDocument } from "../../IRawJson";
 import { TableApp } from "../../apps/TableApp";
 import { ColumnsType } from "antd/es/table";
@@ -97,7 +97,7 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                     status: status
                 } as IReportRecord;
                 updateProgressValue(progress.Progress * 100);
-                updateReports([...reports, report]);
+                updateReports([...reportsRef.current, report]);
             });
             updateProgressValue(100);
         }
@@ -127,17 +127,22 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
             </Button>
 
         </Flex>
-        <Flex>
-            <Progress style={{
-                flex: 1
-            }} percent={progressValue} showInfo={false}></Progress>
-            <Spin indicator={<LoadingOutlined spin />} percent={progressValue == 100 ? progressValue : undefined} />
-        </Flex>
         <TableApp columns={ReportColumns} dataSource={reports} style={{
             flex: 1,
             height: 0
         }}>
         </TableApp>
-
+        <Flex style={{
+            padding: '10px 0'
+        }}>
+            <Progress style={{
+                flex: 1
+            }} percent={progressValue} showInfo={false}></Progress>
+            {progressValue >= 100 ? <CheckOutlined /> : <LoadingOutlined spin />}
+        </Flex>
+        <Button disabled={progressValue < 100}>{"Close"}</Button>
+        <div style={{
+            height: '10px'
+        }}></div>
     </Flex>
 });
