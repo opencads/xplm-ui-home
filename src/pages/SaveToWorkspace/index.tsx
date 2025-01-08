@@ -89,16 +89,26 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                     Agent: data.Agent
                 });
             }
-            await services.importFilesToWorkspaceAsync(toImportData, progress => {
-                let status = progress.Data?.Status;
-                let report = {
-                    key: `${progress.Scope}.${progress.Progress}`,
-                    title: `${progress.Message}`,
-                    status: status
+            try {
+                await services.importFilesToWorkspaceAsync(toImportData, progress => {
+                    let status = progress.Data?.Status;
+                    let report = {
+                        key: `${progress.Scope}.${progress.Progress}`,
+                        title: `${progress.Message}`,
+                        status: status
+                    } as IReportRecord;
+                    updateProgressValue(progress.Progress * 100);
+                    updateReports([...reportsRef.current, report]);
+                });
+            }
+            catch (e: any) {
+                let errorReport = {
+                    key: Math.random().toString(),
+                    title: e.message,
+                    status: 'failed'
                 } as IReportRecord;
-                updateProgressValue(progress.Progress * 100);
-                updateReports([...reportsRef.current, report]);
-            });
+                updateReports([...reportsRef.current, errorReport]);
+            }
             updateProgressValue(100);
         }
     });
@@ -141,7 +151,7 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
             {progressValue >= 100 ? <CheckOutlined /> : <LoadingOutlined spin />}
         </Flex>
         <Button style={{
-            margin:'10px'
+            margin: '10px'
         }} disabled={progressValue < 100}>{"Close"}</Button>
     </Flex>
 });
