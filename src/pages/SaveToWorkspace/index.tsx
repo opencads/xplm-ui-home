@@ -126,12 +126,16 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
             </Button>
 
         </Flex>
-        <TableApp columns={ReportColumns} dataSource={reports} style={{
+        <Flex style={{
             flex: 1,
             height: 0
-        }} disablePagination>
-
-        </TableApp>
+        }}>
+            <TableApp columns={ReportColumns} dataSource={reports} style={{
+                flex: 1,
+                height: 0
+            }}>
+            </TableApp>
+        </Flex>
         <Flex>
             <Progress style={{
                 flex: 1
