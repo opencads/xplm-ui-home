@@ -3,11 +3,12 @@ import { Flex, useUpdate } from "../../natived";
 import { services } from "../../services";
 import { dragClass } from "../Home";
 import { Button, Progress, Spin } from "antd";
-import { CloseOutlined, LoadingOutlined, MinusOutlined } from "@ant-design/icons";
+import { CloseOutlined, LoadingOutlined, MinusOutlined, WarningOutlined } from "@ant-design/icons";
 import { IAgent, RawJson, RawJsonDocument } from "../../IRawJson";
 import { TableApp } from "../../apps/TableApp";
 import { ColumnsType } from "antd/es/table";
 import { IImportInput } from "../../interfaces";
+import Icon from "@ant-design/icons/lib/components/Icon";
 
 export interface ISaveToWorkspaceProps {
 
@@ -40,7 +41,14 @@ export const ReportColumns: ColumnsType<IReportRecord> = [
         key: 'status',
         title: 'status',
         width: 200,
-        render: (text, record, index) => record.status
+        render: (text, record, index) => {
+            if (record.status == 'failed') {
+                return <WarningOutlined style={{
+                    // 失败颜色
+                    color: 'red'
+                }} />
+            }
+        }
     }
 ];
 
