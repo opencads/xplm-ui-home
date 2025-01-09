@@ -146,7 +146,8 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
             padding: '10px 10px'
         }}>
             <Progress style={{
-                flex: 1
+                flex: 1,
+                margin:'0px 10px 0px 20px'
             }} percent={progressValue} showInfo={false}></Progress>
             {progressValue >= 100 ? <CheckOutlined /> : <LoadingOutlined spin />}
         </Flex>
