@@ -3,7 +3,7 @@ import { Flex, useUpdate } from "../../natived";
 import { services } from "../../services";
 import { dragClass } from "../Home";
 import { Button, Progress, Spin } from "antd";
-import { CheckOutlined, CloseOutlined, LoadingOutlined, MinusOutlined, WarningOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CheckOutlined, CloseOutlined, LoadingOutlined, MinusOutlined, WarningOutlined } from "@ant-design/icons";
 import { IAgent, RawJson, RawJsonDocument } from "../../IRawJson";
 import { TableApp } from "../../apps/TableApp";
 import { ColumnsType } from "antd/es/table";
@@ -48,6 +48,12 @@ export const ReportColumns: ColumnsType<IReportRecord> = [
                     // 失败颜色
                     color: 'red'
                 }} />
+            }
+            else if (record.status == 'doing') {
+                return <LoadingOutlined spin />
+            }
+            else if (record.status == 'success') {
+                return <CheckCircleOutlined />
             }
         }
     }
