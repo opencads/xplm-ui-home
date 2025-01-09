@@ -34,8 +34,8 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
             if (showLoading) updateLoading(true);
             try {
                 let documents = await services.getDocumentsFromWorkspaceAsync(await services.getDefaultDirectory(), "", progress => {
-                    updateLoadingPercent(progress.Progress * 100);
-                    updateLoadingTip(progress.Message);
+                    updateLoadingPercent(progress.progress * 100);
+                    updateLoadingTip(progress.message ?? "");
                 });
                 updateDocuments(documents.Documents);
             }
