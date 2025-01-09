@@ -143,6 +143,18 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                 } as IReportRecord;
                 updateReports([...reportsRef.current, errorReport]);
             }
+            // 将所有report的status（当为doing时）设置为success
+            let formatReports = (records: IReportRecord[]) => {
+                for (let record of records) {
+                    if (record.status == 'doing') {
+                        record.status = 'success';
+                    }
+                    else if (record.children) {
+                        formatReports(record.children);
+                    }
+                }
+            };
+            formatReports(reportsRef.current);
             updateProgressValue(100);
         }
     });
