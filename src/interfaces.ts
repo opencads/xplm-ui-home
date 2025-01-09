@@ -106,11 +106,13 @@ export interface ICheckInOutput {
 }
 
 export interface IProgress {
-    DateTime: string,
-    Scope: string,
-    Progress: number,
-    Message: string,
-    Data?: any
+    dateTime?: string,
+    progress: number,
+    message?: string,
+    parentID?: string,
+    id?: string,
+    status?: 'todo' | 'doing' | 'success' | 'failed',
+    data?: any
 }
 
 export interface ILocation {

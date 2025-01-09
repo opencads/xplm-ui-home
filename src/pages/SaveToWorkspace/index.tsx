@@ -21,7 +21,8 @@ export interface ISaveToWorkspaceRef {
 export interface IReportRecord {
     key: string,
     title: string,
-    status?: 'todo' | 'doing' | 'succeeded' | 'failed'
+    status?: 'todo' | 'doing' | 'success' | 'failed',
+    children?: IReportRecord[]
 }
 
 export const ReportColumns: ColumnsType<IReportRecord> = [
@@ -91,14 +92,29 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
             }
             try {
                 await services.importFilesToWorkspaceAsync(toImportData, progress => {
-                    let status = progress.Data?.Status;
-                    let report = {
-                        key: `${progress.Scope}.${progress.Progress}`,
-                        title: `${progress.Message}`,
-                        status: status
-                    } as IReportRecord;
-                    updateProgressValue(progress.Progress * 100);
-                    updateReports([...reportsRef.current, report]);
+                    let parentReport = reportsRef.current.find(x => x.key == progress.parentID);
+                    let lastReport = reportsRef.current.find(x => x.key == progress.id);
+                    if (lastReport) {
+                        lastReport.status = progress.status;
+                        updateReports([...reportsRef.current]);
+                    }
+                    else if (parentReport) {
+                        parentReport.children = [...parentReport.children ?? [], {
+                            key: progress.id ?? Math.random().toString(),
+                            title: `${progress.message}`,
+                            status: progress.status
+                        }] as IReportRecord[];
+                        updateReports([...reportsRef.current]);
+                    }
+                    else {
+                        let report = {
+                            key: progress.id ?? Math.random().toString(),
+                            title: `${progress.message}`,
+                            status: progress.status
+                        } as IReportRecord;
+                        updateReports([...reportsRef.current, report]);
+                    }
+                    updateProgressValue(progress.progress * 100);
                 });
             }
             catch (e: any) {
@@ -147,7 +163,7 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
         }}>
             <Progress style={{
                 flex: 1,
-                margin:'0px 10px 0px 20px'
+                margin: '0px 10px 0px 20px'
             }} percent={progressValue} showInfo={false}></Progress>
             {progressValue >= 100 ? <CheckOutlined /> : <LoadingOutlined spin />}
         </Flex>
