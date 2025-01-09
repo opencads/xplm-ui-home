@@ -21,6 +21,7 @@ export interface ISaveToWorkspaceRef {
 export interface IReportRecord {
     key: string,
     title: string,
+    dateTime?: string,
     status?: 'todo' | 'doing' | 'success' | 'failed',
     children?: IReportRecord[]
 }
@@ -34,14 +35,22 @@ export const ReportColumns: ColumnsType<IReportRecord> = [
     },
     {
         key: 'title',
-        title: 'title',
+        title: 'Title',
         width: 200,
         render: (text, record, index) => record.title
     },
     {
+        key: 'DateTime',
+        title: 'DateTime',
+        width: 150,
+        render: (text, record, index) => {
+            return record.dateTime
+        }
+    },
+    {
         key: 'status',
-        title: 'status',
-        width: 200,
+        title: 'Status',
+        width: 50,
         render: (text, record, index) => {
             if (record.status == 'failed') {
                 return <WarningOutlined style={{
@@ -108,7 +117,8 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                         parentReport.children = [...parentReport.children ?? [], {
                             key: progress.id ?? Math.random().toString(),
                             title: `${progress.message}`,
-                            status: progress.status
+                            status: progress.status,
+                            dateTime: progress.dateTime
                         }] as IReportRecord[];
                         updateReports([...reportsRef.current]);
                     }
@@ -116,7 +126,8 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                         let report = {
                             key: progress.id ?? Math.random().toString(),
                             title: `${progress.message}`,
-                            status: progress.status
+                            status: progress.status,
+                            dateTime: progress.dateTime
                         } as IReportRecord;
                         updateReports([...reportsRef.current, report]);
                     }
@@ -127,7 +138,8 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                 let errorReport = {
                     key: Math.random().toString(),
                     title: e.message,
-                    status: 'failed'
+                    status: 'failed',
+                    dateTime: new Date().toLocaleString()
                 } as IReportRecord;
                 updateReports([...reportsRef.current, errorReport]);
             }
