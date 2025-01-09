@@ -152,6 +152,8 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
         </Flex>
         <Button style={{
             margin: '10px'
-        }} disabled={progressValue < 100}>{"Close"}</Button>
+        }} disabled={progressValue < 100} onClick={() => {
+            services.close();
+        }}>{"Close"}</Button>
     </Flex>
 });
