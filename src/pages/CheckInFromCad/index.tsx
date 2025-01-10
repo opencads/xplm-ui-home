@@ -80,7 +80,7 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
         // }
         let getLastRecprd = (records: IReportRecord[]): IReportRecord => {
             let lastRecord = records[records.length - 1];
-            if (lastRecord.children && lastRecord.children.length > 0) {
+            if (lastRecord&&lastRecord.children && lastRecord.children.length > 0) {
                 return getLastRecprd(lastRecord.children);
             }
             else {
