@@ -83,7 +83,8 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             }
         };
         tableRef.current?.scrollTo({
-            key: getLastRecord(reportsRef.current).key
+            // key: getLastRecord(reportsRef.current).key,
+            index: reportsRef.current.length ?? 0
         });
     };
     const self = useRef({
