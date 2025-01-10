@@ -11,6 +11,7 @@ import { Workspace } from './pages/Workspaces';
 import { Documents } from './pages/Documents';
 import { CreateWorkspace } from './pages/CreateWorkspace';
 import { SaveToWorkspace } from './pages/SaveToWorkspace';
+import { CheckInFromCad } from './pages/CheckInFromCad';
 const VITE_PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL;
 console.log(`build time:${import.meta.env.VITE_APP_BUILD_TIME}`);
 InjectStyle(`
@@ -36,6 +37,7 @@ root.render(
         <Route path="/documents" element={<Documents />} />
         <Route path="/create-workspace" element={<CreateWorkspace />} />
         <Route path="/save-to-workspace" element={<SaveToWorkspace />} />
+        <Route path="/check-in-from-cad" element={<CheckInFromCad />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

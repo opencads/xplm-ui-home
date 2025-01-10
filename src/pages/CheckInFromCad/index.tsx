@@ -10,11 +10,11 @@ import { ColumnsType } from "antd/es/table";
 import { ICheckInInput, IImportInput } from "../../interfaces";
 import Icon from "@ant-design/icons/lib/components/Icon";
 
-export interface ICheckInProps {
+export interface ICheckInFromCadProps {
 
 }
 
-export interface ICheckInRef {
+export interface ICheckInFromCadRef {
 
 }
 
@@ -68,7 +68,7 @@ export const ReportColumns: ColumnsType<IReportRecord> = [
     }
 ];
 
-export const CheckIn = forwardRef<ICheckInRef, ICheckInProps>((props, ref) => {
+export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProps>((props, ref) => {
     const [reports, updateReports, reportsRef] = useUpdate<IReportRecord[]>([]);
     const [progressValue, updateProgressValue, progressValueRef] = useUpdate(0);
     const self = useRef({
