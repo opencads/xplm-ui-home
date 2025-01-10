@@ -91,14 +91,10 @@ export class services {
         }
         let dataID = generateGUID();
         let response = await axios.post(services.FormatUIUrl("/api/v1/app/openwithdata"), {
-            url: url,
+            url: `${url}?dataID=${dataID}`,
             location,
             dataID,
             data: data ?? {}
-        }, {
-            params: {
-                dataID
-            }
         });
         if (response.status === 200) {
             return true;
