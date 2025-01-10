@@ -255,7 +255,7 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             };
             formatReports(reportsRef.current);
             updateProgressValue(100);
-            
+            scrollToBottom();
         }
     });
 
