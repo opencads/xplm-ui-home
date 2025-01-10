@@ -76,6 +76,15 @@ export class services {
         }
     }
 
+    public static async home() {
+        let response = await axios.post(services.FormatUIUrl("/api/v1/app/home"));
+        if (response.status === 200) {
+            return true;
+        } else {
+            throw new Error(`${response.status}`);
+        }
+    }
+
     public static async openwithdata(url: string, location?: ILocation, data?: any) {
         ///api/v1/app/open/
         if (url.startsWith("/")) {

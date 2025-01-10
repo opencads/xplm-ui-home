@@ -67,6 +67,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
                         delay(1000);
                     }
                 }
+                services.home();
                 updateCurrentTab(localStorage.getItem('currentTab') ?? "documents");
                 await self.current?.refreshUserInfo();
             }
