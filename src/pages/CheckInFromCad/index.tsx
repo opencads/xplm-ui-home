@@ -88,7 +88,7 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             }
         };
         tableRef.current?.scrollTo({
-            key: getLastRecprd(reportsRef.current).key
+            key: getLastRecprd(reportsRef.current)?.key
         });
     };
     useEffect(() => {
