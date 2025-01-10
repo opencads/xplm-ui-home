@@ -2,6 +2,7 @@ import { Table as AntdTable, TablePaginationConfig, TableProps } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { forwardRef } from 'react';
 import { useUpdate } from '../../natived';
+import { TableRef } from 'antd/es/table';
 
 
 export interface ITableProps<RecordType = any> extends TableProps<RecordType> {
@@ -10,16 +11,11 @@ export interface ITableProps<RecordType = any> extends TableProps<RecordType> {
     debug?: boolean
 }
 
-export interface ITableRef {
-
-}
-
-export const TableApp = forwardRef<ITableRef, ITableProps>((props, ref) => {
+export const TableApp = forwardRef<TableRef, ITableProps>((props, ref) => {
     const tableContainerRef = useRef<HTMLDivElement | null>(null);
     const [tableBodyHeight, setTableBodyHeight] = useState(100)
     const [disablePagination, updatedisablePagination, disablePaginationRef] = useUpdate<boolean>(props.disablePagination ?? false)
     const hasHeaderListened = useRef(false)
-
     const debug = props.debug ?? false;
 
     const getPagination = () => {
@@ -110,7 +106,7 @@ export const TableApp = forwardRef<ITableRef, ITableProps>((props, ref) => {
         position: 'relative',
         overflowY: 'hidden',
     }} ref={tableContainerRef}>
-        <AntdTable {...props} scroll={{
+        <AntdTable ref={ref} {...props} scroll={{
             y: tableBodyHeight,
             x: props.scroll?.x ?? 'max-content'
         }} style={{

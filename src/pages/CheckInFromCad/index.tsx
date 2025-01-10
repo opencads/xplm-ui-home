@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useRef } from "react";
 import { Flex, useUpdate } from "../../natived";
 import { services } from "../../services";
 import { dragClass } from "../Home";
@@ -6,7 +6,7 @@ import { Button, Progress, Spin } from "antd";
 import { CheckCircleOutlined, CheckOutlined, CloseOutlined, LoadingOutlined, MinusOutlined, WarningOutlined } from "@ant-design/icons";
 import { IAgent, RawJson, RawJsonDocument } from "../../IRawJson";
 import { TableApp } from "../../apps/TableApp";
-import { ColumnsType } from "antd/es/table";
+import { ColumnsType, TableRef } from "antd/es/table";
 import { ICheckInInput, IImportInput } from "../../interfaces";
 import Icon from "@ant-design/icons/lib/components/Icon";
 
@@ -71,6 +71,7 @@ export const ReportColumns: ColumnsType<IReportRecord> = [
 export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProps>((props, ref) => {
     const [reports, updateReports, reportsRef] = useUpdate<IReportRecord[]>([]);
     const [progressValue, updateProgressValue, progressValueRef] = useUpdate(0);
+    const tableRef = useRef<TableRef>(null);
     const self = useRef({
         checkin: async () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -134,6 +135,9 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
                         updateReports([...reportsRef.current, report]);
                     }
                     updateProgressValue(progress.progress * 100 * nextStepRatio);
+                    tableRef.current?.scrollTo({
+                        key: reportsRef.current[reportsRef.current.length - 1].key
+                    });
                 });
                 let checkInInput = { Items: [] } as ICheckInInput;
                 for (let item of importResult) {
@@ -213,6 +217,9 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
                         updateReports([...reportsRef.current, report]);
                     }
                     updateProgressValue(nextStepStart + progress.progress * 100 * nextStepRatio);
+                    tableRef.current?.scrollTo({
+                        key: reportsRef.current[reportsRef.current.length - 1].key
+                    });
                 });
             }
             catch (e: any) {
@@ -239,6 +246,7 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             updateProgressValue(100);
         }
     });
+
     useEffect(() => {
         self.current.checkin();
     }, []);
@@ -264,7 +272,7 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             </Button>
 
         </Flex>
-        <TableApp columns={ReportColumns} dataSource={reports} style={{
+        <TableApp ref={tableRef} columns={ReportColumns} dataSource={reports} style={{
             flex: 1,
             height: 0
         }} disablePagination>
