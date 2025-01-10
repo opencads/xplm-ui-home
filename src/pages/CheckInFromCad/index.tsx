@@ -72,12 +72,30 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
     const [reports, updateReports, reportsRef] = useUpdate<IReportRecord[]>([]);
     const [progressValue, updateProgressValue, progressValueRef] = useUpdate(0);
     const tableRef = useRef<TableRef>(null);
+    const isAutoScrollToBottom = useRef(true);
     const scrollToBottom = () => {
-        let tableBody = tableRef.current?.nativeElement.getElementsByClassName("ant-table-body");
-        if (tableBody && tableBody.length > 0) {
-            tableBody[0].scrollTo(0, tableBody[0].scrollHeight + 100);
-        }
+        // let tableBody = tableRef.current?.nativeElement.getElementsByClassName("ant-table-body");
+        // if (tableBody && tableBody.length > 0) {
+        //     tableBody[0].scrollTo(0, tableBody[0].scrollHeight + 100);
+        // }
+        let getLastRecprd = (records: IReportRecord[]): IReportRecord => {
+            let lastRecord = records[records.length - 1];
+            if (lastRecord.children && lastRecord.children.length > 0) {
+                return getLastRecprd(lastRecord.children);
+            }
+            else {
+                return lastRecord;
+            }
+        };
+        tableRef.current?.scrollTo({
+            key: getLastRecprd(reportsRef.current).key
+        });
     };
+    useEffect(() => {
+        if (isAutoScrollToBottom.current) {
+            scrollToBottom();
+        }
+    }, [reports]);
     const self = useRef({
         checkin: async () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -141,7 +159,6 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
                         updateReports([...reportsRef.current, report]);
                     }
                     updateProgressValue(progress.progress * 100 * nextStepRatio);
-                    scrollToBottom();
                 });
                 let checkInInput = { Items: [] } as ICheckInInput;
                 for (let item of importResult) {
@@ -221,7 +238,6 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
                         updateReports([...reportsRef.current, report]);
                     }
                     updateProgressValue(nextStepStart + progress.progress * 100 * nextStepRatio);
-                    scrollToBottom();
                 });
             }
             catch (e: any) {
@@ -232,7 +248,6 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
                     dateTime: new Date().toLocaleString()
                 } as IReportRecord;
                 updateReports([...reportsRef.current, errorReport]);
-                scrollToBottom();
             }
             // 将所有report的status（当为doing时）设置为success
             let formatReports = (records: IReportRecord[]) => {
@@ -247,7 +262,6 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             };
             formatReports(reportsRef.current);
             updateProgressValue(100);
-            scrollToBottom();
         }
     });
 
