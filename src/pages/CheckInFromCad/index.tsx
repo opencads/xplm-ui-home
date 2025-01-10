@@ -83,8 +83,7 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             }
         };
         tableRef.current?.scrollTo({
-            // key: getLastRecord(reportsRef.current).key,
-            index: reportsRef.current.length ?? 0
+            key: getLastRecord(reportsRef.current).key
         });
     };
     const self = useRef({
@@ -257,6 +256,7 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             formatReports(reportsRef.current);
             updateProgressValue(100);
             scrollToBottom();
+            console.log(tableRef.current?.nativeElement);
         }
     });
 
