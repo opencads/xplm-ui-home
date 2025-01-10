@@ -48,6 +48,7 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
     });
     const [layoutTabs, updateLayoutTabs] = useUpdate<ILayoutTab[]>([]);
     const [currentTab, updateCurrentTab] = useUpdate<string>(localStorage.getItem('currentTab') ?? "documents");
+    const delay = async (time: number) => new Promise(resolve => setTimeout(resolve, time));
     const self = useRef<IHomeRef>({
         refreshUserInfo: async () => {
             let userInfo = await services.getUserInfo();
@@ -57,7 +58,15 @@ export const Home = forwardRef<IHomeRef, IHomeProps>((props, ref) => {
         refresh: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
             try {
-                await self.current?.refreshLayoutTabs();
+                while (true) {
+                    try {
+                        await self.current?.refreshLayoutTabs();
+                        break;
+                    }
+                    catch {
+                        delay(1000);
+                    }
+                }
                 updateCurrentTab(localStorage.getItem('currentTab') ?? "documents");
                 await self.current?.refreshUserInfo();
             }
