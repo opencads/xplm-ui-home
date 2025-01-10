@@ -6,6 +6,7 @@ import pako from 'pako';
 import { ILayoutTab } from "./pages/Home";
 import { IWorkspaceRecord } from "./apps/WorkspacesApp";
 import { IContainerRecord, IFolderRecord } from "./pages/CreateWorkspace";
+import { generateGUID } from "./utils";
 export type Guid = string;
 const Util = {
     calculateFileMD5: (file: File): Promise<string> => {
@@ -67,6 +68,37 @@ export class services {
         let response = await axios.post(services.FormatUIUrl("/api/v1/app/open"), {
             url: window.location.origin + url,
             location
+        });
+        if (response.status === 200) {
+            return true;
+        } else {
+            throw new Error(`${response.status}`);
+        }
+    }
+
+    public static async openwithdata(url: string, location?: ILocation, data?: any) {
+        ///api/v1/app/open/
+        if (url.startsWith("/")) {
+            url = window.location.origin + url;
+        }
+        if (location == undefined) {
+            location = {
+                x: 'center',
+                y: 'center',
+                width: '60%',
+                height: '60%'
+            };
+        }
+        let dataID = generateGUID();
+        let response = await axios.post(services.FormatUIUrl("/api/v1/app/openwithdata"), {
+            url: window.location.origin + url,
+            location,
+            dataID,
+            data: data ?? {}
+        }, {
+            params: {
+                dataID
+            }
         });
         if (response.status === 200) {
             return true;

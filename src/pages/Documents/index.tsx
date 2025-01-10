@@ -88,7 +88,13 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
                         Document: record
                     });
                 }
-                await services.checkinDocuments(checkInInput);
+                // await services.checkinDocuments(checkInInput);
+                await services.openwithdata("/easyplm-ui-home/check-in-from-workbench", {
+                    "x": "center",
+                    "y": "center",
+                    "width": "60%",
+                    "height": "60%"
+                }, checkInInput);
             }
             catch (e) {
                 console.log(e);

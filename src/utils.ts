@@ -15,3 +15,15 @@ export const useLocalStorageListener = (key: string, callback: (data: any) => vo
         };
     }, [key, callback]);
 };
+
+export const generateGUID = () => {
+    // Helper function to generate a random four-character hexadecimal segment
+    function s4(): string {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+
+    // Combine four segments to form a GUID
+    return `${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+};
