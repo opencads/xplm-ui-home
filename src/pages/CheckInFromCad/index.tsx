@@ -280,11 +280,6 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             }}>
                 {"Check In"}
             </Flex>
-            {/* <Button type='text'
-                icon={<MinusOutlined />} onClick={() => {
-                    services.minimize();
-                }}>
-            </Button> */}
 
         </Flex>
         <TableApp ref={tableRef} columns={ReportColumns} dataSource={reports} style={{
