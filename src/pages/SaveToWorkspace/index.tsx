@@ -176,12 +176,11 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
             }}>
                 {"Save To Workspace"}
             </Flex>
-            <Button type='text'
+            {/* <Button type='text'
                 icon={<MinusOutlined />} onClick={() => {
                     services.minimize();
                 }}>
-            </Button>
-
+            </Button> */}
         </Flex>
         <TableApp columns={ReportColumns} dataSource={reports} style={{
             flex: 1,

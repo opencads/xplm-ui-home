@@ -176,11 +176,11 @@ export const CheckInFromWorkbench = forwardRef<ICheckInFromWorkbenchRef, ICheckI
             }}>
                 {"Check In"}
             </Flex>
-            <Button type='text'
+            {/* <Button type='text'
                 icon={<MinusOutlined />} onClick={() => {
                     services.minimize();
                 }}>
-            </Button>
+            </Button> */}
 
         </Flex>
         <TableApp ref={tableRef} columns={ReportColumns} dataSource={reports} style={{

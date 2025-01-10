@@ -143,15 +143,12 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
             }}>
                 {"Create Workspace"}
             </Flex>
-            <Button type='text'
+            {/* <Button type='text'
                 icon={<CloseOutlined></CloseOutlined>} onClick={() => {
                     services.close();
                 }}>
                 {"Close"}
-            </Button>
-            <Flex>
-
-            </Flex>
+            </Button> */}
         </Flex>
         <CreateWorkspaceApp workspaceName={workspaceName} selectedContainer={selectedContainer} selectedWorkspacePath={selectedWorkspacePath}
             allContainers={allContainers} allWorkspacePaths={allWorkspacePaths}
