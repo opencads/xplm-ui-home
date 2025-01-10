@@ -471,6 +471,9 @@ export class services {
     public static async checkinDocuments(input: ICheckInInput) {
         return await services.runPlugin("checkin", input);
     }
+    public static async checkinDocumentsAsync(input: ICheckInInput, onProgress: (progress: IProgress) => void) {
+        return await services.runPluginAsync("checkin", input, onProgress);
+    }
     public static async getSettings() {
         return await services.runPlugin("get-settings", {});
     }

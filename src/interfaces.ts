@@ -1,4 +1,4 @@
-import { IAgent, RawJson } from "./IRawJson";
+import { IAgent, RawJson, RawJsonDocument } from "./IRawJson";
 import { IDocumentRecord } from "./apps/DocumentsApp";
 
 export type Guid = string;
@@ -43,7 +43,8 @@ export interface DocumentInterface {
 }
 
 export interface IImportOutput extends DocumentInterface {
-    rawJson: any
+    rawJsonDocument: RawJsonDocument,
+    filePath: string
 }
 
 export interface DirectoryInterface {
