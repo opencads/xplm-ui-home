@@ -91,7 +91,7 @@ export class services {
         }
         let dataID = generateGUID();
         let response = await axios.post(services.FormatUIUrl("/api/v1/app/openwithdata"), {
-            url: window.location.origin + url,
+            url: url,
             location,
             dataID,
             data: data ?? {}
