@@ -73,18 +73,10 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
     const [progressValue, updateProgressValue, progressValueRef] = useUpdate(0);
     const tableRef = useRef<TableRef>(null);
     const scrollToBottom = () => {
-        let getLastRecord = (records: IReportRecord[]) => {
-            let lastRecord = records[records.length - 1];
-            if (lastRecord.children && lastRecord.children.length > 0) {
-                return getLastRecord(lastRecord.children);
-            }
-            else {
-                return lastRecord;
-            }
-        };
-        tableRef.current?.scrollTo({
-            key: getLastRecord(reportsRef.current).key
-        });
+        let tableBody = tableRef.current?.nativeElement.getElementsByClassName("ant-table-body");
+        if (tableBody && tableBody.length > 0) {
+            tableBody[0].scrollTo(0, tableBody[0].scrollHeight + 100);
+        }
     };
     const self = useRef({
         checkin: async () => {
@@ -256,7 +248,6 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             formatReports(reportsRef.current);
             updateProgressValue(100);
             scrollToBottom();
-            console.log(tableRef.current?.nativeElement);
         }
     });
 
