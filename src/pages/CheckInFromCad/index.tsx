@@ -281,7 +281,7 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
                 flex: 1,
                 userSelect: 'none'
             }}>
-                {"Save To Workspace"}
+                {"Check In"}
             </Flex>
             <Button type='text'
                 icon={<MinusOutlined />} onClick={() => {
