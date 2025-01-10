@@ -5,6 +5,7 @@ import { Button, Spin } from "antd";
 import { services } from "../../services";
 import { CloseOutlined } from "@ant-design/icons";
 import { dragClass } from "../Home";
+import { globalRefreshWorkspaces } from "../Workspaces";
 
 export interface ILoginRef {
 
@@ -87,6 +88,7 @@ export const Login = forwardRef<ILoginRef, ILoginProps>((props, ref) => {
                 }} onLogin={(username, password, remember) => {
                     services.setLoginInfo(username, password, remember);
                     self.current?.login(username, password);
+                    globalRefreshWorkspaces();
                 }} />
         </Flex>
     </Flex>

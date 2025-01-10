@@ -74,13 +74,9 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
     const tableRef = useRef<TableRef>(null);
     const isAutoScrollToBottom = useRef(true);
     const scrollToBottom = () => {
-        // let tableBody = tableRef.current?.nativeElement.getElementsByClassName("ant-table-body");
-        // if (tableBody && tableBody.length > 0) {
-        //     tableBody[0].scrollTo(0, tableBody[0].scrollHeight + 100);
-        // }
         let getLastRecprd = (records: IReportRecord[]): IReportRecord => {
             let lastRecord = records[records.length - 1];
-            if (lastRecord&&lastRecord.children && lastRecord.children.length > 0) {
+            if (lastRecord && lastRecord.children && lastRecord.children.length > 0) {
                 return getLastRecprd(lastRecord.children);
             }
             else {
@@ -262,6 +258,7 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
             };
             formatReports(reportsRef.current);
             updateProgressValue(100);
+            localStorage.setItem('documents.refresh', Math.random().toString());
         }
     });
 

@@ -221,7 +221,7 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
                 updateLoading(true);
                 try {
                     await self.current.checkIn(records, false);
-                    await self.current.refreshDocuments(false);
+                    // await self.current.refreshDocuments(false);
                 }
                 catch {
 

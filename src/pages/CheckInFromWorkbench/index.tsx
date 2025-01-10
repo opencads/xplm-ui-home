@@ -154,6 +154,7 @@ export const CheckInFromWorkbench = forwardRef<ICheckInFromWorkbenchRef, ICheckI
             };
             formatReports(reportsRef.current);
             updateProgressValue(100);
+            localStorage.setItem('documents.refresh', Math.random().toString());
         }
     });
 
