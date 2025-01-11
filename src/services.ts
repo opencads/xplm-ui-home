@@ -159,7 +159,7 @@ export class services {
     }
 
     public static async import(data: ImportInterface[]) {
-        let url = services.FormatUrl("/api/v1/xplm/import");
+        let url = services.FormatUrl("/api/v1/easyplm/import");
         let response = await axios.post(url, {
             data
         });
@@ -175,7 +175,7 @@ export class services {
         }
     }
     public static async getDocumentsByDirectory(directory: string) {
-        let url = services.FormatUrl(`/api/v1/xplm/getDocumentsByDirectory`);
+        let url = services.FormatUrl(`/api/v1/easyplm/getDocumentsByDirectory`);
         let response = await axios.get(url, {
             params: {
                 directory
@@ -194,9 +194,9 @@ export class services {
     }
     public static async getDefaultDirectory() {
         if (debug) {
-            return "D:\\Documents\\xplm-import-test";
+            return "D:\\Documents\\easyplm-import-test";
         }
-        let url = services.FormatUrl(`/api/v1/xplm/getDefaultDirectory`);
+        let url = services.FormatUrl(`/api/v1/easyplm/getDefaultDirectory`);
         let response = await axios.get(url);
         if (response.status === 200) {
             if (response.data.success) {
@@ -210,7 +210,7 @@ export class services {
         }
     }
     public static async setDefaultDirectory(defaultDirectory: string) {
-        let url = services.FormatUrl(`/api/v1/xplm/setDefaultDirectory`);
+        let url = services.FormatUrl(`/api/v1/easyplm/setDefaultDirectory`);
         let response = await axios.post(url, {
             defaultDirectory
         });
@@ -228,16 +228,16 @@ export class services {
     public static async getPluginSubscribers() {
         if (debug) {
             return [{
-                url: "http://localhost:19780/api/v1/xplm",
-                name: "XplmPlugin",
+                url: "http://localhost:19780/api/v1/easyplm",
+                name: "easyplmPlugin",
                 type: 'git-release'
             }, {
-                url: "http://localhost:19780/api/v1/xplm",
-                name: "XplmPlugin2",
+                url: "http://localhost:19780/api/v1/easyplm",
+                name: "easyplmPlugin2",
                 type: 'git-repository'
             }] as PluginSubscriber[];
         }
-        let url = services.FormatUrl(`/api/v1/xplm/getPluginSubscribers`);
+        let url = services.FormatUrl(`/api/v1/easyplm/getPluginSubscribers`);
         let response = await axios.get(url);
         if (response.status === 200) {
             if (response.data.success) {
@@ -251,7 +251,7 @@ export class services {
         }
     }
     public static async setPluginSubscribers(subscribers: PluginSubscriber[]) {
-        let url = services.FormatUrl(`/api/v1/xplm/setPluginSubscribers`);
+        let url = services.FormatUrl(`/api/v1/easyplm/setPluginSubscribers`);
         let response = await axios.post(url, {
             subscribers
         });
@@ -267,7 +267,7 @@ export class services {
         }
     }
     public static async addPluginSubscriber(subscriber: PluginSubscriber) {
-        let url = services.FormatUrl(`/api/v1/xplm/addPluginSubscriber`);
+        let url = services.FormatUrl(`/api/v1/easyplm/addPluginSubscriber`);
         let response = await axios.post(url, {
             subscriber
         });
@@ -285,14 +285,14 @@ export class services {
     public static async getLocalSubscribers() {
         if (debug) {
             return [{
-                url: "http://localhost:19780/api/v1/xplm",
-                name: "XplmPlugin",
+                url: "http://localhost:19780/api/v1/easyplm",
+                name: "easyplmPlugin",
             }, {
-                url: "http://localhost:19780/api/v1/xplm",
-                name: "XplmPlugin2",
+                url: "http://localhost:19780/api/v1/easyplm",
+                name: "easyplmPlugin2",
             }] as LocalSubscriber[];
         }
-        let url = services.FormatUrl(`/api/v1/xplm/getLocalSubscribers`);
+        let url = services.FormatUrl(`/api/v1/easyplm/getLocalSubscribers`);
         let response = await axios.get(url);
         if (response.status === 200) {
             if (response.data.success) {
@@ -315,7 +315,7 @@ export class services {
                 Entry: "export.exe {input}",
             }] as PluginInterface[];
         }
-        let url = services.FormatUrl(`/api/v1/xplm/getPlugins`);
+        let url = services.FormatUrl(`/api/v1/easyplm/getPlugins`);
         let response = await axios.get(url);
         if (response.status === 200) {
             if (response.data.success) {
@@ -330,7 +330,7 @@ export class services {
     }
     //removeLocalSubscriber
     public static async removeLocalSubscriber(name: string) {
-        let url = services.FormatUrl(`/api/v1/xplm/removeLocalSubscriber`);
+        let url = services.FormatUrl(`/api/v1/easyplm/removeLocalSubscriber`);
         let response = await axios.post(url, {
             name
         });
@@ -346,7 +346,7 @@ export class services {
         }
     }
     public static async updatePlugins() {
-        let url = services.FormatUrl(`/api/v1/xplm/updatePlugins`);
+        let url = services.FormatUrl(`/api/v1/easyplm/updatePlugins`);
         let response = await axios.post(url);
         if (response.status === 200) {
             if (response.data.success) {
@@ -450,7 +450,7 @@ export class services {
         return await services.runPlugin("get-user-info", {}) as IUserInfomation;
     }
     public static async downloadToDefaultDirectory(fileID: Guid, fileName: string) {
-        let url = services.FormatUrl(`/api/v1/xplm/downloadToDefaultDirectory`);
+        let url = services.FormatUrl(`/api/v1/easyplm/downloadToDefaultDirectory`);
         let response = await axios.post(url, {
             fileID,
             fileName
