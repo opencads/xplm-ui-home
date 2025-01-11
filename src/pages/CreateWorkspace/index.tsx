@@ -97,7 +97,7 @@ export const CreateWorkspace = forwardRef<ICreateWorkspaceRef, ICreateWorkspaceP
                 if (!container) {
                     throw new Error(`container not found ${selectedContainer}`);
                 }
-                await services.createWorkspace(container, workspaceNameRef.current, selectedWorkspacePathRef.current);
+                await services.createWorkspace(container, workspaceNameRef.current, allWorkspacePathsRef.current.find(item => item.value === selectedWorkspacePathRef.current)?.label ?? '');
                 globalRefreshWorkspaces();
                 await services.close();
             }
