@@ -41,12 +41,17 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
             width: '10em',
             key: 'name',
             render: (value, record) => {
-                return <Flex verticalCenter>
-                    <Icon style={{
-                        color: record.active ? 'red' : 'transparent'
-                    }} component={ActiveSvg} />
-                    <span>{record.name}</span>
-                </Flex>;
+                return <span>{record.name}</span>
+            }
+        },
+        {
+            title: "Active",
+            width: '6em',
+            key: 'active',
+            render: (value, record) => {
+                return <Icon style={{
+                    color: record.active ? 'red' : 'transparent'
+                }} component={ActiveSvg} />
             }
         },
         {
@@ -56,9 +61,7 @@ export const WorkspacesApp = forwardRef<IWorkspaceAppRef, IWorkspaceAppProps>((p
             fixed: 'right',
             render: (value, record) => {
                 return <Flex spacing={'4px'}>
-                    {record.active == false ? <Button type='text' icon={<Icon component={ActiveSvg} style={{
-                        color: 'red'
-                    }}></Icon>} onClick={() => {
+                    {record.active == false ? <Button type='text' icon={<Icon component={ActiveSvg}></Icon>} onClick={() => {
                         props.onActive?.(record);
                     }}>{"Active"}</Button> : undefined}
                     {record.active == false ? <Button type='text' icon={<DeleteOutlined />} onClick={() => {
