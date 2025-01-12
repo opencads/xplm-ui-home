@@ -194,7 +194,8 @@ export const CheckInFromCad = forwardRef<ICheckInFromCadRef, ICheckInFromCadProp
                                 remoteAttributes: [],
                                 remoteChildren: [],
                                 remoteLastModifiedTime: '',
-                                lifeCycle: ''
+                                lifeCycle: '',
+                                version:''
                             },
                             local: {
                                 success: true,

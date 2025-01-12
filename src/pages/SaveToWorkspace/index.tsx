@@ -6,7 +6,7 @@ import { Button, Progress, Spin } from "antd";
 import { CheckCircleOutlined, CheckOutlined, CloseOutlined, LoadingOutlined, MinusOutlined, WarningOutlined } from "@ant-design/icons";
 import { IAgent, RawJson, RawJsonDocument } from "../../IRawJson";
 import { TableApp } from "../../apps/TableApp";
-import { ColumnsType } from "antd/es/table";
+import { ColumnsType, TableRef } from "antd/es/table";
 import { IImportInput } from "../../interfaces";
 import Icon from "@ant-design/icons/lib/components/Icon";
 
@@ -71,6 +71,27 @@ export const ReportColumns: ColumnsType<IReportRecord> = [
 export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceProps>((props, ref) => {
     const [reports, updateReports, reportsRef] = useUpdate<IReportRecord[]>([]);
     const [progressValue, updateProgressValue, progressValueRef] = useUpdate(0);
+    const tableRef = useRef<TableRef>(null);
+    const isAutoScrollToBottom = useRef(true);
+    const scrollToBottom = () => {
+        let getLastRecprd = (records: IReportRecord[]): IReportRecord => {
+            let lastRecord = records[records.length - 1];
+            if (lastRecord && lastRecord.children && lastRecord.children.length > 0) {
+                return getLastRecprd(lastRecord.children);
+            }
+            else {
+                return lastRecord;
+            }
+        };
+        tableRef.current?.scrollTo({
+            key: getLastRecprd(reportsRef.current)?.key
+        });
+    };
+    useEffect(() => {
+        if (isAutoScrollToBottom.current) {
+            scrollToBottom();
+        }
+    }, [reports]);
     const self = useRef({
         saveToWorkspace: async () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -182,7 +203,7 @@ export const SaveToWorkspace = forwardRef<ISaveToWorkspaceRef, ISaveToWorkspaceP
                 }}>
             </Button> */}
         </Flex>
-        <TableApp columns={ReportColumns} dataSource={reports} style={{
+        <TableApp ref={tableRef} columns={ReportColumns} dataSource={reports} style={{
             flex: 1,
             height: 0
         }} disablePagination>

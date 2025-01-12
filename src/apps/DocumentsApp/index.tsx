@@ -38,6 +38,7 @@ export interface IDocumentRecord {
         remoteState: 'new' | 'checkedIn' | 'checkedOut' | 'unknown';
         remoteLastModifiedTime: string;
         lifeCycle: string;
+        version: string;
         remoteAttributes: {
             key: string,
             value: string,
@@ -119,6 +120,16 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 dataIndex: 'name',
                 width: '12em',
             }, {
+                key: 'state',
+                title: 'State',
+                width: '8em',
+                render: (text, record) => {
+                    return <Flex spacing={'4px'}>
+                        {renderRemoteState(record.remote.remoteState)}
+                        {renderLocalState(record.local.workspaceState)}
+                    </Flex>
+                }
+            }, {
                 key: 'number',
                 title: 'Number',
                 dataIndex: 'number',
@@ -129,14 +140,11 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                 dataIndex: 'partNumber',
                 width: '12em'
             }, {
-                key: 'state',
-                title: 'State',
-                width: '8em',
+                key: 'version',
+                title: 'Version',
+                width: '10em',
                 render: (text, record) => {
-                    return <Flex spacing={'4px'}>
-                        {renderRemoteState(record.remote.remoteState)}
-                        {renderLocalState(record.local.workspaceState)}
-                    </Flex>
+                    return record.remote.version;
                 }
             }, {
                 key: 'lifeCycle',
