@@ -3,7 +3,7 @@ import { Flex, useUpdate } from "../../natived";
 import { ImportFileApp } from "../ImportFileApp";
 import useMessage from "antd/es/message/useMessage";
 import { Button, Spin, Table, TableColumnsType, Tag } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
+import { DownloadOutlined, ReloadOutlined } from "@ant-design/icons";
 import ArchiveSvg from "../../svgs/Archive.svg?react";
 import { TableApp } from "../TableApp";
 import CheckInSvg from "../../svgs/CheckIn.svg?react";
@@ -25,6 +25,7 @@ export interface IDocumentsAppProps {
     showLoading?: (loading: boolean) => Promise<void>;
     onImported?: () => Promise<void>;
     onCheckIn?: (records: IDocumentRecord[]) => Promise<void>;
+    onDownload?: (records: IDocumentRecord[]) => Promise<void>;
 }
 
 export interface IDocumentRecord {
@@ -85,7 +86,6 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             else if (state == 'checkedOut') {
                 return <Tag>Checked Out</Tag>;
             }
-
         };
         const renderLocalState = (state: IDocumentRecord["local"]["workspaceState"]) => {
             if (state == 'untracked') {
@@ -165,6 +165,9 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                         <Button onClick={() => {
                             props.onDetail?.(record);
                         }} type='text' icon={<DetailSvg />}>{"Detail"}</Button>
+                        {record.local.workspaceState == 'todownload' ? <Button type='text' icon={<DownloadOutlined />} onClick={() => {
+                            props.onDownload?.([record]);
+                        }}>{"Download"}</Button> : undefined}
                     </Flex>
                 }
             },

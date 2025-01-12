@@ -433,6 +433,9 @@ export class services {
     public static async importFilesToWorkspaceAsync(input: IImportInput, onProgress: (progress: IProgress) => void) {
         return await services.runPluginAsync("workspace-import-files", input, onProgress) as IImportOutput[];
     }
+    public static async downloadFilesToWorkspceAsync(records: IDocumentRecord[], onProgress: (progress: IProgress) => void) {
+        return await services.runPluginAsync("workspace-download-files", records, onProgress);
+    }
     public static async login(username: string, password: string) {
         return await services.runPlugin("login", {
             username,

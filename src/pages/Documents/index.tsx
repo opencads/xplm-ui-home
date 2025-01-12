@@ -102,6 +102,23 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
             if (showLoading) {
                 updateLoading(false);
             }
+        },
+        download: async (records: IDocumentRecord[], showLoading: boolean) => {
+            if (showLoading) updateLoading(true);
+            try {
+                await services.openwithdata("/easyplm-ui-home/download-from-workbench", {
+                    "x": "center",
+                    "y": "center",
+                    "width": "60%",
+                    "height": "60%"
+                }, records);
+            }
+            catch (e) {
+                console.log(e);
+            }
+            if (showLoading) {
+                updateLoading(false);
+            }
         }
     });
     useEffect(() => {
@@ -227,6 +244,8 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
 
                 }
                 updateLoading(false);
+            }} onDownload={async records => {
+                await self.current.download(records, true);
             }}></DocumentsApp>
             <ResizeButton style={{
                 display: showDetails ? 'flex' : 'none'
