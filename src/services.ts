@@ -193,9 +193,6 @@ export class services {
         }
     }
     public static async getDefaultDirectory() {
-        if (debug) {
-            return "D:\\Documents\\easyplm-import-test";
-        }
         let url = services.FormatUrl(`/api/v1/easyplm/getDefaultDirectory`);
         let response = await axios.get(url);
         if (response.status === 200) {
