@@ -56,14 +56,14 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
                     Items: []
                 } as IImportInput;
                 for (let document of documents.Documents) {
-                    if (document.local.workspaceState == 'untracked') {
+                    if (document.local?.workspaceState == 'untracked') {
                         imports.Items.push({
-                            FilePath: document.local.localFilePath
+                            FilePath: document?.local?.localFilePath ?? ''
                         });
                     }
-                    else if (document.local.workspaceState == 'modified') {
+                    else if (document.local?.workspaceState == 'modified') {
                         imports.Items.push({
-                            FilePath: document.local.localFilePath
+                            FilePath: document?.local?.localFilePath ?? ''
                         });
                     }
                 }
@@ -84,7 +84,7 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
                 } as ICheckInInput;
                 for (let record of records) {
                     checkInInput.Items.push({
-                        FilePath: record.local.localFilePath,
+                        FilePath: record.local?.localFilePath ?? '',
                         Document: record
                     });
                 }
@@ -135,7 +135,7 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
     const createDetails = (record: IDocumentRecord) => {
         let result = [] as IMarkdownLine[];
         result.push(`## ${record.name}`);
-        if (record.remote.remoteAttributes.length > 0) {
+        if (record.remote?.remoteAttributes?.length && record.remote?.remoteAttributes?.length > 0) {
             result.push(`### Remote Attributes`);
             result.push({
                 type: 'card',
@@ -152,7 +152,7 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
                 }]
             });
         }
-        if (record.local?.localAttributes.length > 0) {
+        if (record.local?.localAttributes?.length && record.local?.localAttributes?.length > 0) {
             result.push(`### Local Attributes`);
             result.push({
                 type: 'card',
@@ -169,7 +169,7 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
                 }]
             });
         }
-        if (record.remote.remoteChildren.length > 0) {
+        if (record.remote?.remoteChildren?.length && record.remote?.remoteChildren?.length > 0) {
             result.push(`### Remote Children`);
             result.push({
                 type: 'card',
@@ -186,7 +186,7 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
                 }]
             });
         }
-        if (record.local?.localChildren.length > 0) {
+        if (record.local?.localChildren?.length && record.local?.localChildren?.length > 0) {
             result.push(`### Local Children`);
             result.push({
                 type: 'card',
