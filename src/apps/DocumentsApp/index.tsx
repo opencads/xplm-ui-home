@@ -203,7 +203,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                         }
                     };
                 });
-
+                let columnsEndCount = 2;
                 for (let i = 0; i < columns.length; i++) {
                     for (let item of [...toInsert]) {
                         if (item.index !== undefined) {
@@ -213,14 +213,16 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                             }
                         }
                     }
-                    if (i != columns.length - 1) {
+                    if (i < columns.length - columnsEndCount) {
                         result.push(columns[i]);
                     }
                 }
                 for (let item of toInsert) {
                     result.push(item);
                 }
-                result.push(columns[columns.length - 1]);
+                for (let i = 0; i < columnsEndCount; i++) {
+                    result.push(columns[columns.length - columnsEndCount + i]);
+                }
             }
             else {
                 result = [...columns];
