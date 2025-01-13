@@ -85,6 +85,7 @@ export interface DocumentsLayout {
         title: string,
         dataIndex: string,
         width: string,
+        index: number
     }[]
 }
 
@@ -192,16 +193,37 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
             }
         ];
         const computedColumns = useMemo(() => {
-            let result = [...columns];
+            let result = [] as TableColumnsType<IDocumentRecord>;
             if (props.layout?.columns) {
-                result = [...result, ...props.layout.columns.map(item => {
+                let toInsert = props.layout.columns.map(item => {
                     return {
                         ...item,
                         render: (text: string, record: IDocumentRecord) => {
                             return (record as any)?.[item.dataIndex] ?? (record?.remote as any)?.[item.dataIndex];
                         }
                     };
-                })];
+                });
+
+                for (let i = 0; i < columns.length; i++) {
+                    for (let item of [...toInsert]) {
+                        if (item.index !== undefined) {
+                            if (i == item.index) {
+                                result.push(item);
+                                toInsert.splice(toInsert.indexOf(item), 1);
+                            }
+                        }
+                    }
+                    if (i != columns.length - 1) {
+                        result.push(columns[i]);
+                    }
+                }
+                for (let item of toInsert) {
+                    result.push(item);
+                }
+                result.push(columns[columns.length - 1]);
+            }
+            else {
+                result = [...columns];
             }
             let disable = props.layout?.disable ?? [];
             if (disable) {
@@ -214,6 +236,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                     }
                 });
             }
+            // 将
             return result;
         }, [props.layout]);
         return <Flex direction='column' spacing={'4px'} style={props.style}>
