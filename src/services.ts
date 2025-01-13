@@ -560,7 +560,7 @@ export class services {
         return await services.runPlugin("remote-workspaces-delete", workspace);
     }
     public static async getDocumentLayout() {
-        return await services.runPlugin("documents-layout-get", {
+        return await services.runPlugin("layout-documents-get", {
         });
     }
 }
