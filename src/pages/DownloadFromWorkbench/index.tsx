@@ -175,14 +175,8 @@ export const DownloadFromWorkbench = forwardRef<IDownloadFromWorkbenchRef, IDown
                 flex: 1,
                 userSelect: 'none'
             }}>
-                {"Check In"}
+                {"Download"}
             </Flex>
-            {/* <Button type='text'
-                icon={<MinusOutlined />} onClick={() => {
-                    services.minimize();
-                }}>
-            </Button> */}
-
         </Flex>
         <TableApp ref={tableRef} columns={ReportColumns} dataSource={reports} style={{
             flex: 1,
