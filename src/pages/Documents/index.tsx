@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useRef } from "react";
 import { Flex, useUpdate } from "../../natived";
-import { DocumentsApp, IDocumentRecord } from "../../apps/DocumentsApp";
+import { DocumentsApp, DocumentsLayout, IDocumentRecord } from "../../apps/DocumentsApp";
 import { Button, Spin } from "antd";
 import { services } from "../../services";
 import { ICheckInInput, IImportInput } from "../../interfaces";
@@ -29,6 +29,7 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
     const [loadingPercent, updateLoadingPercent, loadingPercentRef] = useUpdate<number | undefined>(undefined);
     const [loadingTip, updateLoadingTip, loadingTipRef] = useUpdate('');
     const [detailsMarkdownLines, updateDetailsMarkdownLines, detailsMarkdownLinesRef] = useUpdate<IMarkdownLine[]>([]);
+    const [documentsLayout, updateDocumentsLayout, documentsLayoutRef] = useUpdate<DocumentsLayout>({});
     const self = useRef({
         refreshDocuments: async (showLoading: boolean) => {
             if (showLoading) updateLoading(true);
@@ -119,9 +120,13 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
             if (showLoading) {
                 updateLoading(false);
             }
+        },
+        initializeLayout: async () => {
+            updateDocumentsLayout(await services.getDocumentLayout());
         }
     });
     useEffect(() => {
+        self.current.initializeLayout();
         self.current.refreshDocuments(true);
     }, []);
     useLocalStorageListener("login", data => {
@@ -246,7 +251,7 @@ export const Documents = forwardRef<IDocumentsRef, IDocumentProps>((props, ref) 
                 updateLoading(false);
             }} onDownload={async records => {
                 await self.current.download(records, true);
-            }}></DocumentsApp>
+            }} layout={documentsLayout}></DocumentsApp>
             <ResizeButton style={{
                 display: showDetails ? 'flex' : 'none'
             }} onDeltaChange={updateDetailsDelta}></ResizeButton>
