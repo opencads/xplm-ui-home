@@ -10,6 +10,7 @@ import { ColumnsType, TableRef } from "antd/es/table";
 import { ICheckInInput, IImportInput } from "../../interfaces";
 import Icon from "@ant-design/icons/lib/components/Icon";
 import { IDocumentRecord } from "../../apps/DocumentsApp";
+import { globalRefreshDocuments } from "../Documents";
 
 export interface IDownloadFromWorkbenchProps {
 
@@ -155,7 +156,7 @@ export const DownloadFromWorkbench = forwardRef<IDownloadFromWorkbenchRef, IDown
             };
             formatReports(reportsRef.current);
             updateProgressValue(100);
-            localStorage.setItem('documents.refresh', Math.random().toString());
+            globalRefreshDocuments();
         }
     });
 
