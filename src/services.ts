@@ -529,7 +529,7 @@ export class services {
         });
     }
     public static async getLayout() {
-        return await services.runPlugin("get-layout", {}) as {
+        return await services.runPlugin("layout-get", {}) as {
             tabs?: ILayoutTab[]
         };
     }
