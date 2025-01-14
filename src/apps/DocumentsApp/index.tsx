@@ -199,7 +199,7 @@ export const DocumentsApp = forwardRef<IDocumentsAppRef, IDocumentsAppProps>(
                     return {
                         ...item,
                         render: (text: string, record: IDocumentRecord) => {
-                            return (record as any)?.[item.dataIndex] ?? (record?.remote as any)?.[item.dataIndex];
+                            return (record as any)?.[item.dataIndex] ?? (record?.remote?.raw as any)?.[item.dataIndex];
                         }
                     };
                 });
